@@ -1551,324 +1551,10 @@
     }
 
 
-    /* ===== UX polish: splash, grid, halo, stagger, gold icons ===== */
-    #aes-splash {
-      position: fixed; inset: 0; z-index: 20000;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: radial-gradient(ellipse at 50% 40%, #0c1525 0%, #070b14 70%);
-      transition: opacity 0.55s ease, visibility 0.55s ease;
-      padding: 24px; text-align: center;
-    }
-    #aes-splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
-    #aes-splash .sp-logo {
-      width: min(200px, 48vw); height: min(200px, 48vw);
-      border-radius: 10px; overflow: hidden;
-      border: 1px solid rgba(251,191,36,0.45);
-      box-shadow: 0 0 40px rgba(56,189,248,0.2), 0 12px 32px rgba(0,0,0,0.45);
-      margin-bottom: 22px;
-      animation: sp-pulse 1.4s ease-in-out infinite;
-    }
-    #aes-splash .sp-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    @keyframes sp-pulse {
-      0%,100% { transform: scale(1); box-shadow: 0 0 28px rgba(56,189,248,0.18), 0 12px 32px rgba(0,0,0,0.45); }
-      50% { transform: scale(1.03); box-shadow: 0 0 48px rgba(251,191,36,0.28), 0 12px 32px rgba(0,0,0,0.45); }
-    }
-    #aes-splash .sp-title {
-      font-size: 0.95rem; font-weight: 800; letter-spacing: 1.5px;
-      color: #e0f2fe; margin-bottom: 6px; text-transform: uppercase;
-    }
-    #aes-splash .sp-ar { font-size: 0.88rem; color: var(--gold, #fbbf24); font-weight: 700; margin-bottom: 18px; }
-    #aes-splash .sp-msg {
-      font-size: 0.82rem; color: #94a3b8; direction: rtl;
-      display: flex; align-items: center; gap: 10px; justify-content: center;
-    }
-    #aes-splash .sp-bar {
-      width: 140px; height: 3px; border-radius: 2px; overflow: hidden;
-      background: rgba(56,189,248,0.15); margin-top: 14px;
-    }
-    #aes-splash .sp-bar i {
-      display: block; height: 100%; width: 0%;
-      background: linear-gradient(90deg, #0ea5e9, #fbbf24);
-      animation: sp-load 1.45s ease-out forwards;
-    }
-    @keyframes sp-load { to { width: 100%; } }
-
-    /* survey grid overlay during flight */
-    #aes-survey-grid {
-      position: fixed; inset: 0; z-index: 5; pointer-events: none;
-      opacity: 0; transition: opacity 0.8s ease;
-      background-image:
-        linear-gradient(rgba(56,189,248,0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,189,248,0.07) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 72%);
-      -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 72%);
-    }
-    #aes-survey-grid.on { opacity: 1; }
-    #aes-survey-grid .sg-labels {
-      position: absolute; inset: 0; overflow: hidden;
-      font-family: "Courier New", ui-monospace, monospace;
-      font-size: 0.62rem; color: rgba(56,189,248,0.45); direction: ltr;
-    }
-    #aes-survey-grid .sg-labels span {
-      position: absolute; white-space: nowrap;
-      animation: sg-drift 12s linear infinite;
-    }
-    @keyframes sg-drift {
-      0% { transform: translateY(0); opacity: 0; }
-      10% { opacity: 0.7; }
-      90% { opacity: 0.5; }
-      100% { transform: translateY(-40px); opacity: 0; }
-    }
-    body.light-mode #aes-survey-grid {
-      background-image:
-        linear-gradient(rgba(2,132,199,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(2,132,199,0.08) 1px, transparent 1px);
-    }
-
-    /* halo under Arabic title when lit */
-    .menu-group.drone-target.is-lit .menu-group-title .mgt-ar {
-      position: relative;
-    }
-    .menu-group.drone-target.is-lit .menu-group-title .mgt-ar::after {
-      content: "";
-      position: absolute;
-      left: 50%; bottom: -10px;
-      width: 120%; height: 18px;
-      transform: translateX(-50%);
-      background: radial-gradient(ellipse at center, rgba(251,191,36,0.55) 0%, rgba(56,189,248,0.2) 45%, transparent 70%);
-      filter: blur(4px);
-      pointer-events: none;
-      animation: halo-pulse 2.4s ease-in-out infinite;
-      z-index: -1;
-    }
-    @keyframes halo-pulse {
-      0%,100% { opacity: 0.55; transform: translateX(-50%) scaleX(0.92); }
-      50% { opacity: 1; transform: translateX(-50%) scaleX(1.05); }
-    }
-
-    /* gold rim on icons after lock */
-    .menu-group.drone-target.is-lit .menu-icon {
-      box-shadow: 0 0 0 1.5px rgba(251,191,36,0.75), 0 0 14px rgba(251,191,36,0.25), 0 4px 12px rgba(0,0,0,0.25);
-      transition: box-shadow 0.6s ease;
-    }
-
-    /* cards: hidden until each gets .card-show (timed to drone flight) */
-    .home-menu.await-cards .menu-group.drone-target .menu-card {
-      opacity: 0;
-      transform: translateY(16px) scale(0.96);
-      pointer-events: none;
-    }
-    .home-menu .menu-group.drone-target .menu-card.card-show {
-      animation: card-in 0.5s cubic-bezier(0.22,1,0.36,1) both;
-      pointer-events: auto;
-    }
-    @keyframes card-in {
-      from { opacity: 0; transform: translateY(16px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      #aes-splash .sp-logo, #aes-splash .sp-bar i { animation: none !important; }
-      #aes-survey-grid .sg-labels span { animation: none !important; }
-      .home-menu.await-cards .menu-group.drone-target .menu-card { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
-      .home-menu .menu-group.drone-target .menu-card.card-show { animation: none !important; }
-    }
-
-    /* ===== Survey drone 3D-like + spotlight on title ===== */
-    .drone-scene {
-      position: relative;
-      margin: 0 0 -28px;
-      padding: 0;
-      height: 96px;
-      overflow: visible;
-      pointer-events: none;
-      user-select: none;
-      z-index: 6;
-    }
-    .drone-craft {
-      position: relative;
-      z-index: 7;
-      width: 148px;
-      height: 96px;
-      margin: 0 auto; /* centered baseline; horizontal park ONLY via --park-x */
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.5));
-      transform-style: preserve-3d;
-      transform: translate3d(var(--park-x, 0px), var(--park-y, 0px), 0) rotateX(16deg) rotateY(-10deg) rotateZ(-2deg);
-      will-change: transform;
-    }
-    .drone-craft.is-settled {
-      animation: drone-hover 5.5s ease-in-out infinite;
-    }
-    /* MUST keep translateX(var(--park-x)) in every keyframe — never drop it or craft snaps to center */
-    @keyframes drone-hover {
-      0%, 100% {
-        transform: translate3d(var(--park-x, 0px), 6px, 0) rotateX(16deg) rotateY(-10deg) rotateZ(-2deg);
-      }
-      50% {
-        transform: translate3d(var(--park-x, 0px), 2px, 0) rotateX(17deg) rotateY(-6deg) rotateZ(1deg);
-      }
-    }
-    .drone-craft.is-flying {
-      animation: none !important;
-      transition: none !important;
-    }
-    .drone-craft svg { width: 100%; height: 100%; display: block; overflow: visible; }
-    .drone-prop {
-      transform-origin: center;
-      animation: prop-spin 0.26s linear infinite;
-    }
-    .drone-prop.p2 { animation-duration: 0.24s; animation-direction: reverse; }
-    .drone-prop.p3 { animation-duration: 0.28s; }
-    .drone-prop.p4 { animation-duration: 0.25s; animation-direction: reverse; }
-    @keyframes prop-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .drone-spot {
-      position: absolute;
-      left: 50%;
-      top: 58px;
-      width: 150px;
-      height: 82px;
-      /* cone centered under craft: -50% self-center + same --park-x as drone */
-      transform: translate3d(calc(-50% + var(--park-x, 0px)), var(--park-y, 0px), 0);
-      transform-origin: 50% 0%;
-      z-index: 4;
-      pointer-events: none;
-      background: linear-gradient(
-        180deg,
-        rgba(255,251,235,0.95) 0%,
-        rgba(251,191,36,0.65) 18%,
-        rgba(56,189,248,0.32) 50%,
-        rgba(56,189,248,0.06) 78%,
-        transparent 100%
-      );
-      clip-path: polygon(47% 0%, 53% 0%, 82% 100%, 18% 100%);
-      mix-blend-mode: screen;
-      opacity: 0;
-      transition: opacity 1.4s ease;
-    }
-    .drone-scene.is-locked .drone-spot {
-      opacity: 1;
-      animation: spot-pulse 2.8s ease-in-out infinite;
-    }
-    body.light-mode .drone-spot {
-      background: linear-gradient(
-        180deg,
-        rgba(180,83,9,0.5) 0%,
-        rgba(2,132,199,0.22) 40%,
-        rgba(2,132,199,0.06) 75%,
-        transparent 100%
-      );
-      mix-blend-mode: multiply;
-      opacity: 0.9;
-    }
-    @keyframes spot-pulse {
-      0%, 100% { opacity: 0.55; }
-      50% { opacity: 1; }
-    }
-    .drone-spot-core {
-      position: absolute;
-      left: 50%;
-      top: 56px;
-      width: 3px;
-      height: 72px;
-      transform: translate3d(calc(-50% + var(--park-x, 0px)), var(--park-y, 0px), 0);
-      transform-origin: 50% 0%;
-      z-index: 5;
-      border-radius: 2px;
-      background: linear-gradient(180deg, #fff7ed 0%, #fde68a 12%, #fbbf24 28%, #38bdf8 70%, transparent 100%);
-      box-shadow: 0 0 14px rgba(251,191,36,1), 0 0 28px rgba(56,189,248,0.6);
-      opacity: 0;
-      transition: opacity 1.4s ease;
-    }
-    .drone-scene.is-locked .drone-spot-core {
-      opacity: 1;
-      animation: core-pulse 1.8s ease-in-out infinite;
-    }
-    @keyframes core-pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-    .drone-scene.drone-scene-sm {
-      height: 82px;
-      margin-top: 10px;
-      margin-bottom: -22px;
-    }
-    .drone-scene.drone-scene-sm .drone-craft {
-      width: 120px;
-      height: 78px;
-    }
-    .drone-scene.drone-scene-sm .drone-spot {
-      top: 52px;
-      height: 68px;
-      width: 140px;
-    }
-    .drone-scene.drone-scene-sm .drone-spot-core {
-      top: 50px;
-      height: 58px;
-    }
-    .menu-group.drone-target .menu-group-title {
-      position: relative;
-      z-index: 3;
-      overflow: visible;
-    }
-    .menu-group.drone-target .menu-group-title .mgt-ar {
-      position: relative;
-      display: inline-block;
-      color: var(--gold);
-      font-weight: 800;
-      transition: color 0.7s ease, text-shadow 0.7s ease, filter 0.7s ease;
-    }
-    .menu-group.drone-target.is-lit .menu-group-title .mgt-ar {
-      color: #fffbeb !important;
-      text-shadow:
-        0 0 4px rgba(255,255,255,0.9),
-        0 0 10px rgba(251,191,36,1),
-        0 0 20px rgba(251,191,36,0.9),
-        0 0 36px rgba(56,189,248,0.55),
-        0 1px 0 rgba(0,0,0,0.45);
-      animation: title-glow 2.6s ease-in-out infinite;
-    }
-    .menu-group.drone-target .menu-group-title .mgt-en {
-      opacity: 0.85;
-      text-shadow: none;
-    }
-    body.light-mode .menu-group.drone-target .menu-group-title .mgt-ar {
-      color: #78350f !important;
-      text-shadow:
-        0 0 8px rgba(251,191,36,0.8),
-        0 0 16px rgba(180,83,9,0.45);
-    }
-    @keyframes title-glow {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.3); }
-    }
-    .home-sections { position: relative; }
-    @media (prefers-reduced-motion: reduce) {
-      .drone-craft, .drone-prop, .drone-spot, .drone-spot-core,
-      .menu-group.drone-target .menu-group-title .mgt-ar { animation: none !important; transition: none !important; }
-      .drone-spot, .drone-spot-core { opacity: 1 !important; }
-      .menu-group.drone-target .menu-group-title .mgt-ar {
-        color: #fffbeb !important;
-        text-shadow: 0 0 10px rgba(251,191,36,0.9), 0 0 20px rgba(56,189,248,0.45);
-      }
-    }
 
 </style>
 </head>
 <body>
-  <!-- Boot splash -->
-  <div id="aes-splash" role="status" aria-live="polite">
-    <div class="sp-logo"><img id="aes-sp-img" alt="Logo"></div>
-    <div class="sp-title">AHMED ELTABAKH</div>
-    <div class="sp-ar">تقنيات المساحة الحديثة</div>
-    <div class="sp-msg">جاري تهيئة أجهزة المساحة…</div>
-    <div class="sp-bar"><i></i></div>
-  </div>
-  <div id="aes-survey-grid" aria-hidden="true"><div class="sg-labels" id="aes-sg-labels"></div></div>
-
   <div class="container">
 
     <div class="top-bar">
@@ -1931,157 +1617,7 @@
                     <div id="view-home" class="home-menu">
       <div class="home-sections">
 
-        <!-- Survey drone 3D + spotlight on title -->
-        <div class="drone-scene" id="drone-scene" aria-hidden="true">
-          <div class="drone-craft" id="drone-craft">
-            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="armTop" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
-                </linearGradient>
-                <linearGradient id="armSide" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#1e293b"/>
-                </linearGradient>
-                <linearGradient id="bodyTop" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#1e3a5f"/><stop offset="50%" stop-color="#0f172a"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodyFront" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#0c4a6e"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodySide" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#075985"/><stop offset="100%" stop-color="#0f172a"/>
-                </linearGradient>
-                <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fef3c7"/><stop offset="40%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#92400e"/>
-                </linearGradient>
-                <linearGradient id="prop" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="rgba(186,230,253,0)"/><stop offset="50%" stop-color="rgba(186,230,253,0.65)"/><stop offset="100%" stop-color="rgba(186,230,253,0)"/>
-                </linearGradient>
-                <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- floor shadow -->
-              <ellipse cx="100" cy="118" rx="48" ry="6" fill="rgba(0,0,0,0.4)"/>
-              <!-- ===== isometric X-arms (extruded beams) ===== -->
-              <!-- arm NE (top-right) -->
-              <g>
-                <polygon points="100,48 148,28 152,32 104,52" fill="url(#armSide)"/>
-                <polygon points="100,48 148,28 148,22 100,42" fill="url(#armTop)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="148,22 152,26 152,32 148,28" fill="#1e293b"/>
-              </g>
-              <!-- arm NW (top-left) -->
-              <g>
-                <polygon points="100,48 52,28 48,32 96,52" fill="url(#armSide)"/>
-                <polygon points="100,48 52,28 52,22 100,42" fill="url(#armTop)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="52,22 48,26 48,32 52,28" fill="#1e293b"/>
-              </g>
-              <!-- arm SE -->
-              <g>
-                <polygon points="100,58 148,78 152,74 104,54" fill="url(#armSide)"/>
-                <polygon points="100,58 148,78 148,72 100,52" fill="url(#armTop)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- arm SW -->
-              <g>
-                <polygon points="100,58 52,78 48,74 96,54" fill="url(#armSide)"/>
-                <polygon points="100,58 52,78 52,72 100,52" fill="url(#armTop)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- ===== motor pods (hexagonal isometric) ===== -->
-              <!-- NW motor -->
-              <g transform="translate(48,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p1" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- NE motor -->
-              <g transform="translate(136,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p2" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SW motor -->
-              <g transform="translate(48,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p3" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SE motor -->
-              <g transform="translate(136,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p4" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- ===== central fuselage (true isometric box) ===== -->
-              <!-- top face -->
-              <polygon points="100,30 128,42 100,54 72,42" fill="url(#bodyTop)" stroke="url(#gold)" stroke-width="1.5"/>
-              <!-- left face -->
-              <polygon points="72,42 100,54 100,74 72,62" fill="url(#bodySide)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- right face -->
-              <polygon points="128,42 100,54 100,74 128,62" fill="url(#bodyFront)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- top panel details (engineering lines) -->
-              <polygon points="100,34 118,42 100,50 82,42" fill="none" stroke="#38bdf8" stroke-width="0.7" opacity="0.7"/>
-              <line x1="88" y1="40" x2="112" y2="40" stroke="#22d3ee" stroke-width="0.6" opacity="0.5"/>
-              <line x1="92" y1="44" x2="108" y2="44" stroke="#22d3ee" stroke-width="0.6" opacity="0.4"/>
-              <!-- status LEDs on front edge -->
-              <circle cx="90" cy="58" r="2" fill="#4ade80"/><circle cx="90" cy="58" r="3.5" fill="none" stroke="#4ade80" stroke-width="0.5" opacity="0.5"/>
-              <circle cx="110" cy="58" r="2" fill="#f87171"/><circle cx="110" cy="58" r="3.5" fill="none" stroke="#f87171" stroke-width="0.5" opacity="0.5"/>
-              <!-- ===== LiDAR / survey sensor gimbal (angled) ===== -->
-              <g filter="url(#glow)">
-                <!-- mount bracket -->
-                <polygon points="92,70 108,70 110,76 90,76" fill="#0b1220" stroke="#22d3ee" stroke-width="1"/>
-                <!-- sensor body isometric -->
-                <polygon points="94,76 106,76 108,82 100,86 92,82" fill="#0f172a" stroke="#fbbf24" stroke-width="1.2"/>
-                <polygon points="94,76 100,72 106,76 100,80" fill="#1e293b" stroke="#fbbf24" stroke-width="0.7"/>
-                <!-- lens -->
-                <circle cx="100" cy="80" r="3.2" fill="#020617" stroke="#fde68a" stroke-width="1"/>
-                <circle cx="100" cy="80" r="1.5" fill="#fbbf24"/>
-                <!-- emitter nozzle (angled down-right toward AR text) -->
-                <polygon points="98,86 102,86 104,94 96,94" fill="#fbbf24" opacity="0.9"/>
-                <circle cx="100" cy="94" r="2.5" fill="#fde68a"/>
-                <circle cx="100" cy="94" r="5" fill="none" stroke="#fbbf24" stroke-width="0.8" opacity="0.55"/>
-              </g>
-              <!-- GPS mast -->
-              <line x1="100" y1="30" x2="100" y2="14" stroke="#94a3b8" stroke-width="1.6"/>
-              <circle cx="100" cy="12" r="2.8" fill="#22d3ee"/>
-              <circle cx="100" cy="12" r="5" fill="none" stroke="#22d3ee" stroke-width="0.7" opacity="0.45"/>
-              <!-- landing gear legs -->
-              <g stroke="#64748b" stroke-width="1.6" stroke-linecap="round" fill="none">
-                <path d="M82 62 L76 88"/><path d="M118 62 L124 88"/>
-                <line x1="72" y1="88" x2="128" y2="88" stroke-width="2"/>
-                <line x1="76" y1="85" x2="76" y2="91"/><line x1="124" y1="85" x2="124" y2="91"/>
-              </g>
-              <!-- micro dimension ticks (engineering detail) -->
-              <g stroke="#38bdf8" stroke-width="0.5" opacity="0.35">
-                <line x1="72" y1="42" x2="68" y2="42"/><line x1="128" y1="42" x2="132" y2="42"/>
-              </g>
-            </svg>
-          </div>
-          <div class="drone-spot" aria-hidden="true"></div>
-          <div class="drone-spot-core" aria-hidden="true"></div>
-        </div>
-
-
-        <div class="menu-group drone-target" id="drone-target-group">
+        <div class="menu-group">
           <div class="menu-group-title">
             <span class="mgt-en">Your Project</span>
             <span class="mgt-ar">اختار مشروعك</span>
@@ -2139,156 +1675,7 @@
           </div>
         </div>
 
-        <!-- Survey drone (task) + angled spotlight -->
-        <div class="drone-scene drone-scene-task drone-scene-sm" id="drone-scene-task" aria-hidden="true">
-          <div class="drone-craft" id="drone-craft-task">
-            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="armTop2" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
-                </linearGradient>
-                <linearGradient id="armSide2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#1e293b"/>
-                </linearGradient>
-                <linearGradient id="bodyTop2" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#1e3a5f"/><stop offset="50%" stop-color="#0f172a"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodyFront2" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#0c4a6e"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodySide2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#075985"/><stop offset="100%" stop-color="#0f172a"/>
-                </linearGradient>
-                <linearGradient id="gold2" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fef3c7"/><stop offset="40%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#92400e"/>
-                </linearGradient>
-                <linearGradient id="prop2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="rgba(186,230,253,0)"/><stop offset="50%" stop-color="rgba(186,230,253,0.65)"/><stop offset="100%" stop-color="rgba(186,230,253,0)"/>
-                </linearGradient>
-                <filter id="glow2" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- floor shadow -->
-              <ellipse cx="100" cy="118" rx="48" ry="6" fill="rgba(0,0,0,0.4)"/>
-              <!-- ===== isometric X-arms (extruded beams) ===== -->
-              <!-- arm NE (top-right) -->
-              <g>
-                <polygon points="100,48 148,28 152,32 104,52" fill="url(#armSide2)"/>
-                <polygon points="100,48 148,28 148,22 100,42" fill="url(#armTop2)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="148,22 152,26 152,32 148,28" fill="#1e293b"/>
-              </g>
-              <!-- arm NW (top-left) -->
-              <g>
-                <polygon points="100,48 52,28 48,32 96,52" fill="url(#armSide2)"/>
-                <polygon points="100,48 52,28 52,22 100,42" fill="url(#armTop2)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="52,22 48,26 48,32 52,28" fill="#1e293b"/>
-              </g>
-              <!-- arm SE -->
-              <g>
-                <polygon points="100,58 148,78 152,74 104,54" fill="url(#armSide2)"/>
-                <polygon points="100,58 148,78 148,72 100,52" fill="url(#armTop2)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- arm SW -->
-              <g>
-                <polygon points="100,58 52,78 48,74 96,54" fill="url(#armSide2)"/>
-                <polygon points="100,58 52,78 52,72 100,52" fill="url(#armTop2)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- ===== motor pods (hexagonal isometric) ===== -->
-              <!-- NW motor -->
-              <g transform="translate(48,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p1" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- NE motor -->
-              <g transform="translate(136,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p2" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SW motor -->
-              <g transform="translate(48,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p3" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SE motor -->
-              <g transform="translate(136,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p4" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- ===== central fuselage (true isometric box) ===== -->
-              <!-- top face -->
-              <polygon points="100,30 128,42 100,54 72,42" fill="url(#bodyTop2)" stroke="url(#gold2)" stroke-width="1.5"/>
-              <!-- left face -->
-              <polygon points="72,42 100,54 100,74 72,62" fill="url(#bodySide2)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- right face -->
-              <polygon points="128,42 100,54 100,74 128,62" fill="url(#bodyFront2)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- top panel details (engineering lines) -->
-              <polygon points="100,34 118,42 100,50 82,42" fill="none" stroke="#38bdf8" stroke-width="0.7" opacity="0.7"/>
-              <line x1="88" y1="40" x2="112" y2="40" stroke="#22d3ee" stroke-width="0.6" opacity="0.5"/>
-              <line x1="92" y1="44" x2="108" y2="44" stroke="#22d3ee" stroke-width="0.6" opacity="0.4"/>
-              <!-- status LEDs on front edge -->
-              <circle cx="90" cy="58" r="2" fill="#4ade80"/><circle cx="90" cy="58" r="3.5" fill="none" stroke="#4ade80" stroke-width="0.5" opacity="0.5"/>
-              <circle cx="110" cy="58" r="2" fill="#f87171"/><circle cx="110" cy="58" r="3.5" fill="none" stroke="#f87171" stroke-width="0.5" opacity="0.5"/>
-              <!-- ===== LiDAR / survey sensor gimbal (angled) ===== -->
-              <g filter="url(#glow2)">
-                <!-- mount bracket -->
-                <polygon points="92,70 108,70 110,76 90,76" fill="#0b1220" stroke="#22d3ee" stroke-width="1"/>
-                <!-- sensor body isometric -->
-                <polygon points="94,76 106,76 108,82 100,86 92,82" fill="#0f172a" stroke="#fbbf24" stroke-width="1.2"/>
-                <polygon points="94,76 100,72 106,76 100,80" fill="#1e293b" stroke="#fbbf24" stroke-width="0.7"/>
-                <!-- lens -->
-                <circle cx="100" cy="80" r="3.2" fill="#020617" stroke="#fde68a" stroke-width="1"/>
-                <circle cx="100" cy="80" r="1.5" fill="#fbbf24"/>
-                <!-- emitter nozzle (angled down-right toward AR text) -->
-                <polygon points="98,86 102,86 104,94 96,94" fill="#fbbf24" opacity="0.9"/>
-                <circle cx="100" cy="94" r="2.5" fill="#fde68a"/>
-                <circle cx="100" cy="94" r="5" fill="none" stroke="#fbbf24" stroke-width="0.8" opacity="0.55"/>
-              </g>
-              <!-- GPS mast -->
-              <line x1="100" y1="30" x2="100" y2="14" stroke="#94a3b8" stroke-width="1.6"/>
-              <circle cx="100" cy="12" r="2.8" fill="#22d3ee"/>
-              <circle cx="100" cy="12" r="5" fill="none" stroke="#22d3ee" stroke-width="0.7" opacity="0.45"/>
-              <!-- landing gear legs -->
-              <g stroke="#64748b" stroke-width="1.6" stroke-linecap="round" fill="none">
-                <path d="M82 62 L76 88"/><path d="M118 62 L124 88"/>
-                <line x1="72" y1="88" x2="128" y2="88" stroke-width="2"/>
-                <line x1="76" y1="85" x2="76" y2="91"/><line x1="124" y1="85" x2="124" y2="91"/>
-              </g>
-              <!-- micro dimension ticks (engineering detail) -->
-              <g stroke="#38bdf8" stroke-width="0.5" opacity="0.35">
-                <line x1="72" y1="42" x2="68" y2="42"/><line x1="128" y1="42" x2="132" y2="42"/>
-              </g>
-            </svg>
-          </div>
-          <div class="drone-spot" aria-hidden="true"></div>
-          <div class="drone-spot-core" aria-hidden="true"></div>
-        </div>
-
-        <div class="menu-group drone-target" id="drone-target-task">
+        <div class="menu-group">
           <div class="menu-group-title">
             <span class="mgt-en">Your Task</span>
             <span class="mgt-ar">اختار المهمة</span>
@@ -4700,7 +4087,137 @@ function exportTravExcel() {
 
     /* ===== Admin gate (Apartment Plan + Layout Edit) ===== */
     const ADMIN_KEY = "aes_admin_ok";
-    const ADMIN_PASS = "tabakh95";
+    /* ===== كلمة السر: مخزّنة كـ Hash (SHA-256) مش نص عادي ===== */
+    const ADMIN_SALT = "aes-tabakh-v1|";
+    const ADMIN_DEFAULT_HASH = "103540e4a01e09d1f813d752edcf166cf979c9fd69086d15ed1b2f043b4bcd19"; /* الباسورد الأصلي */
+    const ADMIN_CODE_HASH = "0618317bf43949a385c0378fbf6f16133e843dec9dcb176b8977caa5e3e3cd58";    /* كود السماح بتغيير الباسورد */
+    const ADMIN_HASH_KEY = "aes_admin_hash_v2";
+    var __passMem = null, __codeFails = 0, __codeLockUntil = 0;
+
+    function sha256hex(str) {
+      var bytes = [];
+      var u = unescape(encodeURIComponent(str));
+      for (var i = 0; i < u.length; i++) bytes.push(u.charCodeAt(i));
+      var K = [], H = [], primes = [], n = 2, i2, j;
+      while (primes.length < 64) {
+        var isP = true;
+        for (j = 0; j < primes.length; j++) { if (n % primes[j] === 0) { isP = false; break; } }
+        if (isP) primes.push(n);
+        n++;
+      }
+      for (i2 = 0; i2 < 64; i2++) K[i2] = (Math.pow(primes[i2], 1 / 3) % 1) * 4294967296 | 0;
+      for (i2 = 0; i2 < 8; i2++) H[i2] = (Math.pow(primes[i2], 1 / 2) % 1) * 4294967296 | 0;
+      var bitLen = bytes.length * 8;
+      bytes.push(0x80);
+      while (bytes.length % 64 !== 56) bytes.push(0);
+      var hi = Math.floor(bitLen / 4294967296), lo = bitLen >>> 0;
+      bytes.push((hi >>> 24) & 255, (hi >>> 16) & 255, (hi >>> 8) & 255, hi & 255, (lo >>> 24) & 255, (lo >>> 16) & 255, (lo >>> 8) & 255, lo & 255);
+      function rr(v, k) { return (v >>> k) | (v << (32 - k)); }
+      var w = new Array(64);
+      for (var off = 0; off < bytes.length; off += 64) {
+        for (i2 = 0; i2 < 16; i2++) w[i2] = (bytes[off + i2 * 4] << 24) | (bytes[off + i2 * 4 + 1] << 16) | (bytes[off + i2 * 4 + 2] << 8) | bytes[off + i2 * 4 + 3];
+        for (i2 = 16; i2 < 64; i2++) {
+          var s0 = rr(w[i2 - 15], 7) ^ rr(w[i2 - 15], 18) ^ (w[i2 - 15] >>> 3);
+          var s1 = rr(w[i2 - 2], 17) ^ rr(w[i2 - 2], 19) ^ (w[i2 - 2] >>> 10);
+          w[i2] = (w[i2 - 16] + s0 + w[i2 - 7] + s1) | 0;
+        }
+        var a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+        for (i2 = 0; i2 < 64; i2++) {
+          var S1 = rr(e, 6) ^ rr(e, 11) ^ rr(e, 25);
+          var ch = (e & f) ^ (~e & g);
+          var t1 = (h + S1 + ch + K[i2] + w[i2]) | 0;
+          var S0 = rr(a, 2) ^ rr(a, 13) ^ rr(a, 22);
+          var mj = (a & b) ^ (a & c) ^ (b & c);
+          var t2 = (S0 + mj) | 0;
+          h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+        }
+        H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+        H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+      }
+      var out = "";
+      for (i2 = 0; i2 < 8; i2++) out += ("00000000" + (H[i2] >>> 0).toString(16)).slice(-8);
+      return out;
+    }
+    function passHash(p) { return sha256hex(ADMIN_SALT + p); }
+    function getAdminHash() {
+      var v = null;
+      try { v = localStorage.getItem(ADMIN_HASH_KEY); } catch (e) {}
+      if (!v) v = __passMem;
+      return v || ADMIN_DEFAULT_HASH;
+    }
+    function checkAdminPass(p) { return passHash(p) === getAdminHash(); }
+    function storeAdminPass(p) {
+      var h = passHash(p), saved = true;
+      __passMem = h;
+      try { localStorage.setItem(ADMIN_HASH_KEY, h); } catch (e) { saved = false; }
+      return saved;
+    }
+
+    /* تغيير الباسورد: خطوة 1 = الكود، خطوة 2 = الباسورد الجديد */
+    var __apmStep = 1;
+    function apmShowStep(step) {
+      __apmStep = step;
+      var one = step === 1;
+      document.getElementById("apm-code-wrap").style.display = one ? "block" : "none";
+      document.getElementById("apm-new-wrap").style.display = one ? "none" : "block";
+      document.getElementById("apm-title").textContent = one ? "تغيير الباسورد" : "اختار باسورد جديد";
+      document.getElementById("apm-sub").textContent = one ? "اكتب الكود عشان تقدر تغيّر الباسورد" : "اكتب الباسورد الجديد مرتين";
+      document.getElementById("apm-ok").textContent = one ? "التالي" : "حفظ";
+      document.getElementById("apm-err").style.display = "none";
+      setTimeout(function () { try { document.getElementById(one ? "apm-code" : "apm-new").focus(); } catch (e) {} }, 60);
+    }
+    function openChangePass() {
+      var m = document.getElementById("admin-pass-modal");
+      if (!m) return;
+      ["apm-code", "apm-new", "apm-new2"].forEach(function (id) { var el = document.getElementById(id); el.value = ""; el.type = "password"; });
+      document.getElementById("apm-show").checked = false;
+      apmShowStep(1);
+      m.style.display = "flex";
+    }
+    function closeChangePass() {
+      var m = document.getElementById("admin-pass-modal");
+      if (m) m.style.display = "none";
+      ["apm-code", "apm-new", "apm-new2"].forEach(function (id) { var el = document.getElementById(id); if (el) el.value = ""; });
+      __apmStep = 1;
+    }
+    function apmToggleShow() {
+      var t = document.getElementById("apm-show").checked ? "text" : "password";
+      ["apm-code", "apm-new", "apm-new2"].forEach(function (id) { document.getElementById(id).type = t; });
+    }
+    function apmErr(msg) {
+      var el = document.getElementById("apm-err");
+      el.textContent = msg; el.style.display = "block";
+    }
+    function saveChangePass() {
+      document.getElementById("apm-err").style.display = "none";
+      if (__apmStep === 1) {
+        var now = Date.now();
+        if (now < __codeLockUntil) { apmErr("محاولات كتير غلط — استنى " + Math.ceil((__codeLockUntil - now) / 1000) + " ثانية وحاول تاني"); return; }
+        var code = (document.getElementById("apm-code").value || "").trim();
+        if (passHash(code) !== ADMIN_CODE_HASH) {
+          __codeFails++;
+          if (__codeFails >= 5) { __codeFails = 0; __codeLockUntil = now + 30000; apmErr("محاولات كتير غلط — استنى 30 ثانية وحاول تاني"); }
+          else apmErr("الكود غير صحيح");
+          document.getElementById("apm-code").value = "";
+          return;
+        }
+        __codeFails = 0;
+        apmShowStep(2);
+        return;
+      }
+      var n1 = document.getElementById("apm-new").value;
+      var n2 = document.getElementById("apm-new2").value;
+      if (n1.length < 6) { apmErr("الباسورد الجديد لازم يكون 6 حروف أو أرقام على الأقل"); return; }
+      if (/\s/.test(n1)) { apmErr("الباسورد مينفعش يحتوي على مسافات"); return; }
+      if (n1 !== n2) { apmErr("الباسورد الجديد والتأكيد مش متطابقين"); return; }
+      if (passHash(n1) === ADMIN_CODE_HASH) { apmErr("اختار باسورد مختلف عن كود التغيير"); return; }
+      if (checkAdminPass(n1)) { apmErr("الباسورد الجديد لازم يختلف عن الحالي"); return; }
+      var saved = storeAdminPass(n1);
+      closeChangePass();
+      admToast(saved ? "تم تغيير الباسورد ✓ — استخدمه في الدخول الجاي"
+                     : "⚠ اتغيّر لحد ما تقفل الصفحة بس (التخزين غير متاح هنا)");
+    }
+
     var __adminIntent = "edit"; // 'edit' | 'apt'
 
     function isAdmin() {
@@ -4804,7 +4321,7 @@ function exportTravExcel() {
 
     function submitAdminLogin() {
       var v = (document.getElementById("admin-pass").value || "").trim();
-      if (v === ADMIN_PASS) {
+      if (checkAdminPass(v)) {
         setAdmin(true);
         applyAdminUI();
         closeAdminLogin();
@@ -4972,9 +4489,13 @@ function exportTravExcel() {
         b2.type = "button"; b2.id = "afb-resetpos";
         b2.textContent = "↺ إرجاع الأماكن";
         b2.setAttribute("onclick", "admResetAllPos()");
+        var b3 = document.createElement("button");
+        b3.type = "button"; b3.id = "afb-pass";
+        b3.textContent = "🔑 الباسورد";
+        b3.setAttribute("onclick", "openChangePass()");
         var save = document.getElementById("afb-save");
-        if (save && save.parentNode === fb) { fb.insertBefore(b1, save); fb.insertBefore(b2, save); }
-        else { fb.appendChild(b1); fb.appendChild(b2); }
+        if (save && save.parentNode === fb) { fb.insertBefore(b1, save); fb.insertBefore(b2, save); fb.insertBefore(b3, save); }
+        else { fb.appendChild(b1); fb.appendChild(b2); fb.appendChild(b3); }
       }
       var tm = document.getElementById("admin-trash-modal");
       if (tm && !tm.__admBound) {
@@ -9152,16 +8673,6 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       osc.start(t0);
       osc.stop(t0 + dur + 0.02);
     }
-
-    function playDroneLandSound() {
-      if (!aesSoundOn) return;
-      // soft descending hum + lock chirp
-      playTone(220, 0.35, "sine", 0.04, 110);
-      setTimeout(function(){ playTone(160, 0.28, "triangle", 0.035, 90); }, 120);
-      setTimeout(function(){ playTone(520, 0.12, "sine", 0.05); }, 380);
-      setTimeout(function(){ playTone(780, 0.1, "triangle", 0.03); }, 480);
-    }
-
     function playClickSound() {
       // صوت أكشن سريع
       playTone(180, 0.07, "square", 0.05, 90);
@@ -9425,6 +8936,23 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       </div>
     </div>
   </div>
+  <div id="admin-pass-modal" style="display:none;position:fixed;inset:0;z-index:10007;background:rgba(0,0,0,0.72);align-items:center;justify-content:center;padding:16px;">
+    <div style="background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:22px 18px;max-width:340px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
+      <h3 id="apm-title" style="text-align:center;color:var(--gold);margin-bottom:6px;font-size:1.1rem;">تغيير الباسورد</h3>
+      <p id="apm-sub" style="text-align:center;color:var(--muted);font-size:0.82rem;margin-bottom:14px;line-height:1.6;"></p>
+      <div id="apm-code-wrap"><input type="password" id="apm-code" placeholder="اكتب الكود" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:1rem;margin-bottom:10px;direction:ltr;text-align:center;" onkeydown="if(event.key==='Enter')saveChangePass()"></div>
+      <div id="apm-new-wrap" style="display:none;">
+        <input type="password" id="apm-new" placeholder="الباسورد الجديد (6 على الأقل)" autocomplete="new-password" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:1rem;margin-bottom:10px;direction:ltr;text-align:center;">
+        <input type="password" id="apm-new2" placeholder="أكّد الباسورد الجديد" autocomplete="new-password" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:1rem;margin-bottom:10px;direction:ltr;text-align:center;" onkeydown="if(event.key==='Enter')saveChangePass()">
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:0.82rem;margin-bottom:10px;cursor:pointer;"><input type="checkbox" id="apm-show" onchange="apmToggleShow()" style="width:auto;margin:0;flex:none;"> <span style="white-space:nowrap;">إظهار الكتابة</span></label>
+      <p id="apm-err" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin-bottom:8px;"></p>
+      <div style="display:flex;gap:10px;">
+        <button type="button" class="btn-calc" id="apm-ok" onclick="saveChangePass()" style="flex:1;">التالي</button>
+        <button type="button" class="btn-reset" id="apm-skip" onclick="closeChangePass()" style="flex:1;">إلغاء</button>
+      </div>
+    </div>
+  </div>
   <div id="admin-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;padding:16px;">
     <div style="background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:22px 18px;max-width:340px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
       <h3 style="text-align:center;color:var(--gold);margin-bottom:6px;font-size:1.1rem;">دخول الأدمن</h3>
@@ -9437,6 +8965,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
         <button type="button" class="btn-calc" onclick="submitAdminLogin()" style="flex:1;">دخول</button>
         <button type="button" class="btn-reset" onclick="closeAdminLogin()" style="flex:1;">إلغاء</button>
       </div>
+      <button type="button" id="admin-chpass-btn" onclick="openChangePass()" style="width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px dashed var(--accent);background:transparent;color:var(--accent);font-weight:700;cursor:pointer;font-family:inherit;">🔑 تغيير الباسورد</button>
       <button type="button" id="admin-edit-btn" onclick="toggleAdminEdit()" style="display:none;width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--gold);background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(56,189,248,0.15));color:var(--gold);font-weight:700;cursor:pointer;">✎ تعديل أسماء وترتيب الأيقونات</button>
       <button type="button" id="admin-logout-btn" onclick="adminLogout()" style="display:none;width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--muted);font-weight:600;cursor:pointer;">تسجيل خروج الأدمن</button>
     </div>
@@ -11937,272 +11466,6 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
   S.lastInput = performance.now();
   requestAnimationFrame(frame);
   window.__logo3d = S;
-})();
-</script>
-
-
-
-
-<script>
-/* Drone + cone + splash + grid + stagger + land sound */
-(function(){
-  function reduced(){
-    try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
-    catch(e){ return false; }
-  }
-
-  /* ----- Splash ----- */
-  function initSplash(done){
-    var sp = document.getElementById('aes-splash');
-    var img = document.getElementById('aes-sp-img');
-    var srcImg = document.querySelector('.l3d-img');
-    if(img && srcImg && srcImg.src) img.src = srcImg.src;
-    var ms = reduced() ? 400 : 1600;
-    setTimeout(function(){
-      if(sp) sp.classList.add('hide');
-      setTimeout(function(){ if(sp && sp.parentNode) sp.parentNode.removeChild(sp); }, 600);
-      if(typeof done === 'function') done();
-    }, ms);
-  }
-
-  /* ----- Survey grid ----- */
-  function gridOn(on){
-    var g = document.getElementById('aes-survey-grid');
-    if(!g) return;
-    g.classList.toggle('on', !!on);
-  }
-  function fillGridLabels(){
-    var box = document.getElementById('aes-sg-labels');
-    if(!box || box.childNodes.length) return;
-    var zones = [35,36,37];
-    for(var i=0;i<14;i++){
-      var s = document.createElement('span');
-      var e = 300000 + Math.floor(Math.random()*80000);
-      var n = 3300000 + Math.floor(Math.random()*120000);
-      s.textContent = 'E ' + e + '  N ' + n + '  Z' + zones[i%3] + 'N';
-      s.style.left = (8 + Math.random()*84) + '%';
-      s.style.top = (10 + Math.random()*70) + '%';
-      s.style.animationDelay = (Math.random()*6) + 's';
-      box.appendChild(s);
-    }
-  }
-
-  /* ----- Stagger cards: one-by-one until last = drone land ----- */
-  var _cardTimers = [];
-  function cardsAwait(){
-    var home = document.getElementById('view-home');
-    if(home) home.classList.add('await-cards');
-    document.querySelectorAll('.menu-group.drone-target .menu-card').forEach(function(c){
-      c.classList.remove('card-show');
-    });
-    _cardTimers.forEach(clearTimeout);
-    _cardTimers = [];
-  }
-  function cardsRevealTimed(totalMs){
-    /* show icons sequentially; last one appears at totalMs (drone landing) */
-    var cards = Array.prototype.slice.call(
-      document.querySelectorAll('#drone-target-group .menu-card, #drone-target-task .menu-card')
-    ).filter(function(c){ return c.offsetParent !== null || true; });
-    /* prefer visible order: project group first, then task */
-    var proj = Array.prototype.slice.call(document.querySelectorAll('#drone-target-group .menu-card'));
-    var task = Array.prototype.slice.call(document.querySelectorAll('#drone-target-task .menu-card'));
-    cards = proj.concat(task);
-    var n = cards.length;
-    if(!n) return;
-    if(reduced()){
-      cards.forEach(function(c){ c.classList.add('card-show'); });
-      var home = document.getElementById('view-home');
-      if(home) home.classList.remove('await-cards');
-      return;
-    }
-    /* first card ~0.35s after flight starts; last at totalMs */
-    var start = 350;
-    var end = Math.max(start + 200, totalMs - 80);
-    for(var i=0;i<n;i++){
-      (function(card, idx){
-        var t = n === 1 ? end : start + (end - start) * (idx / (n - 1));
-        var id = setTimeout(function(){
-          card.classList.add('card-show');
-          if(idx === n - 1){
-            var home = document.getElementById('view-home');
-            if(home) home.classList.remove('await-cards');
-          }
-        }, Math.round(t));
-        _cardTimers.push(id);
-      })(cards[i], i);
-    }
-  }
-
-  function parkX(craft, target){
-    if(!craft || !target) return 56;
-    var ar = target.querySelector('.mgt-ar');
-    if(!ar) return 56;
-    var a = ar.getBoundingClientRect();
-    var c = craft.getBoundingClientRect();
-    var craftMid = c.left + c.width / 2;
-    var aimX = a.left + a.width * 0.80;
-    return aimX - craftMid;
-  }
-
-  function setPark(scene, craft, x, y){
-    var xs = x.toFixed(1) + 'px';
-    var ys = y.toFixed(1) + 'px';
-    if(scene){ scene.style.setProperty('--park-x', xs); scene.style.setProperty('--park-y', ys); }
-    if(craft){ craft.style.setProperty('--park-x', xs); craft.style.setProperty('--park-y', ys); }
-  }
-
-  var landCount = 0;
-  var landNeed = 2;
-
-  function onAnyLand(){
-    landCount++;
-    if(landCount === 1){
-      try { if(typeof playDroneLandSound === 'function') playDroneLandSound(); } catch(e){}
-      /* ensure every card is visible when first drone lands (in case timer drift) */
-      document.querySelectorAll('.menu-group.drone-target .menu-card').forEach(function(c){
-        c.classList.add('card-show');
-      });
-      var home = document.getElementById('view-home');
-      if(home) home.classList.remove('await-cards');
-    }
-    if(landCount >= landNeed){
-      gridOn(false);
-    }
-  }
-
-  function landOne(craft, scene, target, opts){
-    if(!craft || !scene) return;
-    opts = opts || {};
-    var delay = opts.delay || 0;
-    var flyMs = opts.flyMs || 6000;
-    var startX = opts.startX != null ? opts.startX : -100;
-    var startY = opts.startY != null ? opts.startY : -50;
-    var settleY = 6;
-
-    function lock(finalX){
-      craft.classList.remove('is-flying');
-      setPark(scene, craft, finalX, 0);
-      craft.style.transform = '';
-      craft.classList.add('is-settled');
-      scene.classList.add('is-locked');
-      if(target) target.classList.add('is-lit');
-      onAnyLand();
-    }
-
-    craft.classList.remove('is-settled', 'is-flying');
-    craft.style.transform = '';
-    craft.style.marginLeft = '';
-    scene.classList.remove('is-locked');
-    if(target) target.classList.remove('is-lit');
-    setPark(scene, craft, startX, startY);
-
-    if(reduced()){
-      setPark(scene, craft, 0, 0);
-      void craft.offsetWidth;
-      lock(parkX(craft, target));
-      return;
-    }
-
-    setTimeout(function(){
-      setPark(scene, craft, 0, 0);
-      void craft.offsetWidth;
-      var destX = parkX(craft, target);
-      craft.classList.add('is-flying');
-      var t0 = performance.now();
-      function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-      function easeInOut(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
-      function frame(now){
-        var life = Math.min(1, (now - t0) / flyMs);
-        var e = life < 0.7 ? easeInOut(life / 0.7) * 0.82 : 0.82 + easeOutCubic((life - 0.7) / 0.3) * 0.18;
-        var x = startX + (destX - startX) * e;
-        var y = startY + (settleY - startY) * e;
-        var bank = (1 - e) * 14;
-        var rx = 16 + (1 - e) * 12;
-        var ry = -8 - bank;
-        var rz = -2 + (1 - e) * -4;
-        if(life < 0.55){
-          var w = Math.sin((now - t0) / 900) * (1 - life / 0.55) * 8;
-          x += w; rz += w * 0.12;
-        }
-        craft.style.transform =
-          'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotateX(' + rx.toFixed(1) +
-          'deg) rotateY(' + ry.toFixed(1) + 'deg) rotateZ(' + rz.toFixed(1) + 'deg)';
-        setPark(scene, craft, x, y);
-        if(life < 1) requestAnimationFrame(frame);
-        else lock(destX);
-      }
-      requestAnimationFrame(frame);
-    }, delay);
-  }
-
-  function runAll(){
-    landCount = 0;
-    cardsAwait();
-    fillGridLabels();
-    gridOn(true);
-    /* primary flight total ≈ delay + flyMs → last icon at this moment */
-    var primaryDelay = 180, primaryFly = 6200;
-    var landAt = primaryDelay + primaryFly; /* ~6380ms */
-    cardsRevealTimed(landAt);
-    landOne(
-      document.getElementById('drone-craft'),
-      document.getElementById('drone-scene'),
-      document.getElementById('drone-target-group'),
-      { delay: primaryDelay, flyMs: primaryFly, startX: -100, startY: -52 }
-    );
-    landOne(
-      document.getElementById('drone-craft-task'),
-      document.getElementById('drone-scene-task'),
-      document.getElementById('drone-target-task'),
-      { delay: 1000, flyMs: 5800, startX: -85, startY: -40 }
-    );
-  }
-
-  function resetAndRun(){
-    ['drone-craft','drone-craft-task'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el){
-        el.classList.remove('is-settled','is-flying');
-        el.style.transform = '';
-        el.style.marginLeft = '';
-        el.style.removeProperty('--park-x');
-        el.style.removeProperty('--park-y');
-      }
-    });
-    ['drone-scene','drone-scene-task'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el){
-        el.classList.remove('is-locked');
-        el.style.removeProperty('--park-x');
-        el.style.removeProperty('--park-y');
-      }
-    });
-    ['drone-target-group','drone-target-task'].forEach(function(id){
-      var el = document.getElementById(id); if(el) el.classList.remove('is-lit');
-    });
-    document.querySelectorAll('.menu-group.drone-target .menu-card').forEach(function(c){
-      c.classList.remove('card-show');
-    });
-    runAll();
-  }
-
-  function boot(){
-    cardsAwait();
-    initSplash(function(){ runAll(); });
-  }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-
-  var _sv = window.showView;
-  if(typeof _sv === 'function'){
-    window.showView = function(name){
-      var r = _sv.apply(this, arguments);
-      if(name === 'home') setTimeout(resetAndRun, 80);
-      return r;
-    };
-  }
-  window.__droneReland = resetAndRun;
 })();
 </script>
 
