@@ -105,7 +105,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
-      transition: transform 0.15s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, background 0.25s ease, box-shadow 0.28s ease;
       position: relative;
       overflow: hidden;
     }
@@ -169,7 +169,7 @@
       align-items: center;
       gap: 3px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-      transition: border-color 0.15s, transform 0.12s, opacity 0.15s;
+      transition: border-color 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease, background 0.28s ease, box-shadow 0.28s ease;
     }
     .bottom-nav button:active { transform: scale(0.96); }
     .bottom-nav button:disabled { opacity: 0.4; cursor: default; }
@@ -679,7 +679,7 @@
       border-radius: 16px;
       padding: 14px 10px 12px;
       cursor: pointer;
-      transition: all 0.22s ease;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.3s ease, background 0.3s ease, opacity 0.35s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -881,7 +881,7 @@
       font-size: 0.94rem;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.22s, filter 0.15s, border-color 0.2s, background 0.2s;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, filter 0.25s ease, border-color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
       backdrop-filter: blur(12px) saturate(1.3);
       -webkit-backdrop-filter: blur(12px) saturate(1.3);
       position: relative;
@@ -894,7 +894,11 @@
       background: linear-gradient(145deg, rgba(255,255,255,0.14) 0%, transparent 45%);
       pointer-events: none;
     }
-    button:active { transform: scale(0.97); }
+    button:active { transform: scale(0.985); }
+    button, .menu-card, .ctrl-btn, .bottom-nav button {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
     .btn-calc {
       background: linear-gradient(135deg, rgba(2,132,199,0.82) 0%, rgba(6,182,212,0.78) 100%);
       color: white;
@@ -1583,20 +1587,27 @@
       display: flex; align-items: center; gap: 10px; justify-content: center;
     }
     #aes-splash .sp-bar {
-      width: 160px; height: 4px; border-radius: 3px; overflow: hidden;
-      background: rgba(56,189,248,0.18); margin-top: 16px;
-      border: 1px solid rgba(56,189,248,0.2);
+      width: 200px; height: 6px; border-radius: 4px; overflow: hidden;
+      background: rgba(56,189,248,0.18); margin-top: 14px;
+      border: 1px solid rgba(56,189,248,0.25);
+      position: relative;
     }
     #aes-splash .sp-bar i {
       display: block; height: 100%; width: 0%;
       background: linear-gradient(90deg, #0ea5e9, #38bdf8, #fbbf24);
-      animation: sp-load 1.55s ease-out forwards;
-      border-radius: 3px;
+      border-radius: 4px;
+      transition: none;
+      will-change: width;
     }
-    @keyframes sp-load {
-      0% { width: 0%; }
-      100% { width: 100%; }
+    #aes-splash .sp-pct {
+      margin-top: 10px;
+      font: 800 0.95rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: 1px;
+      color: var(--accent2, #22d3ee);
+      direction: ltr;
+      min-height: 1.2em;
     }
+    #aes-splash .sp-pct b { color: #fbbf24; }
 
     /* survey grid overlay during flight */
     #aes-survey-grid {
@@ -1674,7 +1685,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      #aes-splash .sp-logo, #aes-splash .sp-bar i { animation: none !important; }
+      #aes-splash .sp-logo { animation: none !important; }
       #aes-survey-grid .sg-labels span { animation: none !important; }
       .home-menu.await-cards .menu-group.drone-target .menu-card { opacity: 1 !important; transform: none !important; pointer-events: auto !important; }
       .home-menu .menu-group.drone-target .menu-card.card-show { animation: none !important; }
@@ -1804,7 +1815,7 @@
       width: 148px;
       height: 96px;
       margin: 0 auto; /* centered baseline; horizontal park ONLY via --park-x */
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.5));
+      filter: drop-shadow(0 12px 12px rgba(0,0,0,0.55)) drop-shadow(0 0 10px rgba(56,189,248,0.22));
       transform-style: preserve-3d;
       transform: translate3d(var(--park-x, 0px), var(--park-y, 0px), 0) rotateX(16deg) rotateY(-10deg) rotateZ(-2deg);
       will-change: transform;
@@ -1815,10 +1826,10 @@
     /* MUST keep translateX(var(--park-x)) in every keyframe — never drop it or craft snaps to center */
     @keyframes drone-hover {
       0%, 100% {
-        transform: translate3d(var(--park-x, 0px), 6px, 0) rotateX(16deg) rotateY(-10deg) rotateZ(-2deg);
+        transform: translate3d(var(--park-x, 0px), 5px, 0) rotateX(16deg) rotateY(-9deg) rotateZ(-1.5deg);
       }
       50% {
-        transform: translate3d(var(--park-x, 0px), 2px, 0) rotateX(17deg) rotateY(-6deg) rotateZ(1deg);
+        transform: translate3d(var(--park-x, 0px), 2px, 0) rotateX(16.6deg) rotateY(-7deg) rotateZ(0.5deg);
       }
     }
     .drone-craft.is-flying {
@@ -1827,6 +1838,7 @@
     }
     .drone-craft svg { width: 100%; height: 100%; display: block; overflow: visible; }
     .drone-prop {
+      transform-box: fill-box;
       transform-origin: center;
       animation: prop-spin 0.26s linear infinite;
     }
@@ -1969,6 +1981,82 @@
     }
 
 </style>
+<style id="cp-style">
+/* ===== CP: control-panel look, LiDAR cloud, HUD, compass ===== */
+.home-sections{isolation:isolate}
+
+/* 5 — cards as control-panel modules */
+#view-home .menu-card{
+  border-radius:3px;
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 8%,transparent),inset 0 0 26px color-mix(in srgb,var(--accent) 7%,transparent);
+}
+body.admin-edit #view-home .menu-card{clip-path:none}
+#view-home .menu-card:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 35%,transparent),inset 0 0 30px color-mix(in srgb,var(--accent) 16%,transparent)}
+#view-home .menu-card .cp-edge{
+  position:absolute;inset:0;pointer-events:none;z-index:2;
+  --c:color-mix(in srgb,var(--accent) 90%,transparent);
+  background:
+    linear-gradient(to bottom left,transparent calc(50% + .2px),var(--c) calc(50% + .3px),var(--c) calc(50% + 1.4px),transparent calc(50% + 1.5px)) top right/12px 12px no-repeat,
+    linear-gradient(to bottom left,transparent calc(50% - 1.5px),var(--c) calc(50% - 1.4px),var(--c) calc(50% - .3px),transparent calc(50% - .2px)) bottom left/12px 12px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 4px top 4px/12px 1.5px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) left 4px top 4px/1.5px 12px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 4px bottom 4px/12px 1.5px no-repeat,
+    linear-gradient(var(--gold),var(--gold)) right 4px bottom 4px/1.5px 12px no-repeat;
+  transition:filter .2s ease;
+}
+#view-home .menu-card:hover .cp-edge{filter:brightness(1.5) drop-shadow(0 0 3px var(--accent))}
+#view-home .menu-card .cp-tag{display:none!important}
+@keyframes cp-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* 7 — typewriter caret */
+.cp-typing::after{content:"\258C";color:var(--gold);margin-inline-start:2px;font-size:.85em;animation:cp-blink .55s steps(1) infinite}
+@keyframes cp-blink{50%{opacity:0}}
+
+/* 6 + 8 — status bar & compass */
+#view-home{padding-bottom:58px}
+#cp-hud{
+  position:fixed;left:10px;right:10px;bottom:calc(var(--cp-nav,81px) + 8px);z-index:1050;
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;pointer-events:none;direction:ltr;
+}
+#cp-hud .cp-bar{
+  display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;
+  border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-left:3px solid var(--gold);border-radius:3px;
+  background:color-mix(in srgb,var(--card) 86%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 4px 14px rgba(0,0,0,.28);
+  font:700 11px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.3px;color:var(--text);white-space:nowrap;
+  flex:0 1 auto;min-width:0;
+}
+#cp-hud .cp-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:cp-pulse 1.6s ease-in-out infinite}
+#cp-hud .cp-k{color:var(--muted);font-weight:600;font-size:10px;white-space:nowrap}
+#cp-hud .cp-bar{
+  gap:6px;height:30px;padding:0 10px;flex-wrap:nowrap;white-space:nowrap;
+  max-width:none;overflow:hidden;align-items:center;
+  font-family:inherit;
+}
+
+#cp-hud b{font-variant-numeric:tabular-nums;min-width:2ch;text-align:right;color:var(--accent)}
+#cp-hud #cp-acc{color:var(--gold);min-width:4.2ch}
+#cp-hud .cp-u{color:var(--muted);font-weight:600;font-size:10px;margin-left:-3px}
+#cp-hud .cp-sep{width:1px;height:14px;background:color-mix(in srgb,var(--muted) 45%,transparent)}
+#cp-hud .cp-compass{
+  width:46px;height:46px;flex:none;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--card) 92%,transparent),color-mix(in srgb,var(--card) 74%,transparent));
+  border:1px solid color-mix(in srgb,var(--accent) 50%,transparent);
+  box-shadow:0 5px 14px rgba(0,0,0,.4),inset 0 0 10px color-mix(in srgb,var(--accent) 12%,transparent);
+}
+#cp-hud .cp-compass svg{width:100%;height:100%;display:block}
+
+@media (max-width:380px){
+  #cp-hud .cp-k{font-size:9px}
+  #cp-hud b{font-size:10px}
+  #cp-hud .cp-compass{width:40px;height:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  .cp-typing::after,#view-home .menu-card .cp-tag::before,#cp-hud .cp-dot{animation:none!important}
+}
+</style>
 </head>
 <body>
   <!-- Boot splash -->
@@ -1977,7 +2065,8 @@
     <div class="sp-title">AHMED ELTABAKH</div>
     <div class="sp-ar">تقنيات المساحة الحديثة</div>
     <div class="sp-msg">جاري تهيئة أجهزة المساحة…</div>
-    <div class="sp-bar"><i></i></div>
+    <div class="sp-bar"><i id="aes-sp-fill"></i></div>
+    <div class="sp-pct" id="aes-sp-pct">0%</div>
   </div>
   <div id="aes-survey-grid" aria-hidden="true"><div class="sg-labels" id="aes-sg-labels"></div></div>
 
@@ -2063,146 +2152,171 @@
         <div class="drone-scene" id="drone-scene" aria-hidden="true">
           <div class="drone-craft" id="drone-craft">
             <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="armTop" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
-                </linearGradient>
-                <linearGradient id="armSide" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#1e293b"/>
-                </linearGradient>
-                <linearGradient id="bodyTop" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#1e3a5f"/><stop offset="50%" stop-color="#0f172a"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodyFront" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#0c4a6e"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodySide" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#075985"/><stop offset="100%" stop-color="#0f172a"/>
-                </linearGradient>
-                <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fef3c7"/><stop offset="40%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#92400e"/>
-                </linearGradient>
-                <linearGradient id="prop" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="rgba(186,230,253,0)"/><stop offset="50%" stop-color="rgba(186,230,253,0.65)"/><stop offset="100%" stop-color="rgba(186,230,253,0)"/>
-                </linearGradient>
-                <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- floor shadow -->
-              <ellipse cx="100" cy="118" rx="48" ry="6" fill="rgba(0,0,0,0.4)"/>
-              <!-- ===== isometric X-arms (extruded beams) ===== -->
-              <!-- arm NE (top-right) -->
-              <g>
-                <polygon points="100,48 148,28 152,32 104,52" fill="url(#armSide)"/>
-                <polygon points="100,48 148,28 148,22 100,42" fill="url(#armTop)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="148,22 152,26 152,32 148,28" fill="#1e293b"/>
-              </g>
-              <!-- arm NW (top-left) -->
-              <g>
-                <polygon points="100,48 52,28 48,32 96,52" fill="url(#armSide)"/>
-                <polygon points="100,48 52,28 52,22 100,42" fill="url(#armTop)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="52,22 48,26 48,32 52,28" fill="#1e293b"/>
-              </g>
-              <!-- arm SE -->
-              <g>
-                <polygon points="100,58 148,78 152,74 104,54" fill="url(#armSide)"/>
-                <polygon points="100,58 148,78 148,72 100,52" fill="url(#armTop)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- arm SW -->
-              <g>
-                <polygon points="100,58 52,78 48,74 96,54" fill="url(#armSide)"/>
-                <polygon points="100,58 52,78 52,72 100,52" fill="url(#armTop)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- ===== motor pods (hexagonal isometric) ===== -->
-              <!-- NW motor -->
-              <g transform="translate(48,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p1" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- NE motor -->
-              <g transform="translate(136,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p2" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SW motor -->
-              <g transform="translate(48,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p3" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SE motor -->
-              <g transform="translate(136,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p4" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- ===== central fuselage (true isometric box) ===== -->
-              <!-- top face -->
-              <polygon points="100,30 128,42 100,54 72,42" fill="url(#bodyTop)" stroke="url(#gold)" stroke-width="1.5"/>
-              <!-- left face -->
-              <polygon points="72,42 100,54 100,74 72,62" fill="url(#bodySide)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- right face -->
-              <polygon points="128,42 100,54 100,74 128,62" fill="url(#bodyFront)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- top panel details (engineering lines) -->
-              <polygon points="100,34 118,42 100,50 82,42" fill="none" stroke="#38bdf8" stroke-width="0.7" opacity="0.7"/>
-              <line x1="88" y1="40" x2="112" y2="40" stroke="#22d3ee" stroke-width="0.6" opacity="0.5"/>
-              <line x1="92" y1="44" x2="108" y2="44" stroke="#22d3ee" stroke-width="0.6" opacity="0.4"/>
-              <!-- status LEDs on front edge -->
-              <circle cx="90" cy="58" r="2" fill="#4ade80"/><circle cx="90" cy="58" r="3.5" fill="none" stroke="#4ade80" stroke-width="0.5" opacity="0.5"/>
-              <circle cx="110" cy="58" r="2" fill="#f87171"/><circle cx="110" cy="58" r="3.5" fill="none" stroke="#f87171" stroke-width="0.5" opacity="0.5"/>
-              <!-- ===== LiDAR / survey sensor gimbal (angled) ===== -->
-              <g filter="url(#glow)">
-                <!-- mount bracket -->
-                <polygon points="92,70 108,70 110,76 90,76" fill="#0b1220" stroke="#22d3ee" stroke-width="1"/>
-                <!-- sensor body isometric -->
-                <polygon points="94,76 106,76 108,82 100,86 92,82" fill="#0f172a" stroke="#fbbf24" stroke-width="1.2"/>
-                <polygon points="94,76 100,72 106,76 100,80" fill="#1e293b" stroke="#fbbf24" stroke-width="0.7"/>
-                <!-- lens -->
-                <circle cx="100" cy="80" r="3.2" fill="#020617" stroke="#fde68a" stroke-width="1"/>
-                <circle cx="100" cy="80" r="1.5" fill="#fbbf24"/>
-                <!-- emitter nozzle (angled down-right toward AR text) -->
-                <polygon points="98,86 102,86 104,94 96,94" fill="#fbbf24" opacity="0.9"/>
-                <circle cx="100" cy="94" r="2.5" fill="#fde68a"/>
-                <circle cx="100" cy="94" r="5" fill="none" stroke="#fbbf24" stroke-width="0.8" opacity="0.55"/>
-              </g>
-              <!-- GPS mast -->
-              <line x1="100" y1="30" x2="100" y2="14" stroke="#94a3b8" stroke-width="1.6"/>
-              <circle cx="100" cy="12" r="2.8" fill="#22d3ee"/>
-              <circle cx="100" cy="12" r="5" fill="none" stroke="#22d3ee" stroke-width="0.7" opacity="0.45"/>
-              <!-- landing gear legs -->
-              <g stroke="#64748b" stroke-width="1.6" stroke-linecap="round" fill="none">
-                <path d="M82 62 L76 88"/><path d="M118 62 L124 88"/>
-                <line x1="72" y1="88" x2="128" y2="88" stroke-width="2"/>
-                <line x1="76" y1="85" x2="76" y2="91"/><line x1="124" y1="85" x2="124" y2="91"/>
-              </g>
-              <!-- micro dimension ticks (engineering detail) -->
-              <g stroke="#38bdf8" stroke-width="0.5" opacity="0.35">
-                <line x1="72" y1="42" x2="68" y2="42"/><line x1="128" y1="42" x2="132" y2="42"/>
-              </g>
-            </svg>
+<defs>
+  <linearGradient id="armA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cbd5e1"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient>
+  <linearGradient id="mBodyA" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b1220"/><stop offset=".35" stop-color="#475569"/><stop offset=".55" stop-color="#94a3b8"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+  <radialGradient id="mTopA" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".6" stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/></radialGradient>
+  <linearGradient id="goldA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#92400e"/></linearGradient>
+  <radialGradient id="discA"><stop offset="0" stop-color="rgba(186,230,253,.05)"/><stop offset=".8" stop-color="rgba(186,230,253,.16)"/><stop offset="1" stop-color="rgba(186,230,253,.30)"/></radialGradient>
+  <linearGradient id="hullSideA" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#020617"/><stop offset=".3" stop-color="#0c4a6e"/><stop offset=".6" stop-color="#0b3a5c"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <radialGradient id="hullTopA" cx=".35" cy=".25" r=".95"><stop offset="0" stop-color="#3b82b6"/><stop offset=".35" stop-color="#1e3a5f"/><stop offset=".75" stop-color="#0f172a"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  <radialGradient id="sphereA" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".4" stop-color="#475569"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  <linearGradient id="glassA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#075985"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <filter id="blurA" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="glowA" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+
+<!-- ground shadow -->
+<ellipse cx="100" cy="120" rx="58" ry="7" fill="rgba(0,0,0,.45)" filter="url(#blurA)"/>
+
+<!-- back arms + back motors -->
+<line x1="92" y1="46.2" x2="48" y2="36.2" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+<line x1="92" y1="44" x2="48" y2="34" stroke="url(#armA)" stroke-width="5" stroke-linecap="round"/>
+<line x1="92" y1="43" x2="48" y2="33" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+<line x1="108" y1="46.2" x2="152" y2="36.2" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+<line x1="108" y1="44" x2="152" y2="34" stroke="url(#armA)" stroke-width="5" stroke-linecap="round"/>
+<line x1="108" y1="43" x2="152" y2="33" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+
+<g transform="translate(46,34) scale(0.86)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyA)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldA)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopA)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldA)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discA)"/>
+    <g class="drone-prop p1">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldA)"/>
+</g>
+
+<g transform="translate(154,34) scale(0.86)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyA)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldA)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopA)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldA)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discA)"/>
+    <g class="drone-prop p2">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldA)"/>
+</g>
+
+<!-- landing skids (back rail) -->
+<g stroke="#475569" stroke-width="1.4" stroke-linecap="round" fill="none">
+  <path d="M84,66 L78,98"/><path d="M116,66 L122,98"/>
+  <line x1="66" y1="96" x2="134" y2="96"/>
+</g>
+
+<!-- front arms -->
+<line x1="90" y1="60.2" x2="44" y2="78.2" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+<line x1="90" y1="58" x2="44" y2="76" stroke="url(#armA)" stroke-width="6" stroke-linecap="round"/>
+<line x1="90" y1="57" x2="44" y2="75" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+<line x1="110" y1="60.2" x2="156" y2="78.2" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+<line x1="110" y1="58" x2="156" y2="76" stroke="url(#armA)" stroke-width="6" stroke-linecap="round"/>
+<line x1="110" y1="57" x2="156" y2="75" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+
+<!-- ===== fuselage ===== -->
+<path d="M70,48 C70,35 84,28 100,28 C116,28 130,35 130,48 L130,62 C130,71 116,78 100,78 C84,78 70,71 70,62 Z" fill="url(#hullSideA)" stroke="#0b1220" stroke-width=".8"/>
+<path d="M70,62 C70,71 84,78 100,78 C116,78 130,71 130,62" fill="none" stroke="url(#goldA)" stroke-width="1.6"/>
+<path d="M70,58 C70,67 84,74 100,74 C116,74 130,67 130,58" fill="none" stroke="rgba(56,189,248,.45)" stroke-width=".7"/>
+<!-- top shell -->
+<path d="M70,48 C70,35 84,28 100,28 C116,28 130,35 130,48 C130,57 116,64 100,64 C84,64 70,57 70,48 Z" fill="url(#hullTopA)" stroke="url(#goldA)" stroke-width="1.4"/>
+<!-- shell seams / panels -->
+<path d="M82,44 C88,39 112,39 118,44 C112,52 88,52 82,44 Z" fill="rgba(2,6,23,.55)" stroke="#38bdf8" stroke-width=".7" opacity=".85"/>
+<g stroke="#22d3ee" stroke-width=".6" opacity=".55" stroke-linecap="round">
+  <line x1="90" y1="44" x2="110" y2="44"/><line x1="93" y1="47" x2="107" y2="47"/>
+</g>
+<g stroke="#0b1220" stroke-width="1.1" opacity=".9" stroke-linecap="round">
+  <line x1="74" y1="52" x2="82" y2="55"/><line x1="76" y1="49" x2="84" y2="52"/>
+  <line x1="126" y1="52" x2="118" y2="55"/><line x1="124" y1="49" x2="116" y2="52"/>
+</g>
+<!-- specular highlight -->
+<ellipse cx="86" cy="38" rx="11" ry="3.2" fill="rgba(255,255,255,.38)" transform="rotate(-18 86 38)" filter="url(#blurA)"/>
+<path d="M76,42 C80,36 90,32 100,32" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>
+<!-- front sensor window -->
+<path d="M84,64 C92,67 108,67 116,64 L114,71 C106,74 94,74 86,71 Z" fill="url(#glassA)" stroke="#fbbf24" stroke-width=".9"/>
+<path d="M88,66 C95,68 105,68 112,66" fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".8"/>
+<!-- nav LEDs -->
+<g filter="url(#glowA)">
+  <circle cx="75" cy="63" r="2" fill="#4ade80"/><circle cx="125" cy="63" r="2" fill="#f87171"/>
+</g>
+
+<!-- GPS puck + mast -->
+<line x1="100" y1="29" x2="100" y2="19" stroke="#94a3b8" stroke-width="1.6"/>
+<ellipse cx="100" cy="19" rx="8" ry="2.8" fill="#0f172a" stroke="#22d3ee" stroke-width=".8"/>
+<ellipse cx="100" cy="17.8" rx="6" ry="2" fill="#1e293b"/>
+<g filter="url(#glowA)"><circle cx="100" cy="17.5" r="1.6" fill="#22d3ee"/></g>
+
+<!-- gimbal: mount + sphere + lens + emitter -->
+<g filter="url(#glowA)">
+  <rect x="94" y="77" width="12" height="5" rx="1.5" fill="#0b1220" stroke="#22d3ee" stroke-width=".8"/>
+  <circle cx="100" cy="87" r="7.5" fill="url(#sphereA)" stroke="#fbbf24" stroke-width="1"/>
+  <ellipse cx="100" cy="87.5" rx="7.5" ry="2" fill="none" stroke="rgba(251,191,36,.6)" stroke-width=".6"/>
+  <circle cx="100" cy="88.5" r="3.4" fill="#020617" stroke="#fde68a" stroke-width=".9"/>
+  <circle cx="100" cy="88.5" r="1.6" fill="#fbbf24"/>
+  <circle cx="98.9" cy="87.4" r=".7" fill="#fff"/>
+  <polygon points="97,94 103,94 102,98 98,98" fill="url(#goldA)"/>
+  <circle cx="100" cy="99" r="2.4" fill="#fde68a"/>
+  <circle cx="100" cy="99" r="5" fill="none" stroke="#fbbf24" stroke-width=".7" opacity=".5"/>
+</g>
+
+<!-- front skid rail (closer = thicker) -->
+<g stroke="#94a3b8" stroke-width="2" stroke-linecap="round" fill="none">
+  <path d="M78,68 L70,102"/><path d="M122,68 L130,102"/>
+  <line x1="60" y1="102" x2="140" y2="102" stroke-width="2.6" stroke="#64748b"/>
+  <line x1="60" y1="101" x2="140" y2="101" stroke-width="1" stroke="rgba(255,255,255,.4)"/>
+</g>
+
+<!-- front motors -->
+
+<g transform="translate(42,78) scale(1)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyA)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldA)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopA)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldA)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discA)"/>
+    <g class="drone-prop p3">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldA)"/>
+</g>
+
+<g transform="translate(158,78) scale(1)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyA)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldA)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopA)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldA)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discA)"/>
+    <g class="drone-prop p4">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldA)"/>
+</g>
+</svg>
           </div>
           <div class="drone-spot" aria-hidden="true"></div>
           <div class="drone-spot-core" aria-hidden="true"></div>
@@ -2271,146 +2385,171 @@
         <div class="drone-scene drone-scene-task drone-scene-sm" id="drone-scene-task" aria-hidden="true">
           <div class="drone-craft" id="drone-craft-task">
             <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="armTop2" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
-                </linearGradient>
-                <linearGradient id="armSide2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#1e293b"/>
-                </linearGradient>
-                <linearGradient id="bodyTop2" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#1e3a5f"/><stop offset="50%" stop-color="#0f172a"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodyFront2" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#0c4a6e"/><stop offset="100%" stop-color="#020617"/>
-                </linearGradient>
-                <linearGradient id="bodySide2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="#075985"/><stop offset="100%" stop-color="#0f172a"/>
-                </linearGradient>
-                <linearGradient id="gold2" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fef3c7"/><stop offset="40%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#92400e"/>
-                </linearGradient>
-                <linearGradient id="prop2" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stop-color="rgba(186,230,253,0)"/><stop offset="50%" stop-color="rgba(186,230,253,0.65)"/><stop offset="100%" stop-color="rgba(186,230,253,0)"/>
-                </linearGradient>
-                <filter id="glow2" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- floor shadow -->
-              <ellipse cx="100" cy="118" rx="48" ry="6" fill="rgba(0,0,0,0.4)"/>
-              <!-- ===== isometric X-arms (extruded beams) ===== -->
-              <!-- arm NE (top-right) -->
-              <g>
-                <polygon points="100,48 148,28 152,32 104,52" fill="url(#armSide2)"/>
-                <polygon points="100,48 148,28 148,22 100,42" fill="url(#armTop2)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="148,22 152,26 152,32 148,28" fill="#1e293b"/>
-              </g>
-              <!-- arm NW (top-left) -->
-              <g>
-                <polygon points="100,48 52,28 48,32 96,52" fill="url(#armSide2)"/>
-                <polygon points="100,48 52,28 52,22 100,42" fill="url(#armTop2)" stroke="#cbd5e1" stroke-width="0.6"/>
-                <polygon points="52,22 48,26 48,32 52,28" fill="#1e293b"/>
-              </g>
-              <!-- arm SE -->
-              <g>
-                <polygon points="100,58 148,78 152,74 104,54" fill="url(#armSide2)"/>
-                <polygon points="100,58 148,78 148,72 100,52" fill="url(#armTop2)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- arm SW -->
-              <g>
-                <polygon points="100,58 52,78 48,74 96,54" fill="url(#armSide2)"/>
-                <polygon points="100,58 52,78 52,72 100,52" fill="url(#armTop2)" stroke="#94a3b8" stroke-width="0.5"/>
-              </g>
-              <!-- ===== motor pods (hexagonal isometric) ===== -->
-              <!-- NW motor -->
-              <g transform="translate(48,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p1" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- NE motor -->
-              <g transform="translate(136,20)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p2" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SW motor -->
-              <g transform="translate(48,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p3" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- SE motor -->
-              <g transform="translate(136,68)">
-                <polygon points="0,8 8,4 16,8 16,16 8,20 0,16" fill="#0f172a" stroke="url(#gold2)" stroke-width="1.2"/>
-                <polygon points="0,8 8,4 16,8 8,12" fill="#1e293b" opacity="0.9"/>
-                <circle cx="8" cy="11" r="3" fill="#020617" stroke="#fbbf24" stroke-width="0.9"/>
-                <g class="drone-prop p4" transform="translate(8,11)">
-                  <ellipse cx="0" cy="0" rx="14" ry="2.8" fill="url(#prop2)"/>
-                  <ellipse cx="0" cy="0" rx="2.8" ry="14" fill="url(#prop2)" opacity="0.65"/>
-                  <circle cx="0" cy="0" r="2" fill="#fbbf24"/>
-                </g>
-              </g>
-              <!-- ===== central fuselage (true isometric box) ===== -->
-              <!-- top face -->
-              <polygon points="100,30 128,42 100,54 72,42" fill="url(#bodyTop2)" stroke="url(#gold2)" stroke-width="1.5"/>
-              <!-- left face -->
-              <polygon points="72,42 100,54 100,74 72,62" fill="url(#bodySide2)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- right face -->
-              <polygon points="128,42 100,54 100,74 128,62" fill="url(#bodyFront2)" stroke="#b45309" stroke-width="0.8"/>
-              <!-- top panel details (engineering lines) -->
-              <polygon points="100,34 118,42 100,50 82,42" fill="none" stroke="#38bdf8" stroke-width="0.7" opacity="0.7"/>
-              <line x1="88" y1="40" x2="112" y2="40" stroke="#22d3ee" stroke-width="0.6" opacity="0.5"/>
-              <line x1="92" y1="44" x2="108" y2="44" stroke="#22d3ee" stroke-width="0.6" opacity="0.4"/>
-              <!-- status LEDs on front edge -->
-              <circle cx="90" cy="58" r="2" fill="#4ade80"/><circle cx="90" cy="58" r="3.5" fill="none" stroke="#4ade80" stroke-width="0.5" opacity="0.5"/>
-              <circle cx="110" cy="58" r="2" fill="#f87171"/><circle cx="110" cy="58" r="3.5" fill="none" stroke="#f87171" stroke-width="0.5" opacity="0.5"/>
-              <!-- ===== LiDAR / survey sensor gimbal (angled) ===== -->
-              <g filter="url(#glow2)">
-                <!-- mount bracket -->
-                <polygon points="92,70 108,70 110,76 90,76" fill="#0b1220" stroke="#22d3ee" stroke-width="1"/>
-                <!-- sensor body isometric -->
-                <polygon points="94,76 106,76 108,82 100,86 92,82" fill="#0f172a" stroke="#fbbf24" stroke-width="1.2"/>
-                <polygon points="94,76 100,72 106,76 100,80" fill="#1e293b" stroke="#fbbf24" stroke-width="0.7"/>
-                <!-- lens -->
-                <circle cx="100" cy="80" r="3.2" fill="#020617" stroke="#fde68a" stroke-width="1"/>
-                <circle cx="100" cy="80" r="1.5" fill="#fbbf24"/>
-                <!-- emitter nozzle (angled down-right toward AR text) -->
-                <polygon points="98,86 102,86 104,94 96,94" fill="#fbbf24" opacity="0.9"/>
-                <circle cx="100" cy="94" r="2.5" fill="#fde68a"/>
-                <circle cx="100" cy="94" r="5" fill="none" stroke="#fbbf24" stroke-width="0.8" opacity="0.55"/>
-              </g>
-              <!-- GPS mast -->
-              <line x1="100" y1="30" x2="100" y2="14" stroke="#94a3b8" stroke-width="1.6"/>
-              <circle cx="100" cy="12" r="2.8" fill="#22d3ee"/>
-              <circle cx="100" cy="12" r="5" fill="none" stroke="#22d3ee" stroke-width="0.7" opacity="0.45"/>
-              <!-- landing gear legs -->
-              <g stroke="#64748b" stroke-width="1.6" stroke-linecap="round" fill="none">
-                <path d="M82 62 L76 88"/><path d="M118 62 L124 88"/>
-                <line x1="72" y1="88" x2="128" y2="88" stroke-width="2"/>
-                <line x1="76" y1="85" x2="76" y2="91"/><line x1="124" y1="85" x2="124" y2="91"/>
-              </g>
-              <!-- micro dimension ticks (engineering detail) -->
-              <g stroke="#38bdf8" stroke-width="0.5" opacity="0.35">
-                <line x1="72" y1="42" x2="68" y2="42"/><line x1="128" y1="42" x2="132" y2="42"/>
-              </g>
-            </svg>
+<defs>
+  <linearGradient id="armB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cbd5e1"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient>
+  <linearGradient id="mBodyB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b1220"/><stop offset=".35" stop-color="#475569"/><stop offset=".55" stop-color="#94a3b8"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+  <radialGradient id="mTopB" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".6" stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/></radialGradient>
+  <linearGradient id="goldB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#92400e"/></linearGradient>
+  <radialGradient id="discB"><stop offset="0" stop-color="rgba(186,230,253,.05)"/><stop offset=".8" stop-color="rgba(186,230,253,.16)"/><stop offset="1" stop-color="rgba(186,230,253,.30)"/></radialGradient>
+  <linearGradient id="hullSideB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#020617"/><stop offset=".3" stop-color="#0c4a6e"/><stop offset=".6" stop-color="#0b3a5c"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <radialGradient id="hullTopB" cx=".35" cy=".25" r=".95"><stop offset="0" stop-color="#3b82b6"/><stop offset=".35" stop-color="#1e3a5f"/><stop offset=".75" stop-color="#0f172a"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  <radialGradient id="sphereB" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".4" stop-color="#475569"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  <linearGradient id="glassB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#075985"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <filter id="blurB" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="glowB" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+
+<!-- ground shadow -->
+<ellipse cx="100" cy="120" rx="58" ry="7" fill="rgba(0,0,0,.45)" filter="url(#blurB)"/>
+
+<!-- back arms + back motors -->
+<line x1="92" y1="46.2" x2="48" y2="36.2" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+<line x1="92" y1="44" x2="48" y2="34" stroke="url(#armB)" stroke-width="5" stroke-linecap="round"/>
+<line x1="92" y1="43" x2="48" y2="33" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+<line x1="108" y1="46.2" x2="152" y2="36.2" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+<line x1="108" y1="44" x2="152" y2="34" stroke="url(#armB)" stroke-width="5" stroke-linecap="round"/>
+<line x1="108" y1="43" x2="152" y2="33" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+
+<g transform="translate(46,34) scale(0.86)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p1">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+
+<g transform="translate(154,34) scale(0.86)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p2">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+
+<!-- landing skids (back rail) -->
+<g stroke="#475569" stroke-width="1.4" stroke-linecap="round" fill="none">
+  <path d="M84,66 L78,98"/><path d="M116,66 L122,98"/>
+  <line x1="66" y1="96" x2="134" y2="96"/>
+</g>
+
+<!-- front arms -->
+<line x1="90" y1="60.2" x2="44" y2="78.2" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+<line x1="90" y1="58" x2="44" y2="76" stroke="url(#armB)" stroke-width="6" stroke-linecap="round"/>
+<line x1="90" y1="57" x2="44" y2="75" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+<line x1="110" y1="60.2" x2="156" y2="78.2" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+<line x1="110" y1="58" x2="156" y2="76" stroke="url(#armB)" stroke-width="6" stroke-linecap="round"/>
+<line x1="110" y1="57" x2="156" y2="75" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+
+<!-- ===== fuselage ===== -->
+<path d="M70,48 C70,35 84,28 100,28 C116,28 130,35 130,48 L130,62 C130,71 116,78 100,78 C84,78 70,71 70,62 Z" fill="url(#hullSideB)" stroke="#0b1220" stroke-width=".8"/>
+<path d="M70,62 C70,71 84,78 100,78 C116,78 130,71 130,62" fill="none" stroke="url(#goldB)" stroke-width="1.6"/>
+<path d="M70,58 C70,67 84,74 100,74 C116,74 130,67 130,58" fill="none" stroke="rgba(56,189,248,.45)" stroke-width=".7"/>
+<!-- top shell -->
+<path d="M70,48 C70,35 84,28 100,28 C116,28 130,35 130,48 C130,57 116,64 100,64 C84,64 70,57 70,48 Z" fill="url(#hullTopB)" stroke="url(#goldB)" stroke-width="1.4"/>
+<!-- shell seams / panels -->
+<path d="M82,44 C88,39 112,39 118,44 C112,52 88,52 82,44 Z" fill="rgba(2,6,23,.55)" stroke="#38bdf8" stroke-width=".7" opacity=".85"/>
+<g stroke="#22d3ee" stroke-width=".6" opacity=".55" stroke-linecap="round">
+  <line x1="90" y1="44" x2="110" y2="44"/><line x1="93" y1="47" x2="107" y2="47"/>
+</g>
+<g stroke="#0b1220" stroke-width="1.1" opacity=".9" stroke-linecap="round">
+  <line x1="74" y1="52" x2="82" y2="55"/><line x1="76" y1="49" x2="84" y2="52"/>
+  <line x1="126" y1="52" x2="118" y2="55"/><line x1="124" y1="49" x2="116" y2="52"/>
+</g>
+<!-- specular highlight -->
+<ellipse cx="86" cy="38" rx="11" ry="3.2" fill="rgba(255,255,255,.38)" transform="rotate(-18 86 38)" filter="url(#blurB)"/>
+<path d="M76,42 C80,36 90,32 100,32" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>
+<!-- front sensor window -->
+<path d="M84,64 C92,67 108,67 116,64 L114,71 C106,74 94,74 86,71 Z" fill="url(#glassB)" stroke="#fbbf24" stroke-width=".9"/>
+<path d="M88,66 C95,68 105,68 112,66" fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".8"/>
+<!-- nav LEDs -->
+<g filter="url(#glowB)">
+  <circle cx="75" cy="63" r="2" fill="#4ade80"/><circle cx="125" cy="63" r="2" fill="#f87171"/>
+</g>
+
+<!-- GPS puck + mast -->
+<line x1="100" y1="29" x2="100" y2="19" stroke="#94a3b8" stroke-width="1.6"/>
+<ellipse cx="100" cy="19" rx="8" ry="2.8" fill="#0f172a" stroke="#22d3ee" stroke-width=".8"/>
+<ellipse cx="100" cy="17.8" rx="6" ry="2" fill="#1e293b"/>
+<g filter="url(#glowB)"><circle cx="100" cy="17.5" r="1.6" fill="#22d3ee"/></g>
+
+<!-- gimbal: mount + sphere + lens + emitter -->
+<g filter="url(#glowB)">
+  <rect x="94" y="77" width="12" height="5" rx="1.5" fill="#0b1220" stroke="#22d3ee" stroke-width=".8"/>
+  <circle cx="100" cy="87" r="7.5" fill="url(#sphereB)" stroke="#fbbf24" stroke-width="1"/>
+  <ellipse cx="100" cy="87.5" rx="7.5" ry="2" fill="none" stroke="rgba(251,191,36,.6)" stroke-width=".6"/>
+  <circle cx="100" cy="88.5" r="3.4" fill="#020617" stroke="#fde68a" stroke-width=".9"/>
+  <circle cx="100" cy="88.5" r="1.6" fill="#fbbf24"/>
+  <circle cx="98.9" cy="87.4" r=".7" fill="#fff"/>
+  <polygon points="97,94 103,94 102,98 98,98" fill="url(#goldB)"/>
+  <circle cx="100" cy="99" r="2.4" fill="#fde68a"/>
+  <circle cx="100" cy="99" r="5" fill="none" stroke="#fbbf24" stroke-width=".7" opacity=".5"/>
+</g>
+
+<!-- front skid rail (closer = thicker) -->
+<g stroke="#94a3b8" stroke-width="2" stroke-linecap="round" fill="none">
+  <path d="M78,68 L70,102"/><path d="M122,68 L130,102"/>
+  <line x1="60" y1="102" x2="140" y2="102" stroke-width="2.6" stroke="#64748b"/>
+  <line x1="60" y1="101" x2="140" y2="101" stroke-width="1" stroke="rgba(255,255,255,.4)"/>
+</g>
+
+<!-- front motors -->
+
+<g transform="translate(42,78) scale(1)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p3">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+
+<g transform="translate(158,78) scale(1)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p4">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+</svg>
           </div>
           <div class="drone-spot" aria-hidden="true"></div>
           <div class="drone-spot-core" aria-hidden="true"></div>
@@ -12189,18 +12328,35 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
   function initSplash(done){
     var sp = document.getElementById('aes-splash');
     var img = document.getElementById('aes-sp-img');
+    var fill = document.getElementById('aes-sp-fill');
+    var pctEl = document.getElementById('aes-sp-pct');
     var srcImg = document.querySelector('.l3d-img');
     if(img && srcImg && srcImg.src) img.src = srcImg.src;
-    /* match CSS sp-load duration: bar fills, then fade, then main screen */
-    var loadMs = reduced() ? 300 : 1600;
+    var loadMs = reduced() ? 400 : 2200;
     var fadeMs = reduced() ? 200 : 550;
-    setTimeout(function(){
-      if(sp) sp.classList.add('hide');
-      setTimeout(function(){
-        if(sp && sp.parentNode) sp.parentNode.removeChild(sp);
-        if(typeof done === 'function') done();
-      }, fadeMs);
-    }, loadMs);
+    var t0 = performance.now();
+    function tick(now){
+      var p = Math.min(1, (now - t0) / loadMs);
+      /* smooth ease-out curve for progress */
+      var e = 1 - Math.pow(1 - p, 2.2);
+      var pct = Math.round(e * 100);
+      if(fill) fill.style.width = (e * 100).toFixed(2) + '%';
+      if(pctEl) pctEl.innerHTML = '<b>' + pct + '</b>%';
+      if(p < 1){
+        requestAnimationFrame(tick);
+      } else {
+        if(fill) fill.style.width = '100%';
+        if(pctEl) pctEl.innerHTML = '<b>100</b>%';
+        setTimeout(function(){
+          if(sp) sp.classList.add('hide');
+          setTimeout(function(){
+            if(sp && sp.parentNode) sp.parentNode.removeChild(sp);
+            if(typeof done === 'function') done();
+          }, fadeMs);
+        }, 180);
+      }
+    }
+    requestAnimationFrame(tick);
   }
 
   /* ----- Survey grid ----- */
@@ -12312,7 +12468,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     if(!craft || !scene) return;
     opts = opts || {};
     var delay = opts.delay || 0;
-    var flyMs = opts.flyMs || 6000;
+    var flyMs = opts.flyMs || 7000;
     var startX = opts.startX != null ? opts.startX : -100;
     var startY = opts.startY != null ? opts.startY : -50;
     var settleY = 6;
@@ -12347,24 +12503,32 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       var destX = parkX(craft, target);
       craft.classList.add('is-flying');
       var t0 = performance.now();
-      function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-      function easeInOut(t){ return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
+      /* single smooth continuous curve (smootherstep) — no piecewise jumps */
+      function smoothstep(t){
+        t = Math.max(0, Math.min(1, t));
+        return t * t * t * (t * (t * 6 - 15) + 10);
+      }
       function frame(now){
         var life = Math.min(1, (now - t0) / flyMs);
-        var e = life < 0.7 ? easeInOut(life / 0.7) * 0.82 : 0.82 + easeOutCubic((life - 0.7) / 0.3) * 0.18;
-        var x = startX + (destX - startX) * e;
+        var e = smoothstep(life);
+        /* soft landing: slow near end */
+        var landSoft = smoothstep(Math.min(1, life / 0.92));
+        var x = startX + (destX - startX) * landSoft;
         var y = startY + (settleY - startY) * e;
-        var bank = (1 - e) * 14;
-        var rx = 16 + (1 - e) * 12;
-        var ry = -8 - bank;
-        var rz = -2 + (1 - e) * -4;
-        if(life < 0.55){
-          var w = Math.sin((now - t0) / 900) * (1 - life / 0.55) * 8;
-          x += w; rz += w * 0.12;
+        var bank = (1 - e) * 10;
+        var rx = 16 + (1 - e) * 10;
+        var ry = -8 - bank * 0.85;
+        var rz = -2 + (1 - e) * -3;
+        /* gentle continuous drift — low amplitude, long period */
+        if(life < 0.85){
+          var fade = 1 - life / 0.85;
+          var w = Math.sin((now - t0) / 1400) * fade * 4.5;
+          x += w;
+          rz += w * 0.08;
         }
         craft.style.transform =
-          'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotateX(' + rx.toFixed(1) +
-          'deg) rotateY(' + ry.toFixed(1) + 'deg) rotateZ(' + rz.toFixed(1) + 'deg)';
+          'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0) rotateX(' + rx.toFixed(2) +
+          'deg) rotateY(' + ry.toFixed(2) + 'deg) rotateZ(' + rz.toFixed(2) + 'deg)';
         setPark(scene, craft, x, y);
         if(life < 1) requestAnimationFrame(frame);
         else lock(destX);
@@ -12379,20 +12543,20 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     fillGridLabels();
     gridOn(true);
     /* primary flight total ≈ delay + flyMs → last icon at this moment */
-    var primaryDelay = 180, primaryFly = 6200;
-    var landAt = primaryDelay + primaryFly; /* ~6380ms */
+    var primaryDelay = 200, primaryFly = 7200;
+    var landAt = primaryDelay + primaryFly;
     cardsRevealTimed(landAt);
     landOne(
       document.getElementById('drone-craft'),
       document.getElementById('drone-scene'),
       document.getElementById('drone-target-group'),
-      { delay: primaryDelay, flyMs: primaryFly, startX: -100, startY: -52 }
+      { delay: primaryDelay, flyMs: primaryFly, startX: -110, startY: -48 }
     );
     landOne(
       document.getElementById('drone-craft-task'),
       document.getElementById('drone-scene-task'),
       document.getElementById('drone-target-task'),
-      { delay: 1000, flyMs: 5800, startX: -85, startY: -40 }
+      { delay: 900, flyMs: 6800, startX: -90, startY: -42 }
     );
   }
 
@@ -12499,5 +12663,323 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
 })();
 </script>
 
+<script id="cp-script">
+(function(){
+'use strict';
+var reduced=false; try{reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+function $(id){return document.getElementById(id);}
+var _vis=0,_visT=-1e9;
+function homeVisible(){
+  var n=performance.now();
+  if(n-_visT>400){_visT=n;var h=$('view-home');_vis=(h&&getComputedStyle(h).display!=='none'&&!document.hidden)?1:0;}
+  return _vis===1;
+}
+function safe(fn){try{fn();}catch(e){if(window.console)console.warn('[cp]',e);}}
+
+/* ---------- 5: decorate cards ---------- */
+function decorateCards(){
+  var cards=document.querySelectorAll('#view-home .menu-card');
+  for(var i=0;i<cards.length;i++){
+    var c=cards[i];
+    /* remove any old SEC labels */
+    c.querySelectorAll('.cp-tag').forEach(function(el){ el.remove(); });
+    if(c.querySelector(':scope > .cp-edge'))continue;
+    var e=document.createElement('i');e.className='cp-edge';e.setAttribute('aria-hidden','true');
+    c.appendChild(e);
+  }
+}
+
+/* ---------- 4: LiDAR point cloud ---------- */
+var LID={cv:null,ctx:null,W:0,H:0,dpr:1,N:0,X:null,Y:null,S:null,seen:null,rev:null,bins:[],
+  pulses:[],prev:[0,0],nextPulse:[0,0],last:0,colsKey:'',cols:[]};
+function hash(a,b){var s=Math.sin(a*127.1+b*311.7)*43758.5453;return s-Math.floor(s);}
+function mixc(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];}
+function binColors(light){
+  var key=light?'l':'d';if(LID.colsKey===key)return LID.cols;
+  var A=light?[3,105,161]:[14,116,144],M=light?[2,132,199]:[56,189,248],Z=light?[180,83,9]:[251,191,36],out=[];
+  for(var b=0;b<16;b++){var t=b/15,c=t<.55?mixc(A,M,t/.55):mixc(M,Z,(t-.55)/.45);
+    out.push('rgb('+Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2])+')');}
+  LID.colsKey=key;LID.cols=out;return out;
+}
+function buildPts(){
+  var W=LID.W,H=LID.H,step=15,cols=Math.max(12,Math.round(W/step)),rows=Math.max(8,Math.round(H/step));
+  var dx=W/(cols-1),dy=H/(rows-1),X=[],Y=[],S=[],B=[];
+  for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+    if(hash(c,r)<0.10)continue;
+    var nx=c*0.34,ny=r*0.34;
+    var h=0.55*Math.sin(nx*0.9+Math.sin(ny*0.5)*1.6)*Math.cos(ny*0.7)+0.3*Math.sin(nx*2.1+ny*1.3+1.7)+0.15*Math.cos(nx*3.7-ny*2.9);
+    h=Math.max(-1,Math.min(1,h));
+    X.push(c*dx+(hash(r,c)-.5)*5+h*2);
+    Y.push(r*dy+(hash(c+9,r+3)-.5)*5-h*7);
+    S.push(1.1+(h+1)*0.55);
+    B.push(Math.max(0,Math.min(15,Math.floor((h+1)*0.5*16))));
+  }
+  var N=X.length;LID.N=N;
+  LID.X=Float32Array.from(X);LID.Y=Float32Array.from(Y);LID.S=Float32Array.from(S);
+  LID.seen=new Uint8Array(N);LID.rev=new Float32Array(N);
+  if(reduced)LID.seen.fill(1);
+  LID.bins=[];for(var b=0;b<16;b++)LID.bins.push([]);
+  for(var i=0;i<N;i++)LID.bins[B[i]].push(i);
+  LID.pulses.length=0;
+}
+function lidResize(){
+  if(!LID.cv)return;var host=LID.cv.parentNode,w=host.clientWidth,h=host.clientHeight;
+  if(!w||!h)return;
+  if(w===LID.W&&Math.abs(h-LID.H)<2)return;
+  LID.W=w;LID.H=h;LID.dpr=Math.min(window.devicePixelRatio||1,2);
+  LID.cv.width=Math.round(w*LID.dpr);LID.cv.height=Math.round(h*LID.dpr);
+  buildPts();
+}
+function lidInit(){
+  var host=document.querySelector('#view-home .home-sections');if(!host||LID.cv)return;
+  var cv=document.createElement('canvas');cv.id='cp-lidar';cv.setAttribute('aria-hidden','true');
+  host.insertBefore(cv,host.firstChild);LID.cv=cv;LID.ctx=cv.getContext('2d');
+  lidResize();
+  if(window.ResizeObserver)new ResizeObserver(lidResize).observe(host);
+  window.addEventListener('resize',lidResize);
+}
+var CRAFT=['drone-craft','drone-craft-task'],SCENE=['drone-scene','drone-scene-task'];
+function lidFrame(ts){
+  requestAnimationFrame(lidFrame);
+  if(!LID.cv||!LID.N||!homeVisible())return;
+  if(ts-LID.last<33)return;
+  var dt=Math.min(100,ts-LID.last);LID.last=ts;
+  lidResize();
+  var cr=LID.cv.getBoundingClientRect(),N=LID.N,X=LID.X,Y=LID.Y,seen=LID.seen,rev=LID.rev,sc=[],k,i;
+  for(k=0;k<2;k++){
+    var el=$(CRAFT[k]),scn=$(SCENE[k]);if(!el)continue;
+    var st=el.classList.contains('is-settled')?2:(el.classList.contains('is-flying')?1:0);
+    if(LID.prev[k]===2&&st===0&&!reduced){seen.fill(0);rev.fill(0);LID.pulses.length=0;LID.nextPulse[k]=ts+1500;}
+    LID.prev[k]=st;
+    if(st===0)continue;
+    var r=el.getBoundingClientRect();
+    sc.push({x:r.left+r.width/2-cr.left,y:r.bottom-cr.top+20,R:k?58:72,locked:!!(scn&&scn.classList.contains('is-locked')),k:k});
+  }
+  for(var s=0;s<sc.length;s++){
+    var o=sc[s],R2=o.R*o.R;
+    for(i=0;i<N;i++){var dx=X[i]-o.x,dy=Y[i]-o.y;if(dx*dx+dy*dy<R2){seen[i]=1;rev[i]=1;}}
+    if(o.locked&&!reduced&&ts>=LID.nextPulse[o.k]){
+      LID.pulses.push({x:o.x,y:o.y,t0:ts});LID.nextPulse[o.k]=ts+7500+o.k*2500;
+    }
+  }
+  for(var p=LID.pulses.length-1;p>=0;p--){
+    var pu=LID.pulses[p],rr=(ts-pu.t0)*0.28;
+    if(rr>520){LID.pulses.splice(p,1);continue;}
+    pu.r=rr;
+    for(i=0;i<N;i++){var ex=X[i]-pu.x,ey=Y[i]-pu.y,d=Math.sqrt(ex*ex+ey*ey);if(d>rr-13&&d<rr+13){seen[i]=1;rev[i]=1;}}
+  }
+  var ctx=LID.ctx,light=document.body.classList.contains('light-mode'),cols=binColors(light);
+  ctx.setTransform(LID.dpr,0,0,LID.dpr,0,0);ctx.clearRect(0,0,LID.W,LID.H);
+  for(var b=0;b<16;b++){
+    ctx.fillStyle=cols[b];var list=LID.bins[b];
+    for(var j=0;j<list.length;j++){
+      i=list[j];if(!seen[i])continue;
+      var rv=rev[i];if(rv>0){rv-=dt*0.0007;if(rv<0)rv=0;rev[i]=rv;}
+      var a=0.18+rv*0.8+(reduced?0:0.05*Math.sin(ts*0.0021+i));
+      ctx.globalAlpha=a<0?0:(a>1?1:a);
+      var sz=LID.S[i]*(1+rv*0.7);
+      ctx.fillRect(X[i]-sz/2,Y[i]-sz/2,sz,sz);
+    }
+  }
+  ctx.globalAlpha=1;
+  ctx.lineWidth=1;
+  for(var q=0;q<LID.pulses.length;q++){
+    var pp=LID.pulses[q];if(pp.r==null)continue;
+    ctx.strokeStyle=(light?'rgba(2,132,199,':'rgba(56,189,248,')+(0.3*(1-pp.r/520)).toFixed(3)+')';
+    ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,6.2832);ctx.stroke();
+  }
+}
+
+/* ---------- 6 + 8: HUD (satellites / accuracy) + compass ---------- */
+var HUD={started:false,sat:0,acc:0,tw:{},jit:0,satEl:null,accEl:null};
+var CP={cur:0,tgt:null,moving:0,px:null,py:null,last:0,rose:null};
+function hudInit(){
+  var home=$('view-home');if(!home||$('cp-hud'))return;
+  var ticks='',i;
+  for(i=0;i<12;i++){
+    var long=(i%3===0),a=i*30*Math.PI/180,r1=24.5,r2=long?20.5:22.5;
+    ticks+='<line x1="'+(30+Math.sin(a)*r1).toFixed(2)+'" y1="'+(30-Math.cos(a)*r1).toFixed(2)+'" x2="'+(30+Math.sin(a)*r2).toFixed(2)+'" y2="'+(30-Math.cos(a)*r2).toFixed(2)+'" stroke="'+(long?'#fbbf24':'#94a3b8')+'" stroke-width="'+(long?1.3:.8)+'"/>';
+  }
+  var svg='<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g id="cp-rose">'+ticks+
+    '<polygon points="30,2.5 33,8.5 27,8.5" fill="#f87171"/>'+
+    '<text x="30" y="19.5" text-anchor="middle" font-size="6.5" font-weight="800" fill="#f87171" font-family="ui-monospace,Consolas,monospace">N</text>'+
+    '<text x="50" y="32.3" text-anchor="middle" font-size="5.5" fill="#94a3b8" font-family="ui-monospace,Consolas,monospace">E</text>'+
+    '<text x="30" y="52.5" text-anchor="middle" font-size="5.5" fill="#94a3b8" font-family="ui-monospace,Consolas,monospace">S</text>'+
+    '<text x="10" y="32.3" text-anchor="middle" font-size="5.5" fill="#94a3b8" font-family="ui-monospace,Consolas,monospace">W</text></g>'+
+    '<polygon points="30,21 34.5,36 30,32.5 25.5,36" fill="#fbbf24" stroke="#fde68a" stroke-width=".5"/>'+
+    '<circle cx="30" cy="30" r="1.6" fill="#0f172a" stroke="#fde68a" stroke-width=".6"/></svg>';
+  var d=document.createElement('div');d.id='cp-hud';d.setAttribute('aria-hidden','true');
+  d.innerHTML='<div class="cp-bar" dir="rtl"><span class="cp-dot"></span><span class="cp-k">عدد الاقمار الصناعيه</span><b id="cp-sat">0</b><span class="cp-sep"></span><span class="cp-k">ACC</span><b id="cp-acc">&plusmn;--</b><span class="cp-u">cm</span></div><div class="cp-compass">'+svg+'</div>';
+  home.appendChild(d);
+  HUD.satEl=$('cp-sat');HUD.accEl=$('cp-acc');CP.rose=$('cp-rose');
+  navH();
+}
+function navH(){var n=document.querySelector('.bottom-nav');if(n&&n.offsetHeight)document.documentElement.style.setProperty('--cp-nav',n.offsetHeight+'px');}
+function tween(key,from,to,ms,fn,done){
+  cancelAnimationFrame(HUD.tw[key]);var t0=performance.now();
+  (function step(t){var p=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-p,3);fn(from+(to-from)*e);
+    if(p<1)HUD.tw[key]=requestAnimationFrame(step);else if(done)done();})(t0);
+}
+function hudSet(){if(HUD.satEl)HUD.satEl.textContent=Math.round(HUD.sat);if(HUD.accEl)HUD.accEl.textContent='\u00B1'+HUD.acc.toFixed(1);}
+function hudReset(){
+  clearInterval(HUD.jit);for(var k in HUD.tw)cancelAnimationFrame(HUD.tw[k]);
+  HUD.started=false;HUD.sat=0;
+  if(HUD.satEl)HUD.satEl.textContent='0';if(HUD.accEl)HUD.accEl.textContent='\u00B1--';
+}
+function hudStart(){
+  if(HUD.started||!HUD.satEl)return;HUD.started=true;
+  var target=18+Math.floor(Math.random()*4);
+  if(reduced){HUD.sat=target;HUD.acc=0.8;hudSet();return;}
+  tween('sat',0,target,1500,function(v){HUD.sat=v;hudSet();});
+  tween('acc',9.9,0.8,1900,function(v){HUD.acc=v;hudSet();},function(){
+    HUD.jit=setInterval(function(){
+      if(!homeVisible())return;
+      var ns=Math.max(16,Math.min(23,Math.round(HUD.sat)+(Math.random()<.5?-1:1)));
+      tween('sat2',HUD.sat,ns,400,function(v){HUD.sat=v;hudSet();});
+      tween('acc2',HUD.acc,0.6+Math.random()*0.5,700,function(v){HUD.acc=v;hudSet();});
+    },3200);
+  });
+}
+/* device heading for compass */
+var CP_HEAD={ok:false,heading:0,raw:null,base:null};
+function screenAngle(){
+  try{
+    if(screen.orientation&&typeof screen.orientation.angle==='number') return ((screen.orientation.angle%360)+360)%360;
+    if(typeof window.orientation==='number') return ((window.orientation%360)+360)%360;
+  }catch(e){}
+  return 0;
+}
+function onDeviceHeading(e){
+  var h=null;
+  if(typeof e.webkitCompassHeading==='number'&&isFinite(e.webkitCompassHeading)){
+    h=e.webkitCompassHeading; /* iOS: degrees clockwise from north */
+  } else if(typeof e.alpha==='number'&&isFinite(e.alpha)){
+    /* absolute or relative alpha */
+    var a=e.alpha;
+    var ang=screenAngle();
+    /* convert device alpha to compass-like heading (approx) */
+    h=(360-a+ang)%360;
+  }
+  if(h==null) return;
+  CP_HEAD.ok=true;
+  CP_HEAD.raw=h;
+  CP_HEAD.heading=h;
+}
+function startCompassSensors(){
+  if(CP_HEAD._on) return; CP_HEAD._on=1;
+  function attach(){
+    window.addEventListener('deviceorientationabsolute', onDeviceHeading, true);
+    window.addEventListener('deviceorientation', onDeviceHeading, true);
+  }
+  try{
+    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+      /* iOS: request on first user gesture */
+      var once=function(){
+        DeviceOrientationEvent.requestPermission().then(function(r){
+          if(r==='granted') attach();
+        }).catch(function(){});
+        window.removeEventListener('pointerdown', once, true);
+        window.removeEventListener('touchstart', once, true);
+      };
+      window.addEventListener('pointerdown', once, true);
+      window.addEventListener('touchstart', once, true);
+    } else {
+      attach();
+    }
+  }catch(e){ attach(); }
+}
+function compassFrame(ts){
+  requestAnimationFrame(compassFrame);
+  if(!CP.rose||!homeVisible())return;
+  if(ts-CP.last<16)return;CP.last=ts;
+  var want;
+  if(CP_HEAD.ok){
+    want=CP_HEAD.heading;
+  } else {
+    /* fallback: soft idle + optional drone motion while sensors unavailable */
+    var el=$('drone-craft');
+    if(el){
+      var r=el.getBoundingClientRect(),x=r.left+r.width/2+window.scrollX,y=r.top+r.height/2+window.scrollY;
+      if(CP.px!==null){
+        var vx=x-CP.px,vy=y-CP.py;
+        if(Math.sqrt(vx*vx+vy*vy)>0.8){CP.tgt=Math.atan2(vx,-vy)*180/Math.PI;CP.moving=ts;}
+      }
+      CP.px=x;CP.py=y;
+    }
+    want=(CP.tgt!==null&&ts-CP.moving<700)?CP.tgt:(reduced?0:6*Math.sin(ts/2600));
+  }
+  var diff=((want-CP.cur+540)%360)-180;
+  /* smoother follow — higher damping when using real sensors */
+  var k=CP_HEAD.ok?0.18:0.12;
+  CP.cur+=diff*k;
+  CP.rose.setAttribute('transform','rotate('+(-CP.cur).toFixed(2)+' 30 30)');
+}
+
+/* ---------- 7: typewriter ---------- */
+function typeText(el,ms){
+  if(reduced||!el||el.children.length||document.body.classList.contains('admin-edit'))return;
+  if(el.__cpT){clearInterval(el.__cpT);el.__cpT=null;if(el.__cpFull!=null)el.textContent=el.__cpFull;}
+  var full=el.textContent;if(!full||full.length<2)return;
+  el.__cpFull=full;
+  var h=el.offsetHeight;if(h)el.style.minHeight=h+'px';
+  el.textContent='';el.classList.add('cp-typing');
+  var i=0;
+  el.__cpT=setInterval(function(){
+    i++;el.textContent=full.slice(0,i);
+    if(i>=full.length){clearInterval(el.__cpT);el.__cpT=null;el.classList.remove('cp-typing');el.textContent=full;el.style.minHeight='';}
+  },ms);
+}
+function watchTyping(){
+  var cards=document.querySelectorAll('#view-home .menu-card');
+  var mo=new MutationObserver(function(list){
+    for(var i=0;i<list.length;i++){
+      var c=list[i].target,has=c.classList.contains('card-show');
+      if(has&&!c.__cpShown){c.__cpShown=true;typeText(c.querySelector('.menu-text p'),38);}
+      else if(!has)c.__cpShown=false;
+    }
+  });
+  for(var i=0;i<cards.length;i++){
+    mo.observe(cards[i],{attributes:true,attributeFilter:['class']});
+    if(cards[i].classList.contains('card-show'))cards[i].__cpShown=true;
+  }
+  var groups=document.querySelectorAll('.menu-group.drone-target');
+  var mg=new MutationObserver(function(list){
+    for(var i=0;i<list.length;i++){
+      var g=list[i].target,lit=g.classList.contains('is-lit');
+      if(lit&&!g.__cpLit){g.__cpLit=true;typeText(g.querySelector('.mgt-en'),55);}
+      else if(!lit)g.__cpLit=false;
+    }
+  });
+  for(var j=0;j<groups.length;j++){
+    mg.observe(groups[j],{attributes:true,attributeFilter:['class']});
+    if(groups[j].classList.contains('is-lit'))groups[j].__cpLit=true;
+  }
+}
+
+/* ---------- boot ---------- */
+function boot(){
+  safe(decorateCards);
+  safe(function(){
+    var t=0,obs=new MutationObserver(function(){clearTimeout(t);t=setTimeout(function(){safe(decorateCards);},200);});
+    document.querySelectorAll('#view-home .menu-stack').forEach(function(ms){obs.observe(ms,{childList:true});});
+  });
+  safe(hudInit);
+  safe(watchTyping);
+  safe(function(){
+    var scn=$('drone-scene');
+    if(scn){
+      new MutationObserver(function(){if(scn.classList.contains('is-locked'))hudStart();else hudReset();})
+        .observe(scn,{attributes:true,attributeFilter:['class']});
+      if(scn.classList.contains('is-locked'))hudStart();
+    }
+    setTimeout(function(){if(!HUD.started&&homeVisible())hudStart();},14000);
+  });
+  window.addEventListener('resize',navH);
+  safe(startCompassSensors);
+  requestAnimationFrame(compassFrame);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 </body>
 </html>
