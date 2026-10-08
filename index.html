@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ahmed Eltabakh for Modern Surveying</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" media="print" onload="this.media='all'">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
   <style>
@@ -183,9 +184,11 @@
     body { padding-bottom: 88px !important; }
     .wa-float {
       position: fixed;
-      bottom: 88px;
-      left: 14px;
-      z-index: 1100;
+      top: calc(12px + env(safe-area-inset-top, 0px));
+      bottom: auto;
+      right: 14px;
+      left: auto;
+      z-index: 1200;
       width: auto;
       height: auto;
       min-width: 0;
@@ -196,7 +199,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      gap: 5px;
+      gap: 0;
       box-shadow: none;
       text-decoration: none;
       transition: transform 0.2s;
@@ -215,28 +218,24 @@
       border: 1px solid rgba(255,255,255,0.2);
     }
     .wa-float svg { width: 28px; height: 28px; fill: #fff; display: block; }
-    .wa-float-label {
-      max-width: 110px;
-      text-align: center;
-      font-size: 0.62rem;
-      font-weight: 600;
-      line-height: 1.25;
-      color: #e2e8f0;
-      background: rgba(7, 11, 20, 0.72);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(37, 211, 102, 0.35);
-      border-radius: 8px;
-      padding: 4px 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      pointer-events: none;
-      letter-spacing: 0.1px;
-    }
+    .wa-float-label { display: none !important; }
     body.light-mode .wa-float-label {
       color: #0f172a;
       background: rgba(255,255,255,0.88);
       border-color: rgba(16, 185, 129, 0.4);
     }
+
+    /* WhatsApp moved next to mute — hide legacy float */
+    a.wa-float, .wa-float, #wa-float { display: none !important; visibility: hidden !important; pointer-events: none !important; }
+    /* WA beside mute — enforced */
+    a.wa-float { display: none !important; }
+    a.ctrl-btn.wa-ctrl {
+      text-decoration: none !important;
+      color: #25D366;
+    }
+    a.ctrl-btn.wa-ctrl svg { width: 22px; height: 22px; display: block; }
+    body.light-mode a.ctrl-btn.wa-ctrl { color: #128C7E; }
+
     .brand {
       border-radius: 6px !important;
       border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent) !important;
@@ -1246,6 +1245,7 @@
     .lvl-legend-row { display: flex; align-items: center; gap: 8px; }
     .lvl-swatch { width: 22px; height: 14px; border-radius: 3px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.15); }
     .menu-icon.level { background: linear-gradient(135deg, #0f766e, #2dd4bf); }
+    .menu-icon.gis { background: linear-gradient(135deg, #1e3a8a, #6366f1); }
     .qty-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .qty-table th { background: color-mix(in srgb, var(--accent) 22%, var(--card)); padding: 9px 8px; text-align: right; }
     .qty-table td { padding: 9px 8px; border-bottom: 1px solid var(--border); }
@@ -1706,12 +1706,8 @@
       z-index: 1000 !important;
       display: flex !important;
     }
-    .wa-float {
-      position: fixed !important;
-      bottom: 88px !important;
-      left: 14px !important;
-      z-index: 1100 !important;
-    }
+    .wa-float { display: none !important; }
+    a.ctrl-btn.wa-ctrl { display: flex !important; }
     #aes-splash {
       position: fixed !important;
       inset: 0 !important;
@@ -2112,6 +2108,9 @@ body.admin-edit #view-home .menu-card{clip-path:none}
             <path d="M22 9l-6 6M16 9l6 6"/>
           </svg>
         </button>
+        <a class="ctrl-btn wa-ctrl" href="https://wa.me/201065339946" target="_blank" rel="noopener" title="واتساب — راسلنا مباشرة" aria-label="واتساب" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#25D366" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
       </div>
     </div>
 
@@ -2378,6 +2377,19 @@ body.admin-edit #view-home .menu-card{clip-path:none}
                 <p>شبكية ومنسوب • Area وقمر صناعي</p>
               </div>
             </div>
+            <div class="menu-card menu-card-row" onclick="showView('gis')">
+              <div class="menu-icon gis">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+                  <path d="M7 8l3 2 2-3 3 2 2-1"/>
+                </svg>
+              </div>
+              <div class="menu-text">
+                <h2><span class="en">GIS</span><span class="ar">نظم المعلومات الجغرافية</span></h2>
+                <p>KML • KMZ • DXF • Excel • خريطة</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -2573,7 +2585,21 @@ body.admin-edit #view-home .menu-card{clip-path:none}
                 <p>SDR / Text / CSV / Excel → DXF • Sketch</p>
               </div>
             </div>
-            <div class="menu-card" onclick="showView('qty-menu')">
+            
+            <div class="menu-card" onclick="showView('sitesurvey')">
+              <div class="menu-icon" style="background:linear-gradient(135deg,#0e7490,#06b6d4);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="10" r="3.2"/><circle cx="15" cy="14" r="3.2"/>
+                  <path d="M9 13.2V20M15 17.2V20M5 20h14"/>
+                  <path d="M4 6h6M14 6h6" stroke-width="1.5"/>
+                </svg>
+              </div>
+              <div class="menu-text">
+                <h2><span class="en">Site Survey</span><span class="ar">مقارنة الرفع</span></h2>
+                <p>Original vs Field • Compare</p>
+              </div>
+            </div>
+<div class="menu-card" onclick="showView('qty-menu')">
               <div class="menu-icon qty">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round">
                   <path d="M2.5 15.5L8 9l4 4 3.5-5 6 7.5"/><path d="M2.5 19.5h19"/>
@@ -3526,27 +3552,11 @@ body.admin-edit #view-home .menu-card{clip-path:none}
           <input type="number" id="slab-top" step="0.001" placeholder="مثال: 14.000">
         </div>
         <p class="note" style="margin-top:4px;margin-bottom:10px;">
-          سُمك الخرسانة في أماكن مختلفة من السقف (بالمتر) — اترك الفارغ لو مش مستخدم
+          سُمك الخرسانة في أماكن مختلفة من السقف (بالمتر) — اكتب رقمًا في خانة وهتفتح خانة جديدة تلقائيًا
         </p>
-        <div class="form-group">
-          <label>مكان 1 — سُمك الخرسانة (م)</label>
-          <input type="number" id="slab-t1" step="0.001" placeholder="مثال: 0.20">
-        </div>
-        <div class="form-group">
-          <label>مكان 2 — سُمك الخرسانة (م)</label>
-          <input type="number" id="slab-t2" step="0.001" placeholder="مثال: 0.25">
-        </div>
-        <div class="form-group">
-          <label>مكان 3 — سُمك الخرسانة (م)</label>
-          <input type="number" id="slab-t3" step="0.001" placeholder="مثال: 0.15">
-        </div>
-        <div class="form-group">
-          <label>مكان 4 — سُمك الخرسانة (م)</label>
-          <input type="number" id="slab-t4" step="0.001" placeholder="">
-        </div>
-        <div class="form-group">
-          <label>مكان 5 — سُمك الخرسانة (م)</label>
-          <input type="number" id="slab-t5" step="0.001" placeholder="">
+        <div id="slab-thk-list"></div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button type="button" class="btn-reset" onclick="slabAddThkField()">+ إضافة مكان سُمك</button>
         </div>
         <div class="ocr-board" id="ocr-board-box">
           <div class="ocr-board-head">
@@ -4238,6 +4248,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         </div>
         <div class="btn-row">
           <button class="btn-reset" onclick="sdrKML()">تحميل KML (Google Earth / My Maps)</button>
+          <button class="btn-reset" onclick="sdrKMZ()">تحميل KMZ (ArcGIS Pro)</button>
         </div>
         <div class="btn-row">
           <button class="btn-reset" onclick="sdrOpen('gm')">Google Maps (مركز النقاط)</button>
@@ -4247,7 +4258,323 @@ body.admin-edit #view-home .menu-card{clip-path:none}
       </div>
     </div>
 
-    <div id="view-land" class="app-view">
+
+    <div id="view-gis" class="app-view">
+      <button class="back-btn" onclick="showView('home')">› الرجوع للقائمة</button>
+      <div class="app-header">
+        <h2>GIS — نظم المعلومات الجغرافية</h2>
+        <p>تحويلات الملفات • Attribute Data للمشاريع (صرف / طرق / كهرباء)</p>
+      </div>
+      <div class="section" id="gis-submenu">
+        <div class="section-title">اختار الأداة</div>
+        <div class="menu-grid" style="grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="menu-card" onclick="gisShowPanel('convert')" style="cursor:pointer;padding:16px;">
+            <div class="card-icon" style="font-size:1.6rem;">🔄</div>
+            <h3 style="font-size:0.95rem;margin:8px 0 4px;">التحويلات</h3>
+            <p style="font-size:0.75rem;opacity:0.8;margin:0;">KML / KMZ / DXF / Excel / SDR وعرض على الخريطة</p>
+          </div>
+          <div class="menu-card" onclick="gisShowPanel('attr')" style="cursor:pointer;padding:16px;">
+            <div class="card-icon" style="font-size:1.6rem;">📋</div>
+            <h3 style="font-size:0.95rem;margin:8px 0 4px;">Attribute Data</h3>
+            <p style="font-size:0.75rem;opacity:0.8;margin:0;">Excel → DXF بطبقات + KMZ بالتفاصيل لـ ArcGIS Pro</p>
+          </div>
+        </div>
+      </div>
+      <div id="gis-panel-convert" style="display:none;">
+      <button class="back-btn" type="button" onclick="gisShowPanel('menu')" style="margin-bottom:8px;">› رجوع لأدوات GIS</button>
+      <div class="section">
+        <div class="section-title">① رفع الملف</div>
+        <div class="form-group">
+          <label>اختار ملف: KML • KMZ • DXF • TXT • CSV • Excel • SDR</label>
+          <input type="file" id="gis-file" accept="*/*">
+        </div>
+        <div class="form-group">
+          <label>أو الصق نص (KML / إحداثيات / SDR)</label>
+          <textarea id="gis-paste" rows="4" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-family:monospace;font-size:0.8rem;" placeholder="الصق هنا…"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="gisFromText()">قراءة النص</button>
+          <button class="btn-reset" onclick="gisClear()">مسح</button>
+        </div>
+        <p id="gis-status" class="note" style="margin-top:10px;">ارفع ملف أو الصق بيانات</p>
+      </div>
+      <div class="section">
+        <div class="section-title">② نظام الإحداثيات (للملفات المسقطة E/N)</div>
+        <div class="form-group">
+          <label>ترتيب الإحداثيات</label>
+          <select id="gis-order">
+            <option value="NE" selected>Northing ثم Easting (الافتراضي في SDR)</option>
+            <option value="EN">Easting ثم Northing</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الدولة</label>
+          <select id="gis-country" onchange="gisOnCountry()">
+            <option value="">— اختر الدولة —</option>
+            <option value="eg">جمهورية مصر العربية</option>
+            <option value="sa">المملكة العربية السعودية</option>
+            <option value="ae">الإمارات العربية المتحدة</option>
+            <option value="kw">الكويت</option>
+            <option value="ly">ليبيا</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المدينة / المنطقة</label>
+          <select id="gis-region" onchange="gisOnRegion()"><option value="">— اختر الدولة أولاً —</option></select>
+        </div>
+        <p id="gis-zone-hint" class="note" style="margin-top:0;margin-bottom:10px;">اختار الدولة والمنطقة ليتحدد رقم الزون تلقائيًا (لنظام UTM)</p>
+        <div class="form-group">
+          <label>نظام الإحداثيات</label>
+          <select id="gis-sys">
+            <option value="auto" selected>تلقائي (يكتشف النظام الصح)</option>
+            <option value="utm">UTM (WGS84)</option>
+            <option value="purple">الحزام البنفسجي — الساحل الشمالي الغربي</option>
+            <option value="red">الحزام الأحمر — القاهرة والدلتا والصعيد</option>
+            <option value="xpurple">البنفسجي الممتد — الجنوب الغربي</option>
+            <option value="blue">الحزام الأزرق — سيناء</option>
+            <option value="wgs84">WGS84 (Lat/Lon جاهز — للملفات الجغرافية)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>رقم الزون (UTM Zone) — لنظام UTM فقط</label>
+          <input type="number" id="gis-zone" value="36" min="1" max="60" step="1">
+        </div>
+        <div class="form-group">
+          <label>نصف الكرة</label>
+          <select id="gis-hemi"><option value="N" selected>شمالي (N)</option><option value="S">جنوبي (S)</option></select>
+        </div>
+        <p class="note">لو الملف KML/KMZ الإحداثيات أصلًا خطوط طول/عرض — مش محتاج تحويل. لو DXF أو Excel أو SDR اختار الدولة والمنطقة والنظام قبل التصدير أو العرض.</p>
+      </div>
+      <div id="gis-summary"></div>
+      <div class="section" id="gis-export-sec" style="display:none;">
+        <div class="section-title">③ تصدير / تحميل على الموبايل</div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="gisExport('geojson')">تحميل GeoJSON (الأفضل لـ ArcGIS Pro)</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="gisExport('kml')">تحميل KML</button>
+          <button class="btn-calc" onclick="gisExport('kmz')">تحميل KMZ</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-reset" onclick="gisExport('dxf')">تحميل DXF (AutoCAD)</button>
+          <button class="btn-reset" onclick="gisExport('xlsx')">تحميل Excel</button>
+        </div>
+        <p class="note">
+          <b>ArcGIS Pro:</b> استخدم <b>GeoJSON</b> أو <b>KML</b> من Add Data، أو أداة <b>KML To Layer</b> لملف KMZ/KML.<br>
+          عند الضغط على نقطة/خط في Google Earth أو ArcGIS تظهر التفاصيل (قطر، عمق، خامة…) إن وُجدت في الملف.<br>
+          DXF يفتح في AutoCAD وCivil 3D. صيغة DWG مش متاحة من المتصفح.
+        </p>
+      </div>
+      <div class="section" id="gis-map-sec" style="display:none;">
+        <div class="section-title">④ العرض على القمر الصناعي</div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="gisShowMap()">عرض على الخريطة</button>
+        </div>
+        <div id="gis-map" style="height:360px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#0b1220;margin-top:10px;display:none;"></div>
+        <p id="gis-map-info" class="note"></p>
+      </div>
+      </div><!-- gis-panel-convert -->
+
+      <div id="gis-panel-attr" style="display:none;">
+        <button class="back-btn" type="button" onclick="gisShowPanel('menu')" style="margin-bottom:8px;">› رجوع لأدوات GIS</button>
+        <div class="app-header" style="padding:0 0 12px;">
+          <h2 style="font-size:1.1rem;">Attribute Data</h2>
+          <p style="font-size:0.85rem;">Excel فيه نقاط + إحداثيات + وصف → DXF بطبقات AutoCAD + KMZ لـ ArcGIS Pro</p>
+        </div>
+        <div class="section">
+          <div class="section-title">① رفع ملف Excel / CSV</div>
+          <div class="form-group">
+            <label>الملف (نقاط صرف / طرق / كهرباء)</label>
+            <input type="file" id="attr-file" accept=".xlsx,.xls,.csv,.txt,*/*">
+          </div>
+          <p class="note">أعمدة مقترحة: ID, E, N, Z, Layer أو Type, Diameter, Depth, Material, Code, From, To, Note</p>
+          <p id="attr-status" class="note">ارفع ملف Excel فيه الإحداثيات والتفاصيل</p>
+        </div>
+        <div class="section">
+          <div class="section-title">② نظام الإحداثيات</div>
+          <div class="form-group"><label>ترتيب الإحداثيات</label>
+            <select id="attr-order"><option value="EN" selected>Easting ثم Northing</option><option value="NE">Northing ثم Easting</option></select>
+          </div>
+          <div class="form-group"><label>الدولة</label>
+            <select id="attr-country" onchange="attrOnCountry()">
+              <option value="">— اختر الدولة —</option>
+              <option value="eg">جمهورية مصر العربية</option>
+              <option value="sa">المملكة العربية السعودية</option>
+              <option value="ae">الإمارات العربية المتحدة</option>
+              <option value="kw">الكويت</option>
+              <option value="ly">ليبيا</option>
+            </select>
+          </div>
+          <div class="form-group"><label>المدينة / المنطقة</label>
+            <select id="attr-region" onchange="attrOnRegion()"><option value="">— اختر الدولة أولاً —</option></select>
+          </div>
+          <div class="form-group"><label>نظام الإحداثيات</label>
+            <select id="attr-sys">
+              <option value="utm" selected>UTM (WGS84)</option>
+              <option value="purple">الحزام البنفسجي</option>
+              <option value="red">الحزام الأحمر</option>
+              <option value="xpurple">البنفسجي الممتد</option>
+              <option value="blue">الحزام الأزرق</option>
+              <option value="wgs84">WGS84 Lat/Lon</option>
+            </select>
+          </div>
+          <div class="form-group"><label>رقم الزون UTM</label>
+            <input type="number" id="attr-zone" value="36" min="1" max="60">
+          </div>
+          <div class="form-group"><label>نصف الكرة</label>
+            <select id="attr-hemi"><option value="N" selected>شمالي (N)</option><option value="S">جنوبي (S)</option></select>
+          </div>
+        </div>
+        <div id="attr-summary"></div>
+        <div class="section" id="attr-export-sec" style="display:none;">
+          <div class="section-title">③ تصدير</div>
+          <div class="btn-row">
+            <button class="btn-calc" onclick="attrExport('dxf')">تحميل DXF (طبقات AutoCAD)</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn-calc" onclick="attrExport('kmz')">تحميل KMZ (ArcGIS Pro)</button>
+            <button class="btn-reset" onclick="attrExport('kml')">تحميل KML</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn-reset" onclick="attrExport('geojson')">تحميل GeoJSON</button>
+          </div>
+          <p class="note">• AutoCAD: افتح DXF → Layer هتلاقي كل نوع (صرف/كهرباء/طرق)<br>• ArcGIS Pro: اضغط على نقطة/خط تظهر كل الـ Attributes</p>
+        </div>
+        <div class="section">
+          <div class="btn-row"><button class="btn-calc" onclick="attrShowMap()">عرض على الخريطة</button></div>
+          <div id="attr-map" style="height:320px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#0b1220;margin-top:10px;display:none;"></div>
+          <p id="attr-map-info" class="note"></p>
+        </div>
+      </div>
+    </div>
+
+    
+    <div id="view-sitesurvey" class="app-view">
+      <button class="back-btn" onclick="showView('home')">› الرجوع للقائمة</button>
+      <div class="app-header">
+        <h2>مقارنة الرفع — Site Survey</h2>
+        <p>حمّل الملف الأصلي + ملف الرفع من الموقع وقارن النقاط بالألوان</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">1</span> الملف الأصلي (Design / As-planned)</div>
+        <p class="note" style="margin-top:0;border-right-color:#38bdf8;">SDR • Text • CSV • Excel — النقاط الأصلية تظهر <b style="color:#38bdf8">أزرق</b></p>
+        <div class="form-group">
+          <label>رفع الملف الأصلي (SDR / Text / CSV / Excel / أي امتداد)</label>
+          <input type="file" id="ss-file-a" accept="*/*" multiple>
+        </div>
+        <p id="ss-status-a" class="note" style="margin-top:8px;">لم يُحمَّل بعد</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">2</span> ملف الرفع من الموقع (Field / As-built)</div>
+        <p class="note" style="margin-top:0;border-right-color:#fbbf24;">النقاط المرفوعة من الموقع تظهر <b style="color:#fbbf24">ذهبي</b></p>
+        <div class="form-group">
+          <label>رفع ملف الموقع (SDR / Text / CSV / Excel / أي امتداد)</label>
+          <input type="file" id="ss-file-b" accept="*/*" multiple>
+        </div>
+        <p id="ss-status-b" class="note" style="margin-top:8px;">لم يُحمَّل بعد</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">3</span> إعدادات المطابقة والعرض</div>
+        <div class="form-group">
+          <label>ترتيب الأعمدة</label>
+          <select id="ss-order">
+            <option value="EN">Easting ثم Northing (E, N)</option>
+            <option value="NE" selected>Northing ثم Easting (N, E) — شائع في SDR</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>نظام الإحداثيات (لعرض الخريطة)</label>
+          <select id="ss-sys">
+            <option value="auto" selected>تلقائي</option>
+            <option value="utm">UTM (WGS84)</option>
+            <option value="purple">الحزام البنفسجي</option>
+            <option value="red">الحزام الأحمر</option>
+            <option value="xpurple">البنفسجي الممتد</option>
+            <option value="blue">الحزام الأزرق</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>رقم الزون UTM</label>
+          <input type="number" id="ss-zone" value="36" min="1" max="60" step="1">
+        </div>
+        <div class="form-group">
+          <label>تسامح المطابقة الأفقية (متر)</label>
+          <input type="number" id="ss-tol" value="0.10" min="0.01" max="50" step="0.01">
+        </div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="ssCompare()">مقارنة الرفع</button>
+          <button class="btn-reset" onclick="ssClear()">مسح</button>
+        </div>
+      </div>
+
+      <div id="ss-results" style="display:none;">
+        <div class="section">
+          <div class="section-title">④ ملخص المقارنة</div>
+          <div class="kpi-grid" id="ss-kpi"></div>
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn-calc" onclick="ssShowMap()">عرض على الخريطة</button>
+            <button class="btn-reset" onclick="ssExportExcel()">تصدير Excel</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn-calc" onclick="ssExportDxf('both')">تحميل DXF (أوتوكاد) — الملفين معًا</button>
+          </div>
+          <div class="btn-row">
+            <button class="btn-reset" onclick="ssExportDxf('a')">DXF أصلي فقط</button>
+            <button class="btn-reset" onclick="ssExportDxf('b')">DXF موقع فقط</button>
+          </div>
+          <p id="ss-map-info" class="note"></p>
+          <p class="note" style="margin-top:8px;">
+            ملف DXF يفتح على الموبايل (AutoCAD / DWG FastView / CAD Pockets) أو اللابتوب (AutoCAD / Civil 3D).<br>
+            الطبقات: <b style="color:#38bdf8">ORIG</b> أصلي • <b style="color:#fbbf24">FIELD</b> موقع • <b style="color:#4ade80">OK_LINE</b> مطابق • <b style="color:#f87171">DELTA_LINE</b> انحراف
+          </p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">⑤ عرض سريع داخل البرنامج</div>
+          <p class="note" style="margin-top:0;">أزرق = أصلي • ذهبي = موقع • خط أخضر = مطابق • خط أحمر = انحراف — اسحب للتحريك وإصبعَين للتكبير</p>
+          <div class="diagram-box" id="ss-sketch-wrap" style="padding:8px;min-height:280px;">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;justify-content:center;">
+              <button type="button" class="btn-reset" style="flex:0;padding:6px 10px;font-size:0.78rem;" onclick="ssSketchFit()">⤢ ملاءمة</button>
+              <button type="button" class="btn-reset" style="flex:0;padding:6px 10px;font-size:0.78rem;" onclick="ssSketchRot(-90)">↺ 90°</button>
+              <button type="button" class="btn-reset" style="flex:0;padding:6px 10px;font-size:0.78rem;" onclick="ssSketchRot(90)">↻ 90°</button>
+              <button type="button" class="btn-reset" style="flex:0;padding:6px 10px;font-size:0.78rem;" onclick="ssSketchRot(15)">↻ 15°</button>
+              <button type="button" class="btn-reset" style="flex:0;padding:6px 10px;font-size:0.78rem;" onclick="ssSketchToggleNames()">الأسماء</button>
+            </div>
+            <p class="note" style="margin:0 0 6px;font-size:0.72rem;">توجه CAD: شرق يمين · شمال أعلى · مقياس 1:1 · نقاط المقارنة مربوطة بخطوط · إصبع تحريك · إصبعين زوم/تدوير</p>
+            <svg id="ss-sketch" viewBox="0 0 400 360" style="width:100%;height:min(58vh,480px);background:#050a12;border-radius:8px;touch-action:none;cursor:grab;display:block;"></svg>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">⑥ جدول الفروقات</div>
+          <div class="table-wrap">
+            <table class="qty-table" id="ss-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>ΔE (م)</th>
+                  <th>ΔN (م)</th>
+                  <th>ΔZ (م)</th>
+                  <th>أفقي (م)</th>
+                  <th>الحالة</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="note">
+            <span style="color:#4ade80;">● مطابق</span> ضمن التسامح &nbsp;|&nbsp;
+            <span style="color:#fbbf24;">● انحراف</span> أكبر من التسامح &nbsp;|&nbsp;
+            <span style="color:#38bdf8;">● أصلي فقط</span> &nbsp;|&nbsp;
+            <span style="color:#f87171;">● موقع فقط</span>
+          </p>
+        </div>
+      </div>
+    </div>
+<div id="view-land" class="app-view">
       <button class="back-btn" onclick="showView('home')">› الرجوع للقائمة</button>
       <div class="app-header">
         <h2>تقسيم أرض</h2>
@@ -4661,15 +4988,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
 
     <footer>Ahmed Eltabakh for Modern Surveying</footer>
   </div>
-
-  <a class="wa-float" href="https://wa.me/201065339946" target="_blank" rel="noopener" title="راسلنا مباشرة في حالة وجود مشكلة">
-    <span class="wa-float-ico" aria-hidden="true">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    </span>
-    <span class="wa-float-label" id="wa-float-label">راسلنا مباشرة<br>في حالة وجود مشكلة</span>
-  </a>
-
-  <script>
+<script>
     const $ = id => document.getElementById(id);
     let lastPoints = [];
     let lastMeta = {};
@@ -5938,6 +6257,8 @@ function showView(name) {
       if ($("view-level")) $("view-level").classList.toggle("active", name === "level");
       if ($("view-level-menu")) $("view-level-menu").classList.toggle("active", name === "level-menu");
       if ($("view-area")) $("view-area").classList.toggle("active", name === "area");
+      if ($("view-gis")) $("view-gis").classList.toggle("active", name === "gis");
+      if ($("view-sitesurvey")) $("view-sitesurvey").classList.toggle("active", name === "sitesurvey");
       $("view-trav").classList.toggle("active", name === "trav");
       $("view-apt").classList.toggle("active", name === "apt");
       if (name === "map") initMeasureMap();
@@ -8421,11 +8742,9 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
           const d = await window.claude.use("downloads");
           if (d) {
             // text-ish
-            if (typeof data === "string" || (mime && /text|json|csv|svg|kml|xml/i.test(mime))) {
+            if ((typeof data === "string" || (mime && /text|json|csv|svg|kml|xml/i.test(mime))) && !/\.(kmz)$/i.test(filename) && !(mime && /kmz/i.test(mime))) {
               const text = typeof data === "string" ? data : await blob.text();
-              const isKml = /\.kml$/i.test(filename);
-              await d.save({ filename: isKml ? filename + ".txt" : filename, data: text });
-              if (isKml) alert("اتحفظ بامتداد .txt — غيّره إلى .kml قبل فتحه في Google Earth.");
+              await d.save({ filename: filename, data: text });
               return;
             }
             // binary: base64
@@ -9301,7 +9620,11 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       if (bm !== "" && $("slab-bm")) $("slab-bm").value = bm;
       if (bs !== "" && $("slab-bs")) $("slab-bs").value = bs;
       if (top !== "" && $("slab-top")) $("slab-top").value = top;
-      if (thk !== "" && $("slab-t1")) $("slab-t1").value = thk;
+      if (thk !== "") {
+        slabEnsureThkFields();
+        var first = document.querySelector("#slab-thk-list input[data-slab-thk]");
+        if (first) { first.value = thk; first.dispatchEvent(new Event("input")); }
+      }
       if (typeof updateSlabHI === "function") updateSlabHI();
       if (typeof playCalcSound === "function") playCalcSound();
       const st = $("ocr-status");
@@ -9321,6 +9644,34 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       if (st) { st.style.display = "none"; st.textContent = ""; }
     }
 
+    function slabThkInputs() {
+      return Array.prototype.slice.call(document.querySelectorAll("#slab-thk-list input[data-slab-thk]"));
+    }
+    function slabAddThkField(val) {
+      var list = $("slab-thk-list");
+      if (!list) return;
+      var n = slabThkInputs().length + 1;
+      if (n > 80) { alert("الحد الأقصى 80 مكان"); return; }
+      var wrap = document.createElement("div");
+      wrap.className = "form-group";
+      wrap.innerHTML = '<label>مكان ' + n + ' — سُمك الخرسانة (م)</label>' +
+        '<input type="number" data-slab-thk="' + n + '" step="0.001" placeholder="مثال: 0.20" inputmode="decimal">';
+      var inp = wrap.querySelector("input");
+      if (val != null && val !== "") inp.value = val;
+      inp.addEventListener("input", function() {
+        var all = slabThkInputs();
+        var last = all[all.length - 1];
+        if (last === inp && String(inp.value).trim() !== "" && all.length < 80) {
+          slabAddThkField();
+        }
+      });
+      list.appendChild(wrap);
+    }
+    function slabEnsureThkFields() {
+      var list = $("slab-thk-list");
+      if (!list) return;
+      if (!list.children.length) slabAddThkField();
+    }
     function calcSlab() {
       const hi = num("slab-hi");
       const top = num("slab-top");
@@ -9332,16 +9683,18 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       const tbody = $("slab-body");
       tbody.innerHTML = "";
       let any = false;
-      for (let i = 1; i <= 5; i++) {
-        const t = num("slab-t" + i);
-        if (t === null) continue;
+      let i = 0;
+      slabThkInputs().forEach(function(inp) {
+        const t = parseFloat(inp.value);
+        if (!isFinite(t)) return;
         any = true;
+        i++;
         const bottom = top - t;
         const reading = hi - bottom;
         const tr = document.createElement("tr");
         tr.innerHTML = "<td>مكان " + i + "</td><td>" + fmt(t) + "</td><td>" + fmt(bottom) + "</td><td>" + fmt(reading) + "</td>";
         tbody.appendChild(tr);
-      }
+      });
       if (!any) {
         alert("أدخل سُمك واحد على الأقل");
         return;
@@ -9362,9 +9715,17 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       else $("stair-hi").value = "";
     }
     function resetSlab() {
-      ["slab-bm","slab-bs","slab-hi","slab-top","slab-t1","slab-t2","slab-t3","slab-t4","slab-t5"].forEach(id => { $(id).value = ""; });
+      ["slab-bm","slab-bs","slab-hi","slab-top"].forEach(id => { if($(id)) $(id).value = ""; });
+      var list = $("slab-thk-list");
+      if (list) list.innerHTML = "";
+      slabEnsureThkFields();
       $("slab-results").style.display = "none";
       $("slab-body").innerHTML = "";
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", slabEnsureThkFields);
+    } else {
+      slabEnsureThkFields();
     }
 
     function calcStairs() {
@@ -9965,6 +10326,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
   function $g(id){ return document.getElementById(id); }
   function isNum(s){ return s !== '' && s != null && isFinite(Number(s)); }
 
+  function normKeySdr(k){ return String(k||'').trim().toLowerCase().replace(/[\s\-]+/g,'_'); }
   function parseSDR(text, swap){
     var pts = [], ignored = 0, obs = 0;
     var lines = String(text).split(/\r\n|\r|\n/);
@@ -9996,7 +10358,15 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
         } else { ignored++; return; }
       }
       var n = swap ? b : a, e = swap ? a : b;
-      pts.push({id:id||String(pts.length+1), n:n, e:e, z:z, code:code||''});
+      var attrs={};
+      if(code){
+        // parse Code like "DIA=300 DEPTH=2.5 PVC" or "300mm 2.5m"
+        String(code).split(/[|;/]/).forEach(function(part){
+          var m=String(part).trim().match(/^([A-Za-z\u0600-\u06FF_]+)\s*[=:]\s*(.+)$/);
+          if(m) attrs[normKeySdr(m[1])]=m[2].trim();
+        });
+      }
+      pts.push({id:id||String(pts.length+1), n:n, e:e, z:z, code:code||'', attrs:attrs});
     });
     return {pts:pts, ignored:ignored, obs:obs};
   }
@@ -10004,47 +10374,94 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
   function dxfClean(s){ return String(s).replace(/[\r\n]+/g,' '); }
 
   function buildDXF(pts, o){
+    /* DXF R12 متوافق مع DWG FastView / AutoCAD mobile — CIRCLE بدل POINT */
     var out = [];
     function g(c,v){ out.push(String(c)); out.push(String(v)); }
     var layers = [['0',7],['SDR_POINTS',1],['SDR_NO',3],['SDR_ELEV',2],['SDR_CODE',6],['SDR_LINE',5]];
-    g(0,'SECTION'); g(2,'HEADER'); g(9,'$ACADVER'); g(1,'AC1009');
-    g(9,'$PDMODE'); g(70,35); g(9,'$PDSIZE'); g(40,o.th*0.6);
+    var minE=Infinity,maxE=-Infinity,minN=Infinity,maxN=-Infinity,minZ=0,maxZ=0;
+    pts.forEach(function(p){
+      if(p.e<minE)minE=p.e; if(p.e>maxE)maxE=p.e;
+      if(p.n<minN)minN=p.n; if(p.n>maxN)maxN=p.n;
+      if(isFinite(p.z)){ if(p.z<minZ)minZ=p.z; if(p.z>maxZ)maxZ=p.z; }
+    });
+    if(!isFinite(minE)){ minE=0;maxE=1;minN=0;maxN=1; }
+    var pr = Math.max(maxE-minE, maxN-minN) * 0.05 || 1;
+    g(0,'SECTION'); g(2,'HEADER');
+    g(9,'$ACADVER'); g(1,'AC1009');
+    g(9,'$DWGCODEPAGE'); g(3,'ANSI_1252');
+    g(9,'$INSUNITS'); g(70,6);
+    g(9,'$INSBASE'); g(10,0.0); g(20,0.0); g(30,0.0);
+    g(9,'$EXTMIN'); g(10,(minE-pr).toFixed(6)); g(20,(minN-pr).toFixed(6)); g(30,minZ);
+    g(9,'$EXTMAX'); g(10,(maxE+pr).toFixed(6)); g(20,(maxN+pr).toFixed(6)); g(30,maxZ);
+    g(9,'$LIMMIN'); g(10,(minE-pr).toFixed(6)); g(20,(minN-pr).toFixed(6));
+    g(9,'$LIMMAX'); g(10,(maxE+pr).toFixed(6)); g(20,(maxN+pr).toFixed(6));
+    g(9,'$PDMODE'); g(70,35); g(9,'$PDSIZE'); g(40, Math.max(0.2, (o.th||0.5)*0.6));
     g(0,'ENDSEC');
     g(0,'SECTION'); g(2,'TABLES');
     g(0,'TABLE'); g(2,'LTYPE'); g(70,1);
-    g(0,'LTYPE'); g(2,'CONTINUOUS'); g(70,64); g(3,'Solid line'); g(72,65); g(73,0); g(40,0.0);
+    g(0,'LTYPE'); g(2,'CONTINUOUS'); g(70,0); g(3,'Solid line'); g(72,65); g(73,0); g(40,0.0);
     g(0,'ENDTAB');
     g(0,'TABLE'); g(2,'LAYER'); g(70,layers.length);
     layers.forEach(function(l){ g(0,'LAYER'); g(2,l[0]); g(70,0); g(62,l[1]); g(6,'CONTINUOUS'); });
     g(0,'ENDTAB');
+    g(0,'TABLE'); g(2,'STYLE'); g(70,1);
+    g(0,'STYLE'); g(2,'STANDARD'); g(70,0); g(40,0.0); g(41,1.0); g(50,0.0); g(71,0);
+    g(42,1.0); g(3,'txt'); g(4,'');
+    g(0,'ENDTAB');
     g(0,'ENDSEC');
     g(0,'SECTION'); g(2,'ENTITIES');
-    function text(layer,x,y,z,h,s){
-      g(0,'TEXT'); g(8,layer); g(10,x.toFixed(4)); g(20,y.toFixed(4)); g(30,z.toFixed(4)); g(40,h); g(1,dxfClean(s));
+    var span = Math.max(maxE-minE, maxN-minN, 1);
+    var h = Math.max(0.3, o.th || (span*0.01), span*0.008);
+    var rad = Math.max(0.12, span * 0.006, h * 0.3);
+    function text(layer,x,y,z,hh,s){
+      g(0,'TEXT'); g(8,layer); g(7,'STANDARD');
+      g(10,Number(x).toFixed(4)); g(20,Number(y).toFixed(4)); g(30,Number(z).toFixed(4));
+      g(40,Number(hh).toFixed(4)); g(1,dxfClean(s)); g(50,0.0);
     }
     if(o.line && pts.length>1){
       for(var k=1;k<pts.length;k++){
         var A=pts[k-1], B=pts[k];
         g(0,'LINE'); g(8,'SDR_LINE');
-        g(10,A.e.toFixed(4)); g(20,A.n.toFixed(4)); g(30,A.z.toFixed(4));
-        g(11,B.e.toFixed(4)); g(21,B.n.toFixed(4)); g(31,B.z.toFixed(4));
+        g(10,A.e.toFixed(4)); g(20,A.n.toFixed(4)); g(30,(A.z||0).toFixed(4));
+        g(11,B.e.toFixed(4)); g(21,B.n.toFixed(4)); g(31,(B.z||0).toFixed(4));
       }
     }
     pts.forEach(function(p){
-      g(0,'POINT'); g(8,'SDR_POINTS'); g(10,p.e.toFixed(4)); g(20,p.n.toFixed(4)); g(30,p.z.toFixed(4));
-      var h = o.th, dx = h*0.5, y = p.n;
-      if(o.no)  text('SDR_NO',  p.e+dx, y+h*0.3, 0, h, p.id);
-      if(o.elev) text('SDR_ELEV', p.e+dx, y-h*1.1, 0, h*0.8, p.z.toFixed(3));
-      if(o.code && p.code) text('SDR_CODE', p.e+dx, y-h*2.1, 0, h*0.8, p.code);
+      /* CIRCLE على الطبقة المسماة + الطبقة 0 (DWG FastView) */
+      g(0,'CIRCLE'); g(8,'SDR_POINTS');
+      g(10,p.e.toFixed(4)); g(20,p.n.toFixed(4)); g(30,(p.z||0).toFixed(4));
+      g(40, rad.toFixed(4));
+      g(0,'CIRCLE'); g(8,'0');
+      g(10,p.e.toFixed(4)); g(20,p.n.toFixed(4)); g(30,(p.z||0).toFixed(4));
+      g(40, rad.toFixed(4));
+      var dx = h*0.6, y = p.n;
+      if(o.no)  text('SDR_NO',  p.e+dx, y+h*0.35, 0, h, String(p.id));
+      if(o.elev) text('SDR_ELEV', p.e+dx, y-h*1.0, 0, h*0.8, Number(p.z).toFixed(3));
+      if(o.code && p.code) text('SDR_CODE', p.e+dx, y-h*1.9, 0, h*0.75, String(p.code));
     });
     g(0,'ENDSEC'); g(0,'EOF');
     return out.join('\r\n') + '\r\n';
   }
 
   function toCSV(pts, ll){
-    return 'ID,Northing,Easting,Elevation,Code'+(ll?',Latitude,Longitude':'')+'\r\n' + pts.map(function(p,i){
-      return [p.id,p.n.toFixed(4),p.e.toFixed(4),p.z.toFixed(4),p.code].concat(ll?[ll[i].lat.toFixed(8),ll[i].lon.toFixed(8)]:[]).join(',');
-    }).join('\r\n');
+    var hasLL = !!(ll && ll.length === pts.length);
+    var head = 'ID,Northing,Easting,Elevation,Code' + (hasLL ? ',Latitude,Longitude' : '');
+    var rows = pts.map(function(p,i){
+      var cells = [
+        String(p.id == null ? '' : p.id).replace(/,/g,';'),
+        Number(p.n).toFixed(4),
+        Number(p.e).toFixed(4),
+        Number(p.z).toFixed(4),
+        String(p.code == null ? '' : p.code).replace(/,/g,';')
+      ];
+      if (hasLL && ll[i] && isFinite(ll[i].lat) && isFinite(ll[i].lon)) {
+        cells.push(ll[i].lat.toFixed(8), ll[i].lon.toFixed(8));
+      } else if (hasLL) {
+        cells.push('', '');
+      }
+      return cells.join(',');
+    });
+    return head + '\r\n' + rows.join('\r\n') + '\r\n';
   }
 
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -10178,11 +10595,17 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
   }
 
   function download(name, content, type){
-    var blob = new Blob([content],{type:type||'application/octet-stream'});
+    var mime = type || 'application/octet-stream';
+    try {
+      if (typeof window.saveDownload === 'function') { window.saveDownload(name, content, mime); return; }
+      if (typeof window.saveFile === 'function') { window.saveFile(content, name, mime); return; }
+    } catch (e) {}
+    var blob = content instanceof Blob ? content : new Blob([content], {type: mime});
+    var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = name;
+    a.href = url; a.download = name; a.rel = 'noopener'; a.style.display = 'none';
     document.body.appendChild(a); a.click();
-    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    setTimeout(function(){ try { a.remove(); URL.revokeObjectURL(url); } catch(e){} }, 8000);
   }
 
   var LM=null;
@@ -10225,18 +10648,38 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     return true;
   }
   function detectSys(zone,north){
-    var ce=0,cn=0; S.pts.forEach(function(p){ ce+=p.e; cn+=p.n; }); ce/=S.pts.length; cn/=S.pts.length;
+    var ce=0,cn=0,nn=0; S.pts.forEach(function(p){ if(isFinite(p.e)&&isFinite(p.n)){ ce+=p.e; cn+=p.n; nn++; } });
+    if(!nn) return null;
+    ce/=nn; cn/=nn;
     var cc=$g('sdr-country').value;
     if(cc && cc!=='eg') return {sys:'utm',swap:false};
     var list=['utm','purple','red','xpurple','blue'];
+    var best=null;
     for(var pass=0;pass<2;pass++){
       var E=pass?cn:ce, N=pass?ce:cn;
       for(var i=0;i<list.length;i++){
-        if(list[i]==='utm' && !zone) continue;
-        if(areaOk(list[i],conv(list[i],E,N,zone,north))) return {sys:list[i],swap:!!pass};
+        var sys=list[i];
+        if(sys==='utm' && !zone) continue;
+        try{
+          var r=conv(sys,E,N,zone||36,north);
+          if(!r||!areaOk(sys,r)) continue;
+          var score=50;
+          if(sys==='purple' && N>150000 && N<550000 && E>500000 && E<950000) score+=30;
+          if(sys==='xpurple' && N>900000) score+=25;
+          if(sys==='red' && N>550000 && N<1200000 && E>400000 && E<900000) score+=25;
+          if(sys==='blue' && E<500000) score+=20;
+          if(sys==='utm' && (N>1500000||E>1500000)) score+=30;
+          if(!pass) score+=2;
+          if(sys==='purple' && r.lat>30 && r.lon>25 && r.lon<29.5) score+=35;
+          if(sys==='red' && r.lat>29.5 && r.lon>29.5 && r.lon<33) score+=25;
+          if(sys==='utm' && r.lat>30.5 && r.lat<32 && r.lon>26 && r.lon<30) score+=25;
+          if(sys==='red' && r.lat<28) score-=15;
+          if(sys==='purple' && r.lon>30) score-=15;
+          if(!best||score>best.score) best={sys:sys,swap:!!pass,score:score};
+        }catch(e){}
       }
     }
-    return null;
+    return best;
   }
   function allLL(){
     S.sysUsed=null; S.mapMsg='';
@@ -10395,20 +10838,87 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     drawPts(true);
     setTimeout(function(){ LM.invalidateSize(); fitAll(); },250);
   };
-  window.sdrKML = function(){
-    var ll=allLL(); if(!ll){ mapInfo(); return; }
-    var x=function(t){ return esc(t).replace(/'/g,'&apos;'); };
-    var k='<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>'+x(S.name)+'</name>'+
-      '<Style id="pt"><IconStyle><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle></Style>';
+  function buildSdrKmlString(){
+    var ll=allLL(); if(!ll){ mapInfo(); return null; }
+    function x(t){ return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;'); }
+    function descOf(p){
+      var lines=['ID: '+p.id, 'Z: '+p.z.toFixed(3)];
+      if(p.code) lines.push('Code: '+p.code);
+      var a=p.attrs||{};
+      Object.keys(a).forEach(function(k){ if(a[k]!='') lines.push(k+': '+a[k]); });
+      return lines.join('\n');
+    }
+    function extOf(p){
+      var a=p.attrs||{}, out='<ExtendedData>\n';
+      out+='<Data name="ID"><value>'+x(p.id)+'</value></Data>\n';
+      out+='<Data name="Z"><value>'+p.z.toFixed(3)+'</value></Data>\n';
+      if(p.code) out+='<Data name="Code"><value>'+x(p.code)+'</value></Data>\n';
+      Object.keys(a).forEach(function(k){ out+='<Data name="'+x(k)+'"><value>'+x(a[k])+'</value></Data>\n'; });
+      out+='</ExtendedData>\n';
+      return out;
+    }
+    var nm = x((S.name||'survey').replace(/[^\w\u0600-\u06FF\- ]+/g,' ').trim() || 'survey');
+    var k='<?xml version="1.0" encoding="UTF-8"?>\n';
+    k+='<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n';
+    k+='<name>'+nm+'</name>\n';
+    k+='<Style id="pt"><IconStyle><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon></IconStyle></Style>\n';
+    k+='<Style id="ln"><LineStyle><color>ff0000ff</color><width>2</width></LineStyle></Style>\n';
     S.pts.forEach(function(p,i){
-      k+='<Placemark><name>'+x(p.id)+'</name><description>Z = '+p.z.toFixed(3)+(p.code?' | '+x(p.code):'')+'</description><styleUrl>#pt</styleUrl><Point><coordinates>'+ll[i].lon.toFixed(8)+','+ll[i].lat.toFixed(8)+',0</coordinates></Point></Placemark>';
+      k+='<Placemark>\n';
+      k+='<name>'+x(p.id)+'</name>\n';
+      k+='<description><![CDATA['+descOf(p).replace(/\]\]>/g,'')+']]></description>\n';
+      k+='<styleUrl>#pt</styleUrl>\n';
+      k+=extOf(p);
+      k+='<Point><coordinates>'+ll[i].lon.toFixed(8)+','+ll[i].lat.toFixed(8)+',0</coordinates></Point>\n';
+      k+='</Placemark>\n';
     });
     if($g('sdr-line').checked && S.pts.length>1){
-      k+='<Placemark><name>Line</name><Style><LineStyle><color>ff00c8ff</color><width>3</width></LineStyle></Style><LineString><tessellate>1</tessellate><coordinates>'+
-        ll.map(function(r){ return r.lon.toFixed(8)+','+r.lat.toFixed(8)+',0'; }).join(' ')+'</coordinates></LineString></Placemark>';
+      k+='<Placemark><name>Line</name><styleUrl>#ln</styleUrl>\n';
+      k+='<LineString><tessellate>1</tessellate><coordinates>'+
+        ll.map(function(r){ return r.lon.toFixed(8)+','+r.lat.toFixed(8)+',0'; }).join(' ')+
+        '</coordinates></LineString></Placemark>\n';
     }
-    k+='</Document></kml>';
-    download(S.name+'.kml', k, 'application/vnd.google-earth.kml+xml');
+    k+='</Document>\n</kml>';
+    return k;
+  }
+window.sdrKML = function(){
+    var k=buildSdrKmlString(); if(!k) return;
+    var sn=('AES_'+(S.name||'survey')).replace(/[^A-Za-z0-9_\-]+/g,'_'); download(sn+'.kml', k, 'application/vnd.google-earth.kml+xml');
+  };
+  window.sdrKMZ = function(){
+    var k=buildSdrKmlString(); if(!k) return;
+    function saveKmz(blob){
+      if (typeof window.saveFile === 'function') {
+        try { var sn2=('AES_'+(S.name||'survey')).replace(/[^A-Za-z0-9_\-]+/g,'_'); window.saveFile(blob, sn2+'.kmz', 'application/vnd.google-earth.kmz'); return; } catch(e){}
+      }
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download=('AES_'+(S.name||'survey')).replace(/[^A-Za-z0-9_\-]+/g,'_')+'.kmz';
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ try{a.remove(); URL.revokeObjectURL(a.href);}catch(e){} }, 2000);
+    }
+    if(typeof JSZip !== 'undefined'){
+      var zip = new JSZip();
+      zip.file('doc.kml', k);
+      zip.generateAsync({type:'blob', compression:'DEFLATE'}).then(saveKmz).catch(function(){
+        /* fallback pure zip */
+        try {
+          var bytes = new TextEncoder().encode(k);
+          /* use GIS zip if available via window — simple download kml as last resort */
+          if (typeof window.saveFile === 'function') window.saveFile(k, S.name+'.kml', 'application/vnd.google-earth.kml+xml');
+          else saveKmz(new Blob([k],{type:'application/vnd.google-earth.kml+xml'}));
+          alert('تعذر ضغط KMZ — تم تحميل KML بدلًا منه');
+        } catch(e2){ alert('تعذر إنشاء KMZ'); }
+      });
+    } else {
+      /* no JSZip: save KML which ArcGIS also opens, or try pure zip from GIS script */
+      if (typeof makeKmzBlob === 'function') {
+        saveKmz(makeKmzBlob(k));
+      } else {
+        download(S.name+'.kml', k, 'application/vnd.google-earth.kml+xml');
+        alert('مكتبة KMZ غير متاحة — تم تحميل KML (يفتح في ArcGIS Pro أيضًا)');
+      }
+    }
   };
 
   function render(){
@@ -10431,10 +10941,26 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       '<div style="overflow-x:auto;max-height:260px;overflow-y:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.8rem;text-align:center;"><thead><tr><th>ID</th><th>N</th><th>E</th><th>Z</th><th>Code</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
       '<div class="btn-row"><button class="btn-calc" id="sdr-dl-dxf">تحميل DXF</button><button class="btn-reset" id="sdr-dl-csv">تحميل CSV</button></div>';
     $g('sdr-dl-dxf').onclick = function(){
-      var o = {th: parseFloat($g('sdr-th').value)||0.5, no:$g('sdr-no').checked, elev:$g('sdr-elev').checked, code:$g('sdr-code').checked, line:$g('sdr-line').checked};
-      download(S.name+'.dxf', buildDXF(S.pts,o), 'application/dxf');
+      try {
+        if (!S.pts || !S.pts.length) { alert('مفيش نقاط للتحميل'); return; }
+        var o = {th: parseFloat($g('sdr-th').value)||0.5, no:$g('sdr-no').checked, elev:$g('sdr-elev').checked, code:$g('sdr-code').checked, line:$g('sdr-line').checked};
+        download((S.name||'survey')+'.dxf', buildDXF(S.pts,o), 'application/octet-stream');
+        status('تم تحميل DXF ('+S.pts.length+' نقطة)');
+      } catch (err) {
+        alert('تعذر تحميل DXF: '+(err && err.message ? err.message : err));
+      }
     };
-    $g('sdr-dl-csv').onclick = function(){ download(S.name+'.csv', toCSV(S.pts, allLL()), 'text/csv'); };
+    $g('sdr-dl-csv').onclick = function(){
+      try {
+        if (!S.pts || !S.pts.length) { alert('مفيش نقاط للتحميل'); return; }
+        var ll = null;
+        try { ll = allLL(); } catch (e) { ll = null; }
+        download((S.name||'survey')+'.csv', toCSV(S.pts, ll), 'text/csv;charset=utf-8');
+        status('تم تحميل CSV ('+S.pts.length+' نقطة)'+(ll?' مع Lat/Lon':''));
+      } catch (err) {
+        alert('تعذر تحميل CSV: '+(err && err.message ? err.message : err));
+      }
+    };
     skInit(box);
     showMapSec();
   }
@@ -10532,7 +11058,141 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     var pa = $g('sdr-paste'); if(pa) pa.value='';
     skReset(); S.pts=[]; S.raw=null; $g('sdr-file').value=''; status('اختار ملف SDR أو Text أو CSV أو Excel'); render();
   };
-  window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToText,isExcelName:isExcelName,conv:conv,areaOk:areaOk,inEgypt:inEgypt,SYS_NAMES:SYS_NAMES};
+  
+  /* Shared converter used by GIS — same logic as allLL/detectSys, with soft fallback */
+  function convertPts(pts, opt){
+    opt = opt || {};
+    var zone = parseInt(opt.zone, 10);
+    if(!(zone >= 1 && zone <= 60)) zone = 0;
+    var north = opt.north !== false && opt.north !== 'S';
+    var v = opt.sys || 'auto';
+    var cc = opt.country || '';
+    var msg = '';
+    if(!pts || !pts.length) return {ll: [], sysUsed: null, msg: 'لا توجد نقاط'};
+
+    function detect(z, nth){
+      var ce = 0, cn = 0, n = 0;
+      pts.forEach(function(p){ if(isFinite(p.e) && isFinite(p.n)){ ce += p.e; cn += p.n; n++; } });
+      if(!n) return null;
+      ce /= n; cn /= n;
+      if(cc && cc !== 'eg') return {sys: 'utm', swap: false};
+      /*
+        IMPORTANT: do NOT return the first areaOk match.
+        Swapped E/N can make "red" pass areaOk far from the true site
+        while the correct belt (e.g. purple for North Coast) only matches on the other pass.
+        Score every candidate and pick the best.
+      */
+      var list = ['utm', 'purple', 'red', 'xpurple', 'blue'];
+      var best = null;
+      for(var pass = 0; pass < 2; pass++){
+        var E = pass ? cn : ce, N = pass ? ce : cn;
+        for(var i = 0; i < list.length; i++){
+          var sys = list[i];
+          if(sys === 'utm' && !z) continue;
+          try {
+            var r = conv(sys, E, N, z || 36, nth);
+            if(!r || !isFinite(r.lat) || !isFinite(r.lon)) continue;
+            if(!areaOk(sys, r)) continue;
+            var score = 50;
+            /* Magnitude hints use THIS pass E/N (after possible axis swap) */
+            if(sys === 'purple' && N > 150000 && N < 550000 && E > 500000 && E < 950000) score += 30;
+            if(sys === 'xpurple' && N > 900000) score += 25;
+            if(sys === 'red' && N > 550000 && N < 1200000 && E > 400000 && E < 900000) score += 25;
+            if(sys === 'blue' && E < 500000) score += 20;
+            if(sys === 'utm' && (N > 1500000 || E > 1500000)) score += 30;
+            /* Prefer no-swap slightly when scores equal */
+            if(!pass) score += 2;
+            /* Geographic fit — strongest signal */
+            if(sys === 'purple' && r.lat > 30 && r.lon > 25 && r.lon < 29.5) score += 35;
+            if(sys === 'red' && r.lat > 29.5 && r.lon > 29.5 && r.lon < 33) score += 25;
+            if(sys === 'utm' && r.lat > 30.5 && r.lat < 32 && r.lon > 26 && r.lon < 30) score += 25;
+            /* Penalize results that are in Egypt but clearly wrong region for the belt */
+            if(sys === 'red' && r.lat < 28) score -= 15;
+            if(sys === 'purple' && r.lon > 30) score -= 15;
+            if(!best || score > best.score){
+              best = {sys: sys, swap: !!pass, zone: z || 36, score: score};
+            }
+          } catch(e){}
+        }
+      }
+      return best;
+    }
+
+    function softDetect(z, nth){
+      /* When strict areaOk fails: pick best inEgypt / closest to Egypt */
+      var ce = 0, cn = 0, n = 0;
+      pts.forEach(function(p){ if(isFinite(p.e) && isFinite(p.n)){ ce += p.e; cn += p.n; n++; } });
+      if(!n) return null;
+      ce /= n; cn /= n;
+      var zonesTry = [];
+      if(z) zonesTry.push(z);
+      if(zonesTry.indexOf(35) < 0) zonesTry.push(35);
+      if(zonesTry.indexOf(36) < 0) zonesTry.push(36);
+      var list = ['purple', 'red', 'utm', 'blue', 'xpurple'];
+      var best = null;
+      for(var zi = 0; zi < zonesTry.length; zi++){
+        var zz = zonesTry[zi];
+        for(var pass = 0; pass < 2; pass++){
+          var E = pass ? cn : ce, N = pass ? ce : cn;
+          for(var i = 0; i < list.length; i++){
+            var sys = list[i];
+            if(sys === 'utm' && !zz) continue;
+            try {
+              var r = conv(sys, E, N, zz, nth);
+              if(!r || !isFinite(r.lat) || !isFinite(r.lon)) continue;
+              if(Math.abs(r.lat) > 90 || Math.abs(r.lon) > 180) continue;
+              var score = 0;
+              if(areaOk(sys, r)) score = 100;
+              else if(inEgypt(r)) score = 60;
+              else {
+                var dlat = r.lat - 30.5, dlon = r.lon - 28.5; /* north coast bias */
+                var dist = Math.sqrt(dlat * dlat + dlon * dlon);
+                if(dist < 30) score = Math.max(1, 35 - dist);
+              }
+              /* North-coast purple preference when lon would be west of 29.5 */
+              if(sys === 'purple' && r.lat > 28 && r.lon < 29.5 && r.lon > 24) score += 8;
+              if(sys === 'utm' && r.lat > 30.5 && r.lat < 32 && r.lon > 26 && r.lon < 30) score += 8;
+              if(!best || score > best.score){
+                best = {sys: sys, swap: !!pass, zone: zz, score: score};
+              }
+            } catch(e){}
+          }
+        }
+      }
+      if(best && best.score > 0) return best;
+      return {sys: 'utm', swap: false, zone: z || 35};
+    }
+
+    var d;
+    if(v === 'auto'){
+      d = detect(zone, north);
+      if(!d){
+        d = softDetect(zone, north);
+        if(d && d.zone) zone = d.zone;
+      }
+      if(!d){ return {ll: [], sysUsed: null, msg: 'تعذر التحويل'}; }
+    } else {
+      if(v === 'utm' && !zone) zone = 36;
+      d = {sys: v, swap: false};
+    }
+    var zFinal = (d.zone != null ? d.zone : zone) || 36;
+    var out = [];
+    for(var i = 0; i < pts.length; i++){
+      var p = pts[i];
+      try {
+        var r = d.swap ? conv(d.sys, p.n, p.e, zFinal, north) : conv(d.sys, p.e, p.n, zFinal, north);
+        if(r && isFinite(r.lat) && isFinite(r.lon)) out.push({lat: r.lat, lon: r.lon, p: p});
+      } catch(e){}
+    }
+    return {
+      ll: out,
+      sysUsed: {sys: d.sys, zone: zFinal, north: north, swap: !!d.swap},
+      msg: msg
+    };
+  }
+
+window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToText,isExcelName:isExcelName,conv:conv,areaOk:areaOk,inEgypt:inEgypt,SYS_NAMES:SYS_NAMES,convertPts:convertPts,detectSys:detectSys};
+
   if(typeof module!=='undefined') module.exports={parseSDR:parseSDR,buildDXF:buildDXF};
   if(typeof document!=='undefined'){
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', window.sdrInit); else window.sdrInit();
@@ -11160,9 +11820,13 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     return {redraw:draw, state:state};
   }
 
-  function download(name, blob){
-    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
-    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+    function download(name, blob){
+    try {
+      if (typeof window.saveDownload === 'function') { window.saveDownload(name, blob, blob && blob.type); return; }
+      if (typeof window.saveFile === 'function') { window.saveFile(blob, name, blob && blob.type); return; }
+    } catch (e) {}
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.style.display='none';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ try{URL.revokeObjectURL(a.href); a.remove();}catch(e){} },8000);
   }
 
   window.qtyCalc = function(){
@@ -12840,8 +13504,8 @@ function hudStart(){
     },3200);
   });
 }
-/* device heading for compass */
-var CP_HEAD={ok:false,heading:0,raw:null,base:null};
+/* device heading for compass — follows phone yaw to show North */
+var CP_HEAD={ok:false,heading:0,raw:null,base:null,abs:false};
 function screenAngle(){
   try{
     if(screen.orientation&&typeof screen.orientation.angle==='number') return ((screen.orientation.angle%360)+360)%360;
@@ -12849,19 +13513,24 @@ function screenAngle(){
   }catch(e){}
   return 0;
 }
+function norm360(h){ h=h%360; if(h<0) h+=360; return h; }
 function onDeviceHeading(e){
-  var h=null;
+  var h=null, abs=false;
   if(typeof e.webkitCompassHeading==='number'&&isFinite(e.webkitCompassHeading)){
-    h=e.webkitCompassHeading; /* iOS: degrees clockwise from north */
+    h=e.webkitCompassHeading; abs=true;
   } else if(typeof e.alpha==='number'&&isFinite(e.alpha)){
-    /* absolute or relative alpha */
-    var a=e.alpha;
-    var ang=screenAngle();
-    /* convert device alpha to compass-like heading (approx) */
-    h=(360-a+ang)%360;
+    var a=e.alpha, ang=screenAngle();
+    /* absolute alpha: 0 = north; compass heading = 360-alpha (+ screen) */
+    if(e.absolute===true || e.absolute===1){
+      h=norm360(360-a+ang); abs=true;
+    } else {
+      /* relative: still rotate with phone so user can find direction relative to start */
+      h=norm360(360-a+ang); abs=false;
+    }
   }
   if(h==null) return;
   CP_HEAD.ok=true;
+  CP_HEAD.abs=abs;
   CP_HEAD.raw=h;
   CP_HEAD.heading=h;
 }
@@ -12870,48 +13539,52 @@ function startCompassSensors(){
   function attach(){
     window.addEventListener('deviceorientationabsolute', onDeviceHeading, true);
     window.addEventListener('deviceorientation', onDeviceHeading, true);
+    /* Some Androids fire only with this */
+    try {
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', onDeviceHeading, {capture:true, passive:true});
+      }
+    } catch(e) {}
   }
-  try{
-    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
-      /* iOS: request on first user gesture */
-      var once=function(){
+  function requestPermThenAttach(){
+    try{
+      if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
         DeviceOrientationEvent.requestPermission().then(function(r){
           if(r==='granted') attach();
-        }).catch(function(){});
-        window.removeEventListener('pointerdown', once, true);
-        window.removeEventListener('touchstart', once, true);
-      };
-      window.addEventListener('pointerdown', once, true);
-      window.addEventListener('touchstart', once, true);
-    } else {
-      attach();
-    }
-  }catch(e){ attach(); }
+        }).catch(function(){ attach(); });
+      } else {
+        attach();
+      }
+    }catch(e){ attach(); }
+  }
+  /* attach immediately when possible; also re-request on first gesture (iOS) */
+  requestPermThenAttach();
+  var once=function(){
+    requestPermThenAttach();
+    window.removeEventListener('pointerdown', once, true);
+    window.removeEventListener('touchstart', once, true);
+    window.removeEventListener('click', once, true);
+  };
+  window.addEventListener('pointerdown', once, true);
+  window.addEventListener('touchstart', once, true);
+  window.addEventListener('click', once, true);
 }
 function compassFrame(ts){
   requestAnimationFrame(compassFrame);
-  if(!CP.rose||!homeVisible())return;
-  if(ts-CP.last<16)return;CP.last=ts;
+  if(!CP.rose) return;
+  if(!homeVisible()) return;
+  if(ts-CP.last<16) return; CP.last=ts;
   var want;
   if(CP_HEAD.ok){
     want=CP_HEAD.heading;
   } else {
-    /* fallback: soft idle + optional drone motion while sensors unavailable */
-    var el=$('drone-craft');
-    if(el){
-      var r=el.getBoundingClientRect(),x=r.left+r.width/2+window.scrollX,y=r.top+r.height/2+window.scrollY;
-      if(CP.px!==null){
-        var vx=x-CP.px,vy=y-CP.py;
-        if(Math.sqrt(vx*vx+vy*vy)>0.8){CP.tgt=Math.atan2(vx,-vy)*180/Math.PI;CP.moving=ts;}
-      }
-      CP.px=x;CP.py=y;
-    }
-    want=(CP.tgt!==null&&ts-CP.moving<700)?CP.tgt:(reduced?0:6*Math.sin(ts/2600));
+    want=reduced?0:4*Math.sin(ts/2800);
   }
   var diff=((want-CP.cur+540)%360)-180;
-  /* smoother follow — higher damping when using real sensors */
-  var k=CP_HEAD.ok?0.18:0.12;
-  CP.cur+=diff*k;
+  /* fast follow so compass turns with the phone */
+  var k=CP_HEAD.ok?0.35:0.12;
+  CP.cur=norm360(CP.cur+diff*k);
+  /* rotate rose opposite to heading so N points to real north */
   CP.rose.setAttribute('transform','rotate('+(-CP.cur).toFixed(2)+' 30 30)');
 }
 
@@ -12981,5 +13654,1973 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
+
+<script id="gis-script">
+(function(){
+'use strict';
+var G = { name:'gis', pts:[], lines:[], polys:[], ll:[], isGeo:false, map:null, layer:null };
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function status(msg, bad){ var el=$('gis-status'); if(!el) return; el.textContent=msg||''; el.style.color=bad?'var(--warning)':'var(--muted)'; }
+/* Attribute aliases (EN + AR) for sewer/utility attribute popups in KML */
+var ATTR_MAP = {
+  id:['id','point','pt','name','اسم','رقم','رقم_النقطة','point_id','station'],
+  e:['e','easting','x','east','شرق','ايستنج'],
+  n:['n','northing','y','north','شمال','نورثنج'],
+  z:['z','elev','elevation','level','rl','منسوب','ارتفاع','حط'],
+  code:['code','desc','description','وصف','كود','ملاحظات','note','notes','remark'],
+  diameter:['diameter','diam','dia','dn','pipe_dia','قطر','قطر_الماسورة','قطر الماسورة'],
+  depth:['depth','cover','h','عمق','عمق_الردم','عمق الماسورة','عمق_الغرفة'],
+  material:['material','mat','خامة','مادة','نوع_الخامة'],
+  type:['type','feature','layer','نوع','تصنيف','النوع'],
+  from:['from','start','from_id','من','بداية'],
+  to:['to','end','to_id','الى','إلى','نهاية'],
+  length:['length','len','طول','length_m'],
+  slope:['slope','grade','ميل','انحدار'],
+  width:['width','w','عرض'],
+  status:['status','state','حالة'],
+  owner:['owner','مالك'],
+  date:['date','تاريخ']
+};
+function normKey(k){
+  return String(k==null?'':k).trim().toLowerCase().replace(/[\s\-]+/g,'_').replace(/[^\w\u0600-\u06FF_]/g,'');
+}
+function colIndex(headers){
+  var idx={};
+  headers.forEach(function(h,i){
+    var nk=normKey(h);
+    Object.keys(ATTR_MAP).forEach(function(std){
+      if(idx[std]!=null) return;
+      var al=ATTR_MAP[std];
+      for(var j=0;j<al.length;j++){
+        if(nk===normKey(al[j]) || nk.indexOf(normKey(al[j]))===0){ idx[std]=i; break; }
+      }
+    });
+    // also keep original header for extra attrs
+    if(nk && idx['_h_'+nk]==null) idx['_h_'+nk]=i;
+  });
+  return idx;
+}
+function cell(row, i){ return (i==null||i<0||i>=row.length)?'':String(row[i]==null?'':row[i]).trim(); }
+function buildAttrs(row, headers, idx){
+  var attrs={}, used={};
+  Object.keys(ATTR_MAP).forEach(function(std){
+    if(std==='id'||std==='e'||std==='n'||std==='z') return;
+    var i=idx[std];
+    if(i==null) return;
+    var v=cell(row,i);
+    if(v!==''){ attrs[std]=v; used[i]=1; }
+  });
+  // extra columns not mapped to coords
+  headers.forEach(function(h,i){
+    if(used[i] || i===idx.id || i===idx.e || i===idx.n || i===idx.z) return;
+    var v=cell(row,i);
+    if(v==='') return;
+    var key=normKey(h) || ('col'+i);
+    if(['easting','northing','x','y','lon','lat','longitude','latitude'].indexOf(key)>=0) return;
+    if(!attrs[key]) attrs[key]=v;
+  });
+  return attrs;
+}
+function attrDescription(p){
+  var lines=[];
+  if(p.id!=null && p.id!=='') lines.push('ID: '+p.id);
+  if(isFinite(p.z)) lines.push('Z: '+Number(p.z).toFixed(3));
+  if(p.code) lines.push('Code: '+p.code);
+  var a=p.attrs||{};
+  var labels={diameter:'Diameter (mm)',depth:'Depth (m)',material:'Material',type:'Type',from:'From',to:'To',length:'Length (m)',slope:'Slope',width:'Width',status:'Status',owner:'Owner',date:'Date',
+    'قطر':'قطر','عمق':'عمق','خامة':'خامة','نوع':'نوع'};
+  Object.keys(a).forEach(function(k){
+    if(a[k]==null || a[k]==='') return;
+    var lab=labels[k]||k;
+    lines.push(lab+': '+a[k]);
+  });
+  return lines.join('\n');
+}
+function attrExtendedXml(p, x){
+  var a=p.attrs||{}, out='';
+  function add(name,val){
+    if(val==null || val==='') return;
+    out+='<Data name="'+x(name)+'"><value>'+x(String(val))+'</value></Data>\n';
+  }
+  add('ID', p.id);
+  if(isFinite(p.z)) add('Z', Number(p.z).toFixed(3));
+  add('Code', p.code);
+  Object.keys(a).forEach(function(k){ add(k, a[k]); });
+  return out ? '<ExtendedData>\n'+out+'</ExtendedData>\n' : '';
+}
+function T(){ return window.__sdrTools || null; }
+function downloadText(name, content, mime){
+  mime = mime || 'text/plain;charset=utf-8';
+  try {
+    if (typeof window.saveDownload === 'function') { window.saveDownload(name, content, mime); return; }
+    if (typeof window.saveFile === 'function') { window.saveFile(content, name, mime); return; }
+  } catch (e) {}
+  var blob = new Blob([content], {type: mime});
+  downloadBlob(name, blob);
+}
+function downloadBlob(name, blob){
+  try {
+    if (typeof window.saveDownload === 'function') { window.saveDownload(name, blob, (blob && blob.type) || 'application/octet-stream'); return; }
+    if (typeof window.saveFile === 'function') { window.saveFile(blob, name, (blob && blob.type) || 'application/octet-stream'); return; }
+  } catch (e) {}
+  try {
+    if (navigator.msSaveOrOpenBlob) { navigator.msSaveOrOpenBlob(blob, name); return; }
+  } catch (e) {}
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = name; a.rel = 'noopener'; a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ try { a.remove(); } catch(e){} }, 2000);
+  setTimeout(function(){ try { URL.revokeObjectURL(url); } catch(e){} }, 60000);
+}
+/* Minimal ZIP (store) for KMZ without JSZip */
+function crc32(buf){
+  var table = crc32._t;
+  if (!table) {
+    table = crc32._t = new Uint32Array(256);
+    for (var n = 0; n < 256; n++) {
+      var c = n;
+      for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      table[n] = c >>> 0;
+    }
+  }
+  var crc = 0 ^ (-1);
+  for (var i = 0; i < buf.length; i++) crc = (crc >>> 8) ^ table[(crc ^ buf[i]) & 0xFF];
+  return (crc ^ (-1)) >>> 0;
+}
+function u16(n){ return new Uint8Array([n & 255, (n >>> 8) & 255]); }
+function u32(n){ return new Uint8Array([n & 255, (n >>> 8) & 255, (n >>> 16) & 255, (n >>> 24) & 255]); }
+function zipStore(files){
+  /* files: [{name:string, data:Uint8Array}] */
+  var parts = [], offset = 0, central = [], count = 0;
+  files.forEach(function(f){
+    var nameBytes = new TextEncoder().encode(f.name);
+    var data = f.data;
+    var crc = crc32(data);
+    var local = new Uint8Array(30 + nameBytes.length + data.length);
+    local.set([0x50,0x4b,0x03,0x04, 20,0, 0,0, 0,0, 0,0,0,0], 0);
+    local.set(u32(crc), 14);
+    local.set(u32(data.length), 18);
+    local.set(u32(data.length), 22);
+    local.set(u16(nameBytes.length), 26);
+    local.set(u16(0), 28);
+    local.set(nameBytes, 30);
+    local.set(data, 30 + nameBytes.length);
+    parts.push(local);
+    var cen = new Uint8Array(46 + nameBytes.length);
+    cen.set([0x50,0x4b,0x01,0x02, 20,0, 20,0, 0,0, 0,0, 0,0,0,0], 0);
+    cen.set(u32(crc), 16);
+    cen.set(u32(data.length), 20);
+    cen.set(u32(data.length), 24);
+    cen.set(u16(nameBytes.length), 28);
+    cen.set(u16(0), 30); cen.set(u16(0), 32); cen.set(u16(0), 34);
+    cen.set(u16(0), 36); cen.set(u32(0), 38);
+    cen.set(u32(offset), 42);
+    cen.set(nameBytes, 46);
+    central.push(cen);
+    offset += local.length;
+    count++;
+  });
+  var centralSize = central.reduce(function(s,x){return s+x.length;},0);
+  var end = new Uint8Array(22);
+  end.set([0x50,0x4b,0x05,0x06, 0,0,0,0], 0);
+  end.set(u16(count), 8); end.set(u16(count), 10);
+  end.set(u32(centralSize), 12); end.set(u32(offset), 16); end.set(u16(0), 20);
+  var total = offset + centralSize + 22;
+  var out = new Uint8Array(total), o = 0;
+  parts.forEach(function(p){ out.set(p, o); o += p.length; });
+  central.forEach(function(p){ out.set(p, o); o += p.length; });
+  out.set(end, o);
+  return out;
+}
+function makeKmzBlob(kmlText){
+  var kmlBytes = new TextEncoder().encode(kmlText);
+  if (typeof JSZip !== 'undefined') {
+    /* async path handled by caller if needed — sync fallback below always works */
+  }
+  var zipped = zipStore([{name:'doc.kml', data:kmlBytes}]);
+  return new Blob([zipped], {type:'application/vnd.google-earth.kmz'});
+}
+
+function parseCoordTriplet(s){
+  var parts=String(s).trim().split(/[\s,]+/).filter(Boolean);
+  if(parts.length<2) return null;
+  var a=parseFloat(parts[0]), b=parseFloat(parts[1]), z=parts.length>2?parseFloat(parts[2]):0;
+  if(!isFinite(a)||!isFinite(b)) return null;
+  return {a:a,b:b,z:isFinite(z)?z:0};
+}
+
+function parseKmlText(xml){
+  var pts=[], lines=[], polys=[];
+  var doc;
+  try{ doc=new DOMParser().parseFromString(xml,'text/xml'); }catch(e){ return {err:'تعذر قراءة KML'}; }
+  if(doc.querySelector('parsererror')) return {err:'ملف KML غير صالح'};
+  function coordsText(el){
+    if(!el) return [];
+    var raw=(el.textContent||'').trim();
+    if(!raw) return [];
+    return raw.split(/\s+/).map(parseCoordTriplet).filter(Boolean);
+  }
+  // Points
+  function readExt(pm){
+    var attrs={};
+    Array.prototype.forEach.call(pm.querySelectorAll('ExtendedData Data, ExtendedData SchemaData SimpleData'), function(d){
+      var nm=d.getAttribute('name')||d.getAttribute('Name')||'';
+      var val=(d.querySelector('value')&&d.querySelector('value').textContent)||d.textContent||'';
+      nm=String(nm).trim(); val=String(val).trim();
+      if(nm && val) attrs[normKey(nm)]=val;
+    });
+    return attrs;
+  }
+  Array.prototype.forEach.call(doc.querySelectorAll('Placemark'), function(pm, idx){
+    var name=(pm.querySelector('name')&&pm.querySelector('name').textContent)||('P'+(idx+1));
+    var desc=(pm.querySelector('description')&&pm.querySelector('description').textContent)||'';
+    var attrs=readExt(pm);
+    var point=pm.querySelector('Point coordinates');
+    if(point){
+      var c=parseCoordTriplet(point.textContent);
+      if(c) pts.push({id:name, lon:c.a, lat:c.b, e:c.a, n:c.b, z:c.z, code:attrs.code||'', attrs:attrs, geo:true, _desc:desc});
+    }
+    var ls=pm.querySelector('LineString coordinates');
+    if(ls){
+      var arr=coordsText(ls);
+      if(arr.length) lines.push({name:name, coords:arr.map(function(c){return {lon:c.a,lat:c.b,z:c.z};}), attrs:attrs, code:attrs.code||''});
+    }
+    var pg=pm.querySelector('Polygon outerBoundaryIs LinearRing coordinates, Polygon coordinates');
+    if(pg){
+      var arr2=coordsText(pg);
+      if(arr2.length) polys.push({name:name, coords:arr2.map(function(c){return {lon:c.a,lat:c.b,z:c.z};}), attrs:attrs});
+    }
+  });
+  // fallback: any coordinates under Point
+  if(!pts.length && !lines.length && !polys.length){
+    Array.prototype.forEach.call(doc.querySelectorAll('coordinates'), function(el, i){
+      var arr=coordsText(el);
+      if(arr.length===1) pts.push({id:'P'+(i+1), lon:arr[0].a, lat:arr[0].b, e:arr[0].a, n:arr[0].b, z:arr[0].z, code:'', geo:true});
+      else if(arr.length>1) lines.push({name:'L'+(i+1), coords:arr.map(function(c){return {lon:c.a,lat:c.b,z:c.z};})});
+    });
+  }
+  return {pts:pts, lines:lines, polys:polys, isGeo:true};
+}
+
+function parseDxfText(txt){
+  var lines=txt.replace(/\r/g,'').split('\n');
+  var pts=[], segs=[];
+  function pairAt(i){ return {code:String(lines[i]||'').trim(), val:String(lines[i+1]||'').trim()}; }
+  for(var i=0;i<lines.length-1;i++){
+    var p=pairAt(i);
+    if(p.code==='0' && p.val==='POINT'){
+      var x=NaN,y=NaN,z=0,j=i+2;
+      while(j<lines.length-1){
+        var q=pairAt(j);
+        if(q.code==='0') break;
+        if(q.code==='10') x=parseFloat(q.val);
+        if(q.code==='20') y=parseFloat(q.val);
+        if(q.code==='30') z=parseFloat(q.val)||0;
+        j+=2;
+      }
+      if(isFinite(x)&&isFinite(y)) pts.push({id:'P'+(pts.length+1), e:x, n:y, z:z, code:'', geo:false});
+    }
+    if(p.code==='0' && (p.val==='LINE' || p.val==='LWPOLYLINE')){
+      // collect 10/20 pairs until next 0
+      var xs=[], ys=[], j2=i+2;
+      while(j2<lines.length-1){
+        var q2=pairAt(j2);
+        if(q2.code==='0') break;
+        if(q2.code==='10') xs.push(parseFloat(q2.val));
+        if(q2.code==='20') ys.push(parseFloat(q2.val));
+        j2+=2;
+      }
+      var coords=[];
+      for(var k=0;k<Math.min(xs.length,ys.length);k++){
+        if(isFinite(xs[k])&&isFinite(ys[k])) coords.push({e:xs[k], n:ys[k], z:0});
+      }
+      if(coords.length>=2) segs.push({name:'L'+(segs.length+1), coords:coords, projected:true});
+    }
+  }
+  return {pts:pts, lines:segs, polys:[], isGeo:false};
+}
+
+function parseTableText(txt, orderEN){
+  var rawLines = String(txt).replace(/\r/g,'').split('\n').map(function(l){return l.trim();}).filter(function(l){return l && l[0]!=='#';});
+  if(!rawLines.length) return {pts:[], lines:[], polys:[], isGeo:false};
+
+  function splitRow(line){
+    if(line.indexOf('\t')>=0) return line.split('\t').map(function(c){return c.trim();});
+    if(line.indexOf(';')>=0) return line.split(';').map(function(c){return c.trim();});
+    if(line.indexOf(',')>=0) return line.split(',').map(function(c){return c.trim();});
+    return line.split(/\s+/).filter(Boolean);
+  }
+
+  var rows = rawLines.map(splitRow);
+  var headerGuess = rows[0];
+  var looksHeader = headerGuess.some(function(c){
+    var n=normKey(c);
+    return /^(id|name|e|n|x|y|z|easting|northing|lon|lat|diameter|depth|قطر|عمق|كود|code|type|نوع)/i.test(n) || /[a-zA-Z\u0600-\u06FF]/.test(c) && !isFinite(parseFloat(c));
+  });
+  var headers, dataRows;
+  if(looksHeader){
+    headers = headerGuess;
+    dataRows = rows.slice(1);
+  } else {
+    headers = orderEN ? ['ID','E','N','Z','Code'] : ['ID','N','E','Z','Code'];
+    dataRows = rows;
+  }
+  var idx = colIndex(headers);
+  var pts=[], lines=[];
+  dataRows.forEach(function(row, ri){
+    if(!row || !row.length) return;
+    var attrs = buildAttrs(row, headers, idx);
+    var id = cell(row, idx.id) || attrs.from || String(ri+1);
+    var eStr = cell(row, idx.e), nStr = cell(row, idx.n);
+    var e = parseFloat(eStr), n = parseFloat(nStr);
+    // fallback: first two numbers if columns not mapped
+    if(!isFinite(e) || !isFinite(n)){
+      var nums=[];
+      row.forEach(function(c){ var v=parseFloat(c); if(isFinite(v) && /[-+]?\d/.test(String(c))) nums.push(v); });
+      if(nums.length<2) return;
+      if(orderEN){ e=nums[0]; n=nums[1]; } else { n=nums[0]; e=nums[1]; }
+      if(!isFinite(parseFloat(cell(row, idx.z))) && nums.length>2) attrs._z = nums[2];
+    }
+    var z = parseFloat(cell(row, idx.z));
+    if(!isFinite(z) && attrs._z!=null) z = attrs._z;
+    if(!isFinite(z)) z = 0;
+    delete attrs._z;
+    var code = cell(row, idx.code) || attrs.code || '';
+    if(attrs.code) delete attrs.code;
+    var geo = Math.abs(e)<=180 && Math.abs(n)<=90;
+    var type = (attrs.type || '').toLowerCase();
+    // line row if has from+to without own coords of interest, skip geometry-less
+    if((attrs.from && attrs.to) && (!isFinite(e) || !isFinite(n))){
+      lines.push({name:id|| (attrs.from+'-'+attrs.to), attrs:attrs, code:code, from:attrs.from, to:attrs.to, coords:[]});
+      return;
+    }
+    if(!isFinite(e)||!isFinite(n)) return;
+    var p = {id:id, e:e, n:n, z:z, code:code, attrs:attrs, geo:geo};
+    if(geo){ p.lon=e; p.lat=n; }
+    pts.push(p);
+  });
+  // connect from-to lines using point ids
+  if(lines.length && pts.length){
+    var byId={};
+    pts.forEach(function(p){ byId[String(p.id)]=p; });
+    lines.forEach(function(L){
+      var a=byId[String(L.from)], b=byId[String(L.to)];
+      if(a && b){
+        if(a.geo){
+          L.coords=[{lon:a.lon,lat:a.lat,z:a.z},{lon:b.lon,lat:b.lat,z:b.z}];
+        } else {
+          L.coords=[{e:a.e,n:a.n,z:a.z},{e:b.e,n:b.n,z:b.z}];
+          L.projected=true;
+        }
+      }
+    });
+    lines = lines.filter(function(L){ return L.coords && L.coords.length>=2; });
+  } else {
+    lines = [];
+  }
+  // If classic SDR-like without headers produced nothing with attrs path but parseSDR can
+  if(!pts.length){
+    var t=T();
+    if(t && t.parseSDR){
+      var r=t.parseSDR(txt, !!orderEN);
+      if(r && r.pts && r.pts.length){
+        return {pts:r.pts.map(function(p){ return {id:p.id, e:p.e, n:p.n, z:p.z, code:p.code||'', attrs:{}, geo:false}; }), lines:[], polys:[], isGeo:false};
+      }
+    }
+  }
+  var anyGeo = pts.some(function(p){ return p.geo; });
+  return {pts:pts, lines:lines, polys:[], isGeo:anyGeo && pts.length && pts.every(function(p){ return p.geo; })};
+}
+
+function setData(data, name){
+  G.name = name || G.name || 'gis';
+  G.pts = data.pts || [];
+  G.lines = data.lines || [];
+  G.polys = data.polys || [];
+  G.isGeo = !!data.isGeo;
+  G.ll = [];
+  renderSummary();
+}
+
+function renderSummary(){
+  var box=$('gis-summary');
+  var exp=$('gis-export-sec');
+  var mapsec=$('gis-map-sec');
+  if(!G.pts.length && !G.lines.length && !G.polys.length){
+    if(box) box.innerHTML='';
+    if(exp) exp.style.display='none';
+    if(mapsec) mapsec.style.display='none';
+    return;
+  }
+  if(exp) exp.style.display='block';
+  if(mapsec) mapsec.style.display='block';
+  if(box){
+    box.innerHTML = '<div class="results"><h2>ملخص البيانات</h2>'+
+      '<div class="result-row"><span class="result-label">نقاط</span><span class="result-value green">'+G.pts.length+'</span></div>'+
+      '<div class="result-row"><span class="result-label">خطوط</span><span class="result-value blue">'+G.lines.length+'</span></div>'+
+      '<div class="result-row"><span class="result-label">مضلعات</span><span class="result-value blue">'+G.polys.length+'</span></div>'+
+      '<div class="result-row"><span class="result-label">نوع الإحداثيات</span><span class="result-value yellow">'+(G.isGeo?'جغرافية (Lat/Lon)':'مسقطة (E/N)')+'</span></div></div>';
+  }
+}
+
+function toLatLonPts(){
+  /* مسار مطابق لـ allLL في SDR Converter + تبديل E/N تلقائي عند الحاجة */
+  G._mapMsg = '';
+  G._sysUsed = null;
+  G.ll = [];
+  G._llFail = 0;
+  if(!G.pts.length && !G.lines.length && !G.polys.length) return [];
+
+  var t = T();
+  var zone = parseInt(($('gis-zone')||{}).value, 10);
+  if(!(zone >= 1 && zone <= 60)) zone = 0;
+  var north = (($('gis-hemi')||{}).value !== 'S');
+  var v = ($('gis-sys')||{}).value || 'auto';
+  var cc = ($('gis-country')||{}).value || '';
+
+  if(G.isGeo || v === 'wgs84'){
+    var outG = [];
+    for(var gi = 0; gi < G.pts.length; gi++){
+      var pg = G.pts[gi];
+      var lat = pg.lat != null ? pg.lat : pg.n;
+      var lon = pg.lon != null ? pg.lon : pg.e;
+      if(isFinite(lat) && isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180){
+        outG.push({lat: lat, lon: lon, p: pg});
+      } else G._llFail++;
+    }
+    G.ll = outG;
+    G._sysUsed = {sys: 'wgs84', zone: zone || 36, north: north, swap: false};
+    return outG;
+  }
+
+  if(!t || !t.conv){
+    G._mapMsg = 'أدوات التحويل غير جاهزة. حدّث الصفحة.';
+    status(G._mapMsg, true);
+    return [];
+  }
+
+  var projPts = [];
+  for(var i = 0; i < G.pts.length; i++){
+    var p = G.pts[i];
+    if(p.geo && p.lat != null && p.lon != null && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180){
+      G.ll.push({lat: p.lat, lon: p.lon, p: p});
+      continue;
+    }
+    if(isFinite(p.e) && isFinite(p.n)){
+      /* إحداثيات صغيرة جدًا قد تكون lat/lon */
+      if(Math.abs(p.e) <= 180 && Math.abs(p.n) <= 90 && Math.abs(p.e) < 200 && Math.abs(p.n) < 100){
+        /* لو القيم صغيرة والنظام ليس مسقطًا واضحًا */
+        if(Math.abs(p.e) < 40 && Math.abs(p.n) < 40){
+          G.ll.push({lat: p.n, lon: p.e, p: p});
+          continue;
+        }
+      }
+      projPts.push(p);
+    }
+  }
+
+  if(!projPts.length){
+    G._sysUsed = {sys: 'wgs84', zone: zone || 36, north: north, swap: false};
+    return G.ll;
+  }
+
+  /* اكتشاف النظام — نفس نقاط SDR detectSys (بدون softDetect) */
+  function detectLocal(pts, z, nth, forceSwap){
+    var ce = 0, cn = 0, n = 0;
+    pts.forEach(function(pt){
+      var ee = forceSwap ? pt.n : pt.e, nn = forceSwap ? pt.e : pt.n;
+      if(isFinite(ee) && isFinite(nn)){ ce += ee; cn += nn; n++; }
+    });
+    if(!n) return null;
+    ce /= n; cn /= n;
+    if(cc && cc !== 'eg') return {sys: 'utm', swap: !!forceSwap, score: 10};
+    var list = ['utm', 'purple', 'red', 'xpurple', 'blue'];
+    var best = null;
+    for(var pass = 0; pass < 2; pass++){
+      var E = pass ? cn : ce, N = pass ? ce : cn;
+      for(var si = 0; si < list.length; si++){
+        var sys = list[si];
+        if(sys === 'utm' && !z) continue;
+        try {
+          var r = t.conv(sys, E, N, z || 36, nth);
+          if(!r || !isFinite(r.lat) || !isFinite(r.lon)) continue;
+          if(t.areaOk && !t.areaOk(sys, r)) continue;
+          var score = 50;
+          if(sys === 'purple' && N > 150000 && N < 550000 && E > 500000 && E < 950000) score += 30;
+          if(sys === 'xpurple' && N > 900000) score += 25;
+          if(sys === 'red' && N > 550000 && N < 1200000 && E > 400000 && E < 900000) score += 25;
+          if(sys === 'blue' && E < 500000) score += 20;
+          if(sys === 'utm' && (N > 1500000 || E > 1500000)) score += 30;
+          if(!pass) score += 2;
+          if(sys === 'purple' && r.lat > 30 && r.lon > 25 && r.lon < 29.5) score += 35;
+          if(sys === 'red' && r.lat > 29.5 && r.lon > 29.5 && r.lon < 33) score += 25;
+          if(sys === 'utm' && r.lat > 30.5 && r.lat < 32 && r.lon > 26 && r.lon < 30) score += 25;
+          if(sys === 'red' && r.lat < 28) score -= 15;
+          if(sys === 'purple' && r.lon > 30) score -= 15;
+          if(forceSwap) score -= 1;
+          if(!best || score > best.score) best = {sys: sys, swap: !!(forceSwap || pass), score: score, pass: pass};
+        } catch(e){}
+      }
+    }
+    return best;
+  }
+
+  function convertWith(d, pts, zUse){
+    var out = [], fail = 0;
+    for(var j = 0; j < pts.length; j++){
+      var pt = pts[j];
+      try {
+        var ee = pt.e, nn = pt.n;
+        var rr = d.swap ? t.conv(d.sys, nn, ee, zUse, north) : t.conv(d.sys, ee, nn, zUse, north);
+        if(rr && isFinite(rr.lat) && isFinite(rr.lon) && Math.abs(rr.lat) <= 90 && Math.abs(rr.lon) <= 180){
+          out.push({lat: rr.lat, lon: rr.lon, p: pt});
+        } else fail++;
+      } catch(e){ fail++; }
+    }
+    return {out: out, fail: fail};
+  }
+
+  function centerOf(ll){
+    if(!ll.length) return null;
+    var a = 0, b = 0;
+    ll.forEach(function(o){ a += o.lat; b += o.lon; });
+    return {lat: a/ll.length, lon: b/ll.length};
+  }
+
+  var d, zUse = zone || 36;
+  if(v === 'auto'){
+    d = detectLocal(projPts, zone, north, false);
+    if(!d){
+      /* جرّب باعتبار الأعمدة معكوسة */
+      d = detectLocal(projPts, zone, north, true);
+    }
+    if(!d){
+      G._mapMsg = 'مش قادر أحدد نظام الإحداثيات تلقائيًا. اختار النظام يدويًا من القائمة.';
+      status(G._mapMsg, true);
+      return G.ll;
+    }
+  } else {
+    if(v === 'utm' && !zone){
+      G._mapMsg = 'اكتب رقم زون صحيح (1 إلى 60)';
+      status(G._mapMsg, true);
+      return G.ll;
+    }
+    d = {sys: v, swap: false};
+  }
+
+  var res = convertWith(d, projPts, zUse);
+  /* لو النتيجة خارج مصر والدولة مصر/فارغة — جرّب تبديل E/N */
+  var c = centerOf(res.out);
+  var needSwap = false;
+  if(c && t.inEgypt && !t.inEgypt(c) && (!cc || cc === 'eg') && !d.swap){
+    needSwap = true;
+  }
+  if(needSwap || (res.out.length === 0 && projPts.length)){
+    var d2 = {sys: d.sys, swap: !d.swap};
+    var res2 = convertWith(d2, projPts, zUse);
+    var c2 = centerOf(res2.out);
+    var better = false;
+    if(res2.out.length > res.out.length) better = true;
+    else if(c2 && t.inEgypt && t.inEgypt(c2) && (!c || !t.inEgypt(c))) better = true;
+    if(better){ d = d2; res = res2; }
+  }
+
+  G._llFail = res.fail;
+  res.out.forEach(function(o){ G.ll.push(o); });
+  G._sysUsed = {sys: d.sys, zone: zUse, north: north, swap: !!d.swap};
+  return G.ll;
+}
+
+function buildKml(){
+  var ll=toLatLonPts() || [];
+  if(!ll.length && !G.lines.length && !G.polys.length){
+    status('لا توجد نقاط صالحة للتصدير. راجع نظام الإحداثيات والدولة/المنطقة.', true);
+    return null;
+  }
+  function x(s){
+    return String(s==null?'':s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+  }
+  function coord(lon,lat,z){
+    return Number(lon).toFixed(8)+','+Number(lat).toFixed(8)+',0';
+  }
+  var title = x((G.name||'Survey').replace(/[^\w\u0600-\u06FF\- ]+/g,' ').trim() || 'Survey');
+  var k = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  k += '<kml xmlns="http://www.opengis.net/kml/2.2">\n';
+  k += '<Document>\n';
+  k += '<name>'+title+'</name>\n';
+  k += '<Style id="sn_pt"><IconStyle><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href></Icon></IconStyle></Style>\n';
+  k += '<Style id="sn_ln"><LineStyle><color>ff0000ff</color><width>2.5</width></LineStyle></Style>\n';
+  k += '<Style id="sn_pl"><LineStyle><color>ff0000ff</color><width>1.5</width></LineStyle><PolyStyle><color>7f00ff00</color></PolyStyle></Style>\n';
+  ll.forEach(function(o){
+    var p=o.p||{};
+    var id=x(p.id||'P');
+    var desc = attrDescription(p);
+    k += '<Placemark>\n';
+    k += '<name>'+id+'</name>\n';
+    k += '<description><![CDATA['+desc.replace(/\]\]>/g,'')+']]></description>\n';
+    k += '<styleUrl>#sn_pt</styleUrl>\n';
+    k += attrExtendedXml(p, x);
+    k += '<Point><coordinates>'+coord(o.lon,o.lat,0)+'</coordinates></Point>\n';
+    k += '</Placemark>\n';
+  });
+  (G.lines||[]).forEach(function(L){
+    var coords;
+    if(L.coords && L.coords[0] && (L.coords[0].lon!=null || L.coords[0].lat!=null)){
+      coords=L.coords.map(function(c){ return coord(c.lon,c.lat,0); }).join(' ');
+    } else if(L.projected || (L.coords && L.coords[0] && L.coords[0].e!=null)){
+      var t=T(); var d=resolveGisSys();
+      if(!t) return;
+      var sys=d.sys==='wgs84'?'utm':d.sys;
+      coords=L.coords.map(function(c){
+        var E=d.swap?c.n:c.e, N=d.swap?c.e:c.n;
+        var r=t.conv(sys, E, N, d.zone, d.north);
+        if(!r||!isFinite(r.lat)) return null;
+        return coord(r.lon,r.lat,0);
+      }).filter(Boolean).join(' ');
+    }
+    if(!coords) return;
+    var lp = {id:L.name||'Line', code:L.code||'', z:null, attrs:L.attrs||{}};
+    if(L.from) lp.attrs.from = L.from;
+    if(L.to) lp.attrs.to = L.to;
+    var desc = attrDescription(lp);
+    k += '<Placemark>\n';
+    k += '<name>'+x(L.name||'Line')+'</name>\n';
+    k += '<description><![CDATA['+desc.replace(/\]\]>/g,'')+']]></description>\n';
+    k += '<styleUrl>#sn_ln</styleUrl>\n';
+    k += attrExtendedXml(lp, x);
+    k += '<LineString><tessellate>1</tessellate><coordinates>'+coords+'</coordinates></LineString>\n';
+    k += '</Placemark>\n';
+  });
+  (G.polys||[]).forEach(function(P){
+    var coords=(P.coords||[]).map(function(c){ return coord(c.lon,c.lat,0); }).join(' ');
+    if(!coords) return;
+    var pp={id:P.name||'Poly', code:'', z:null, attrs:P.attrs||{}};
+    k += '<Placemark>\n';
+    k += '<name>'+x(P.name||'Poly')+'</name>\n';
+    k += '<description><![CDATA['+attrDescription(pp).replace(/\]\]>/g,'')+']]></description>\n';
+    k += '<styleUrl>#sn_pl</styleUrl>\n';
+    k += attrExtendedXml(pp, x);
+    k += '<Polygon><outerBoundaryIs><LinearRing><coordinates>'+coords+'</coordinates></LinearRing></outerBoundaryIs></Polygon>\n';
+    k += '</Placemark>\n';
+  });
+  k += '</Document>\n</kml>';
+  return k;
+}
+
+function buildGeoJSON(){
+  var ll=toLatLonPts() || [];
+  var features=[];
+  ll.forEach(function(o){
+    var p=o.p||{};
+    var props={id:String(p.id||''), Z:isFinite(p.z)?Number(p.z):null, code:p.code||'', name:String(p.id||'')};
+    if(p.attrs){ Object.keys(p.attrs).forEach(function(k){ if(p.attrs[k]!=null && p.attrs[k]!=='') props[k]=p.attrs[k]; }); }
+    features.push({
+      type:'Feature',
+      geometry:{type:'Point', coordinates:[Number(o.lon), Number(o.lat)]},
+      properties:props
+    });
+  });
+  (G.lines||[]).forEach(function(L){
+    var coords=[];
+    if(L.coords && L.coords[0] && L.coords[0].lon!=null){
+      coords=L.coords.map(function(c){ return [Number(c.lon), Number(c.lat)]; });
+    }
+    if(coords.length>=2){
+      var props={name:L.name||'Line'};
+      if(L.attrs){ Object.keys(L.attrs).forEach(function(k){ props[k]=L.attrs[k]; }); }
+      features.push({type:'Feature', geometry:{type:'LineString', coordinates:coords}, properties:props});
+    }
+  });
+  (G.polys||[]).forEach(function(P){
+    var ring=(P.coords||[]).map(function(c){ return [Number(c.lon), Number(c.lat)]; });
+    if(ring.length>=3){
+      var a=ring[0], b=ring[ring.length-1];
+      if(a[0]!==b[0]||a[1]!==b[1]) ring.push([a[0],a[1]]);
+      features.push({type:'Feature', geometry:{type:'Polygon', coordinates:[ring]}, properties:{name:P.name||'Poly'}});
+    }
+  });
+  if(!features.length){
+    status('لا توجد معالم لتصدير GeoJSON', true);
+    return null;
+  }
+  return JSON.stringify({type:'FeatureCollection', features:features}, null, 2);
+}
+
+window.gisExport = function(kind){
+  try {
+    if(!G.pts.length && !G.lines.length && !G.polys.length){ status('لا توجد بيانات للتصدير', true); return; }
+    var safe = String(G.name || 'survey').replace(/[^A-Za-z0-9_\-]+/g,'_').replace(/_+/g,'_').replace(/^_|_$/g,'');
+    if(!safe) safe = 'survey';
+    var base = 'AES_'+safe;
+    if(kind==='geojson'){
+      var gj=buildGeoJSON(); if(!gj) return;
+      downloadText(base+'.geojson', gj, 'application/geo+json');
+      status('تم تحميل '+base+'.geojson — في ArcGIS Pro: Add Data → اختر الملف');
+    } else if(kind==='kml'){
+      var kml=buildKml(); if(!kml) return;
+      downloadText(base+'.kml', kml, 'application/vnd.google-earth.kml+xml');
+      status('تم تحميل '+base+'.kml — Pro: Add Data أو KML To Layer');
+    } else if(kind==='kmz'){
+      var k2=buildKml(); if(!k2) return;
+      function doneKmz(blob){
+        var b = new Blob([blob], {type:'application/vnd.google-earth.kmz'});
+        downloadBlob(base+'.kmz', b);
+        status('تم تحميل '+base+'.kmz — في Pro استخدم: Analysis → Tools → KML To Layer');
+      }
+      if(typeof JSZip !== 'undefined'){
+        var zip=new JSZip();
+        zip.file('doc.kml', k2);
+        zip.generateAsync({type:'arraybuffer', compression:'DEFLATE', compressionOptions:{level:6}}).then(function(buf){
+          doneKmz(buf);
+        }).catch(function(){ doneKmz(makeKmzBlob(k2)); });
+      } else {
+        doneKmz(makeKmzBlob(k2));
+      }
+    } else if(kind==='dxf'){
+      downloadText(base+'.dxf', (typeof buildDxf==='function'?buildDxf():buildDXF(G.pts,{th:0.5,line:false,no:true,elev:true,code:true})), 'application/octet-stream');
+      status('تم تحميل '+base+'.dxf');
+    } else if(kind==='xlsx'){
+      var buf=buildXlsx(); if(!buf) return;
+      downloadBlob(base+'.xlsx', new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+      status('تم تحميل '+base+'.xlsx');
+    }
+  } catch (err) {
+    status('خطأ أثناء التحميل: '+(err && err.message ? err.message : err), true);
+    alert('تعذر التحميل: '+(err && err.message ? err.message : err));
+  }
+};
+
+window.gisShowMap = function(){
+  /* خريطة ملء الشاشة — نفس أسلوب sdrShowMap تمامًا */
+  var ll = toLatLonPts();
+  var info = $('gis-map-info');
+  if(G._mapMsg && (!ll || !ll.length)){
+    status(G._mapMsg, true);
+    if(info) info.textContent = G._mapMsg;
+    return;
+  }
+  if((!ll || !ll.length) && !G.lines.length && !G.polys.length){
+    var msg = G._mapMsg || 'لا توجد إحداثيات للعرض — راجع النظام والزون وترتيب E/N';
+    status(msg, true);
+    if(info) info.textContent = msg;
+    return;
+  }
+  if(typeof L === 'undefined'){
+    alert('مكتبة الخريطة لم تُحمَّل. تأكد من الإنترنت وحاول تاني.');
+    return;
+  }
+  var lk = document.querySelector('link[href*="leaflet"]');
+  if(lk) lk.media = 'all';
+
+  var t = T();
+  var d = G._sysUsed || {sys: '?', zone: 36, north: true, swap: false};
+  var names = (t && t.SYS_NAMES) ? t.SYS_NAMES : {};
+  var sysLabel = names[d.sys] || d.sys || '?';
+  var cLat = 0, cLon = 0, nC = 0;
+  (ll || []).forEach(function(o){ cLat += o.lat; cLon += o.lon; nC++; });
+  if(nC){ cLat /= nC; cLon /= nC; }
+  if(info){
+    var warn = '';
+    if(nC && t && t.inEgypt && !t.inEgypt({lat: cLat, lon: cLon})){
+      var ccv = ($('gis-country')||{}).value;
+      if(!ccv || ccv === 'eg') warn = ' ⚠ المكان خارج مصر — جرّب نظام إحداثيات تاني أو «تلقائي».';
+    }
+    info.textContent = 'النظام: ' + sysLabel +
+      (d.sys === 'utm' ? ' Z' + (d.zone || '') : '') +
+      ' • تم تحويل ' + (ll ? ll.length : 0) + ' نقطة' +
+      (G._llFail ? ' • فشل ' + G._llFail : '') +
+      (nC ? ' • مركز: ' + cLat.toFixed(6) + '°, ' + cLon.toFixed(6) + '°' : '') +
+      (d.swap ? ' • تم تبديل E/N' : '') + warn;
+  }
+
+  var OV = $('gis-map-ov');
+  if(!OV){
+    OV = document.createElement('div');
+    OV.id = 'gis-map-ov';
+    OV.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0b1220;flex-direction:column;direction:rtl;';
+    var bs = 'padding:8px 12px;border-radius:10px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:0.9rem;cursor:pointer;';
+    OV.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#0f172a;color:#f1f5f9;">'+
+        '<button id="gis-ov-close" type="button" style="'+bs+'">✕ إغلاق</button>'+
+        '<span id="gis-ov-title" style="flex:1;text-align:center;font-size:0.85rem;"></span>'+
+        '<button id="gis-ov-names" type="button" style="'+bs+'">الأسماء</button>'+
+        '<button id="gis-ov-fit" type="button" style="'+bs+'">⤢</button>'+
+      '</div>'+
+      '<div id="gis-ov-warn" style="display:none;padding:10px 12px;background:#422006;color:#fde68a;font-size:0.82rem;line-height:1.6;"></div>'+
+      '<style>#gis-ov-map .leaflet-tile{visibility:visible!important;max-width:none!important;max-height:none!important}#gis-ov-map{position:relative;background:#0b1220;flex:1;min-height:0}</style>'+
+      '<div id="gis-ov-map" style="flex:1;min-height:0;"></div>';
+    document.body.appendChild(OV);
+    document.getElementById('gis-ov-close').onclick = function(){ OV.style.display = 'none'; };
+  }
+
+  var showNames = (ll && ll.length <= 150);
+  var CUR = ll || [];
+  var LM = G._ovMap || null;
+
+  function fitAll(){
+    if(!LM || !CUR.length) return;
+    try {
+      LM.invalidateSize();
+      LM.fitBounds(L.latLngBounds(CUR.map(function(r){ return [r.lat, r.lon]; })), {padding: [30, 30], maxZoom: 19});
+    } catch(e){}
+  }
+  function drawPts(){
+    if(!LM) return;
+    if(LM._gisGrp) try { LM.removeLayer(LM._gisGrp); } catch(e){}
+    var g = L.layerGroup();
+    CUR.forEach(function(r, i){
+      var p = r.p || {};
+      var m = L.circleMarker([r.lat, r.lon], {
+        radius: CUR.length > 400 ? 4 : 6,
+        color: '#ffffff', weight: 1.5, fillColor: '#fbbf24', fillOpacity: 0.95
+      });
+      var desc = (typeof attrDescription === 'function' ? attrDescription(p) : ('ID: '+(p.id||''))).replace(/\n/g, '<br>');
+      m.bindPopup('<b dir="ltr">' + esc(p.id || ('P'+(i+1))) + '</b><br>' + desc +
+        '<br><span dir="ltr" style="opacity:.75">' + r.lat.toFixed(6) + ', ' + r.lon.toFixed(6) + '</span>');
+      if(showNames && CUR.length <= 150){
+        m.bindTooltip(String(p.id || (i+1)), {permanent: true, direction: 'top', offset: [0, -8], opacity: 0.9});
+      }
+      m.addTo(g);
+    });
+    /* خطوط */
+    var dSys = G._sysUsed || {};
+    var zoneL = dSys.zone || 36, northL = dSys.north !== false;
+    var sysL = dSys.sys || 'utm';
+    if(sysL === 'wgs84' || sysL === 'auto') sysL = 'utm';
+    (G.lines || []).forEach(function(Lline){
+      var path = [];
+      (Lline.coords || []).forEach(function(c){
+        if(c.lat != null && c.lon != null){ path.push([c.lat, c.lon]); return; }
+        if(t && t.conv && isFinite(c.e) && isFinite(c.n)){
+          try {
+            var E = dSys.swap ? c.n : c.e, N = dSys.swap ? c.e : c.n;
+            var rr = t.conv(sysL, E, N, zoneL, northL);
+            if(rr && isFinite(rr.lat)) path.push([rr.lat, rr.lon]);
+          } catch(e){}
+        }
+      });
+      if(path.length >= 2) L.polyline(path, {color: '#38bdf8', weight: 3}).bindPopup(esc(Lline.name || 'Line')).addTo(g);
+    });
+    (G.polys || []).forEach(function(P){
+      var path = (P.coords || []).filter(function(c){ return c.lat != null; }).map(function(c){ return [c.lat, c.lon]; });
+      if(path.length >= 3) L.polygon(path, {color: '#fbbf24', fillOpacity: 0.2}).addTo(g);
+    });
+    g.addTo(LM);
+    LM._gisGrp = g;
+  }
+
+  document.getElementById('gis-ov-names').onclick = function(){ showNames = !showNames; drawPts(); };
+  document.getElementById('gis-ov-fit').onclick = function(){ fitAll(); };
+
+  OV.style.display = 'flex';
+  document.getElementById('gis-ov-title').textContent =
+    (CUR.length || 0) + ' نقطة • Esri • ' + sysLabel + (d.sys === 'utm' ? ' Z'+(d.zone||'') : '');
+
+  if(!LM){
+    LM = L.map(document.getElementById('gis-ov-map'), {zoomControl: true});
+    G._ovMap = LM;
+    var errs = 0, ok = 0, swapped = false;
+    var U1 = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    var U2 = 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    var sat = L.tileLayer(U1, {maxZoom: 20, maxNativeZoom: 19, attribution: 'Esri'}).addTo(LM);
+    sat.on('tileload', function(){ ok++; var w = document.getElementById('gis-ov-warn'); if(w) w.style.display = 'none'; });
+    sat.on('tileerror', function(){
+      errs++;
+      if(errs === 3 && !ok && !swapped){ swapped = true; sat.setUrl(U2); }
+      if(errs >= 8 && !ok){
+        var w = document.getElementById('gis-ov-warn');
+        if(w){
+          var gm = nC ? ('https://www.google.com/maps/place/'+cLat+','+cLon+'/@'+cLat+','+cLon+',18z/data=!3m1!1e3') : 'https://www.google.com/maps';
+          w.innerHTML = 'صور القمر الصناعي مش بتتحمل. افتح من Chrome/Safari.<br><a style="color:#fbbf24" target="_blank" href="'+gm+'">Google Maps</a>';
+          w.style.display = 'block';
+        }
+      }
+    });
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom: 20, maxNativeZoom: 18}).addTo(LM);
+  }
+
+  setTimeout(function(){ LM.invalidateSize(); drawPts(); fitAll(); }, 100);
+  setTimeout(function(){ LM.invalidateSize(); fitAll(); }, 400);
+};
+
+function ingestText(txt, name, isXmlHint){
+  txt=String(txt||'').trim();
+  if(!txt){ status('لا يوجد محتوى', true); return; }
+  var data;
+  if(/<kml[\s>]/i.test(txt) || isXmlHint){
+    data=parseKmlText(txt);
+  } else if(/^\s*0\s*$/m.test(txt) && /SECTION/i.test(txt)){
+    data=parseDxfText(txt);
+  } else {
+    /* نفس محرك SDR Converter أولاً — أدق في ترتيب N/E */
+    var orderEN = $('gis-order').value==='EN';
+    var t = T();
+    if(t && t.parseSDR){
+      var r = t.parseSDR(txt, !!orderEN);
+      if(r && r.pts && r.pts.length){
+        data = {pts: r.pts.map(function(pt){
+          return {id: pt.id, e: pt.e, n: pt.n, z: pt.z, code: pt.code||'', attrs: pt.attrs||{}, geo: false};
+        }), lines: [], polys: [], isGeo: false};
+      } else {
+        data = parseTableText(txt, orderEN);
+      }
+    } else {
+      data = parseTableText(txt, orderEN);
+    }
+  }
+  if(data.err){ status(data.err, true); return; }
+  if(!data.pts.length && !data.lines.length && !data.polys.length){ status('لم يُعثر على نقاط أو خطوط في الملف', true); setData({pts:[],lines:[],polys:[]}, name); return; }
+  setData(data, name);
+  status('تم قراءة '+(data.pts.length)+' نقطة'+(data.lines.length?' • '+data.lines.length+' خط':'')+(data.polys.length?' • '+data.polys.length+' مضلع':''));
+}
+
+window.gisFromText = function(){
+  ingestText($('gis-paste').value, 'pasted');
+};
+
+window.gisClear = function(){
+  G={ name:'gis', pts:[], lines:[], polys:[], ll:[], isGeo:false, map:G.map, layer:null };
+  if($('gis-file')) $('gis-file').value='';
+  if($('gis-paste')) $('gis-paste').value='';
+  renderSummary();
+  status('ارفع ملف أو الصق بيانات');
+  var mapEl=$('gis-map'); if(mapEl) mapEl.style.display='none';
+};
+
+function loadFile(file){
+  if(!file) return;
+  G.name = file.name.replace(/\.[^.]+$/,'') || 'gis';
+  var lower=file.name.toLowerCase();
+  var fr=new FileReader();
+  if(/\.kmz$/i.test(lower)){
+    fr.onload=function(){
+      if(typeof JSZip==='undefined'){ status('مكتبة KMZ غير محمّلة', true); return; }
+      JSZip.loadAsync(fr.result).then(function(zip){
+        var kmlName=null;
+        zip.forEach(function(path, fileObj){ if(/\.kml$/i.test(path) && !kmlName) kmlName=path; });
+        if(!kmlName){ status('لا يوجد ملف KML داخل KMZ', true); return; }
+        return zip.file(kmlName).async('string');
+      }).then(function(xml){
+        if(xml) ingestText(xml, G.name, true);
+      }).catch(function(e){ status('تعذر قراءة KMZ: '+(e&&e.message?e.message:e), true); });
+    };
+    fr.readAsArrayBuffer(file);
+    return;
+  }
+  if(/\.(xlsx|xls|xlsm)$/i.test(lower)){
+    fr.onload=function(){
+      try{
+        var t=T();
+        var txt = t && t.excelToText ? t.excelToText(fr.result) : (function(){
+          var wb=XLSX.read(new Uint8Array(fr.result),{type:'array'});
+          var lines=[];
+          wb.SheetNames.forEach(function(n){
+            XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:true,defval:''}).forEach(function(r){
+              if(!r||!r.length) return;
+              lines.push(r.map(function(c){return String(c==null?'':c).trim();}).join(','));
+            });
+          });
+          return lines.join('\n');
+        })();
+        ingestText(txt, G.name);
+      }catch(e){ status('تعذر قراءة Excel: '+(e&&e.message?e.message:e), true); }
+    };
+    fr.readAsArrayBuffer(file);
+    return;
+  }
+  fr.onload=function(){
+    var txt;
+    try{ txt=new TextDecoder('utf-8').decode(fr.result); }
+    catch(e){ txt=new TextDecoder('windows-1252').decode(fr.result); }
+    ingestText(txt, G.name, /\.kml$/i.test(lower));
+  };
+  fr.readAsArrayBuffer(file);
+}
+
+window.gisOnCountry = function(){
+  var code = ($('gis-country')||{}).value;
+  var rg = $('gis-region');
+  var hint = $('gis-zone-hint');
+  if(!rg) return;
+  rg.innerHTML = '';
+  if(!code || typeof ZONE_DATA === 'undefined' || !ZONE_DATA[code]){
+    rg.innerHTML = '<option value="">— اختر الدولة أولاً —</option>';
+    if(hint) hint.textContent = 'اختار الدولة والمنطقة ليتحدد رقم الزون تلقائيًا (لنظام UTM)';
+    return;
+  }
+  var d = ZONE_DATA[code];
+  rg.innerHTML = '<option value="">— اختر المدينة / المنطقة —</option>';
+  d.regions.forEach(function(r){
+    var o = document.createElement('option');
+    o.value = r.zone;
+    o.textContent = r.name + ' — Zone ' + r.zone + 'N';
+    rg.appendChild(o);
+  });
+  if(hint) hint.textContent = d.hint || 'اختار المنطقة لتحديد الزون';
+};
+window.gisOnRegion = function(){
+  var v = ($('gis-region')||{}).value;
+  if(v && $('gis-zone')){
+    $('gis-zone').value = v;
+    if($('gis-hemi')) $('gis-hemi').value = 'N';
+    // when region chosen outside Egypt belts, prefer UTM
+    var cc = ($('gis-country')||{}).value;
+    if(cc && cc !== 'eg' && $('gis-sys') && $('gis-sys').value === 'auto'){
+      $('gis-sys').value = 'utm';
+    }
+  }
+};
+
+function resolveGisSys(){
+  var t = T();
+  var zone = parseInt(($('gis-zone')||{}).value, 10);
+  if(!(zone >= 1 && zone <= 60)) zone = 0;
+  var north = (($('gis-hemi')||{}).value !== 'S');
+  var v = ($('gis-sys')||{}).value || 'auto';
+  var cc = ($('gis-country')||{}).value || '';
+  if(v === 'wgs84') return {sys: 'wgs84', zone: zone || 36, north: north, swap: false};
+  if(v !== 'auto') return {sys: v, zone: zone || 36, north: north, swap: false};
+  if(!t || !t.convertPts || !G.pts.length) return {sys: 'utm', zone: zone || 36, north: north, swap: false};
+  var sample = G.pts.filter(function(p){ return isFinite(p.e) && isFinite(p.n); }).slice(0, 20);
+  if(!sample.length) return {sys: 'utm', zone: zone || 36, north: north, swap: false};
+  var res = t.convertPts(sample, {sys: 'auto', zone: zone, north: north, country: cc});
+  if(res && res.sysUsed) return res.sysUsed;
+  return {sys: 'utm', zone: zone || 36, north: north, swap: false};
+}
+
+
+function init(){
+  var f=$('gis-file');
+  if(f && !f._b){
+    f._b=1;
+    f.addEventListener('change', function(){ if(f.files&&f.files[0]) loadFile(f.files[0]); });
+  }
+  ['gis-order','gis-sys','gis-zone','gis-hemi'].forEach(function(id){
+    var el=$(id); if(el) el.addEventListener('change', function(){
+      if(id==='gis-order' && G.pts && G.pts.length){
+        status('تم تغيير ترتيب الأعمدة — أعد رفع الملف أو الصق البيانات مرة أخرى لتطبيق الترتيب الجديد');
+      }
+    });
+  });
+  var af=$('attr-file');
+  if(af && !af._b){
+    af._b=1;
+    af.addEventListener('change', function(){ if(af.files&&af.files[0]) attrLoadFile(af.files[0]); });
+  }
+  if(typeof gisShowPanel==='function' && $('gis-submenu')) gisShowPanel('menu');
+}
+
+/* ===== GIS panels + Attribute Data ===== */
+var AD = { pts:[], lines:[], name:'attr', map:null, layer:null, ll:[] };
+
+window.gisShowPanel = function(which){
+  var menu=$('gis-submenu'), conv=$('gis-panel-convert'), attr=$('gis-panel-attr');
+  if(which==='menu'){
+    if(menu) menu.style.display='block';
+    if(conv) conv.style.display='none';
+    if(attr) attr.style.display='none';
+  } else if(which==='convert'){
+    if(menu) menu.style.display='none';
+    if(conv) conv.style.display='block';
+    if(attr) attr.style.display='none';
+    setTimeout(function(){ if(G.map) G.map.invalidateSize(); }, 200);
+  } else if(which==='attr'){
+    if(menu) menu.style.display='none';
+    if(conv) conv.style.display='none';
+    if(attr) attr.style.display='block';
+    setTimeout(function(){ if(AD.map) AD.map.invalidateSize(); }, 200);
+  }
+};
+function attrStatus(msg, bad){
+  var el=$('attr-status'); if(!el) return; el.textContent=msg||''; el.style.color=bad?'var(--warning)':'var(--muted)';
+}
+window.attrOnCountry = function(){
+  var code=($('attr-country')||{}).value, rg=$('attr-region');
+  if(!rg) return;
+  rg.innerHTML='';
+  if(!code || typeof ZONE_DATA==='undefined' || !ZONE_DATA[code]){
+    rg.innerHTML='<option value="">— اختر الدولة أولاً —</option>'; return;
+  }
+  rg.innerHTML='<option value="">— اختر المدينة / المنطقة —</option>';
+  ZONE_DATA[code].regions.forEach(function(r){
+    var o=document.createElement('option'); o.value=r.zone; o.textContent=r.name+' — Zone '+r.zone+'N'; rg.appendChild(o);
+  });
+};
+window.attrOnRegion = function(){
+  var v=($('attr-region')||{}).value;
+  if(v && $('attr-zone')){ $('attr-zone').value=v; if($('attr-hemi')) $('attr-hemi').value='N'; }
+};
+function attrResolveSys(){
+  return {
+    sys: ($('attr-sys')||{}).value||'utm',
+    zone: parseInt(($('attr-zone')||{}).value,10)||36,
+    north: (($('attr-hemi')||{}).value!=='S')
+  };
+}
+function attrLayerName(p){
+  var a=(p && p.attrs) || {};
+  var L = a.layer || a.type || a['نوع'] || (p && p.code) || 'POINTS';
+  return String(L).trim().replace(/[^\w\u0600-\u06FF\-]+/g,'_').substring(0,30) || 'POINTS';
+}
+function attrToLL(){
+  var d=attrResolveSys(), t=T(), out=[], fail=0;
+  AD.pts.forEach(function(p){
+    if(p.geo || d.sys==='wgs84'){
+      var lat=p.lat!=null?p.lat:p.n, lon=p.lon!=null?p.lon:p.e;
+      if(isFinite(lat)&&Math.abs(lat)<=90&&Math.abs(lon)<=180){ out.push({lat:lat,lon:lon,p:p}); return; }
+    }
+    if(!t||!t.conv){ fail++; return; }
+    try{
+      var r=t.conv(d.sys==='wgs84'?'utm':d.sys, p.e, p.n, d.zone, d.north);
+      if(r&&isFinite(r.lat)) out.push({lat:r.lat,lon:r.lon,p:p}); else fail++;
+    }catch(e){ fail++; }
+  });
+  AD.ll=out; AD._fail=fail; return out;
+}
+function attrRenderSummary(){
+  var box=$('attr-summary'), exp=$('attr-export-sec');
+  if(!AD.pts.length && !AD.lines.length){ if(box) box.innerHTML=''; if(exp) exp.style.display='none'; return; }
+  if(exp) exp.style.display='block';
+  var layers={};
+  AD.pts.forEach(function(p){ var L=attrLayerName(p); layers[L]=(layers[L]||0)+1; });
+  AD.lines.forEach(function(L){ var n=attrLayerName({attrs:L.attrs||{},code:L.code}); layers[n]=(layers[n]||0)+1; });
+  var layerRows=Object.keys(layers).map(function(k){
+    return '<div class="result-row"><span class="result-label">'+esc(k)+'</span><span class="result-value blue">'+layers[k]+'</span></div>';
+  }).join('');
+  if(box) box.innerHTML='<div class="results"><h2>ملخص Attribute Data</h2>'+
+    '<div class="result-row"><span class="result-label">نقاط</span><span class="result-value green">'+AD.pts.length+'</span></div>'+
+    '<div class="result-row"><span class="result-label">خطوط</span><span class="result-value blue">'+AD.lines.length+'</span></div>'+
+    '<h2 style="margin-top:12px;">الطبقات Layers</h2>'+layerRows+'</div>';
+}
+function attrBuildDxf(){
+  var layersMap={}, layerList=[];
+  function addLayer(name){ if(!layersMap[name]){ layersMap[name]=1; layerList.push(name); } }
+  AD.pts.forEach(function(p){ addLayer(attrLayerName(p)); });
+  AD.lines.forEach(function(L){ addLayer(attrLayerName({attrs:L.attrs||{},code:L.code})); });
+  if(!layerList.length) layerList.push('POINTS');
+  var out=[], colors=[1,2,3,4,5,6,30,40,50,60,70,80,90,100,120,140,160,180,200,220];
+  function g(c,v){ out.push(String(c)); out.push(String(v)); }
+  g(0,'SECTION'); g(2,'HEADER'); g(9,'$ACADVER'); g(1,'AC1009'); g(0,'ENDSEC');
+  g(0,'SECTION'); g(2,'TABLES');
+  g(0,'TABLE'); g(2,'LTYPE'); g(70,1);
+  g(0,'LTYPE'); g(2,'CONTINUOUS'); g(70,64); g(3,'Solid line'); g(72,65); g(73,0); g(40,0.0);
+  g(0,'ENDTAB');
+  g(0,'TABLE'); g(2,'LAYER'); g(70,layerList.length);
+  layerList.forEach(function(name,i){ g(0,'LAYER'); g(2,name); g(70,0); g(62,colors[i%colors.length]); g(6,'CONTINUOUS'); });
+  g(0,'ENDTAB');
+  g(0,'TABLE'); g(2,'STYLE'); g(70,1);
+  g(0,'STYLE'); g(2,'STANDARD'); g(70,0); g(40,0.0); g(41,1.0); g(50,0.0); g(71,0); g(42,1.0); g(3,'txt'); g(4,'');
+  g(0,'ENDTAB');
+  g(0,'ENDSEC');
+  g(0,'SECTION'); g(2,'ENTITIES');
+  AD.pts.forEach(function(p){
+    var layer=attrLayerName(p);
+    g(0,'CIRCLE'); g(8,layer); g(10,Number(p.e).toFixed(4)); g(20,Number(p.n).toFixed(4)); g(30,Number(p.z||0).toFixed(4)); g(40,'0.15');
+    var label=String(p.id||'');
+    var a=p.attrs||{};
+    if(a.diameter||a['قطر']) label+=' D'+(a.diameter||a['قطر']);
+    if(a.depth||a['عمق']) label+=' H'+(a.depth||a['عمق']);
+    g(0,'TEXT'); g(8,layer); g(7,'STANDARD'); g(10,(Number(p.e)+0.5).toFixed(4)); g(20,(Number(p.n)+0.5).toFixed(4)); g(30,'0'); g(40,'0.8'); g(1,String(label).replace(/[\r\n]/g,' ')); g(50,0.0);
+  });
+  AD.lines.forEach(function(L){
+    var layer=attrLayerName({attrs:L.attrs||{},code:L.code});
+    var c=L.coords||[];
+    for(var i=0;i+1<c.length;i++){
+      var a=c[i], b=c[i+1];
+      var x1=a.e!=null?a.e:a.lon, y1=a.n!=null?a.n:a.lat;
+      var x2=b.e!=null?b.e:b.lon, y2=b.n!=null?b.n:b.lat;
+      if(!isFinite(x1)||!isFinite(y1)||!isFinite(x2)||!isFinite(y2)) continue;
+      g(0,'LINE'); g(8,layer);
+      g(10,Number(x1).toFixed(4)); g(20,Number(y1).toFixed(4)); g(30,'0');
+      g(11,Number(x2).toFixed(4)); g(21,Number(y2).toFixed(4)); g(31,'0');
+    }
+  });
+  g(0,'ENDSEC'); g(0,'EOF');
+  return out.join('\r\n')+'\r\n';
+}
+function attrWithGisSys(fn){
+  var bak={pts:G.pts,lines:G.lines,polys:G.polys,isGeo:G.isGeo,name:G.name};
+  G.pts=AD.pts; G.lines=AD.lines; G.polys=[]; G.isGeo=!!(AD.pts.length&&AD.pts.every(function(p){return p.geo;})); G.name=AD.name||'attr';
+  var fsys=$('gis-sys'), fzone=$('gis-zone'), fhemi=$('gis-hemi'), fcountry=$('gis-country');
+  var o={sys:fsys&&fsys.value, zone:fzone&&fzone.value, hemi:fhemi&&fhemi.value, country:fcountry&&fcountry.value};
+  if(fsys) fsys.value=($('attr-sys')||{}).value||'utm';
+  if(fzone) fzone.value=($('attr-zone')||{}).value||'36';
+  if(fhemi) fhemi.value=($('attr-hemi')||{}).value||'N';
+  if(fcountry) fcountry.value=($('attr-country')||{}).value||'';
+  var res; try{ res=fn(); } finally {
+    if(fsys) fsys.value=o.sys; if(fzone) fzone.value=o.zone; if(fhemi) fhemi.value=o.hemi; if(fcountry) fcountry.value=o.country;
+    G.pts=bak.pts; G.lines=bak.lines; G.polys=bak.polys; G.isGeo=bak.isGeo; G.name=bak.name;
+  }
+  return res;
+}
+window.attrExport = function(kind){
+  try{
+    if(!AD.pts.length && !AD.lines.length){ attrStatus('لا توجد بيانات', true); return; }
+    var base='AES_ATTR_'+(AD.name||'data').replace(/[^A-Za-z0-9_\-]+/g,'_');
+    if(kind==='dxf'){
+      downloadText(base+'.dxf', attrBuildDxf(), 'application/octet-stream');
+      attrStatus('تم DXF بطبقات — افتح Layer في AutoCAD');
+    } else if(kind==='kml' || kind==='kmz'){
+      var k=attrWithGisSys(function(){ return buildKml(); });
+      if(!k) return;
+      if(kind==='kml'){ downloadText(base+'.kml', k, 'application/vnd.google-earth.kml+xml'); attrStatus('تم KML'); }
+      else {
+        function done(blob){ downloadBlob(base+'.kmz', new Blob([blob],{type:'application/vnd.google-earth.kmz'})); attrStatus('تم KMZ'); }
+        if(typeof JSZip!=='undefined'){ var z=new JSZip(); z.file('doc.kml',k); z.generateAsync({type:'arraybuffer',compression:'DEFLATE'}).then(done).catch(function(){ done(makeKmzBlob(k)); }); }
+        else done(makeKmzBlob(k));
+      }
+    } else if(kind==='geojson'){
+      var gj=attrWithGisSys(function(){ return buildGeoJSON(); });
+      if(!gj) return;
+      downloadText(base+'.geojson', gj, 'application/geo+json');
+      attrStatus('تم GeoJSON');
+    }
+  }catch(err){
+    attrStatus('خطأ: '+(err&&err.message?err.message:err), true);
+  }
+};
+window.attrShowMap = function(){
+  var ll=attrToLL();
+  var mapEl=$('attr-map'), info=$('attr-map-info');
+  if(!ll||!ll.length){ if(info) info.textContent='لا توجد إحداثيات — راجع النظام والزون'; return; }
+  if(typeof L==='undefined'){ alert('مكتبة الخريطة غير محمّلة'); return; }
+  mapEl.style.display='block';
+  if(!AD.map){
+    AD.map=L.map(mapEl,{zoomControl:true});
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:21,maxNativeZoom:19,attribution:'Esri'}).addTo(AD.map);
+  }
+  if(AD.layer) AD.map.removeLayer(AD.layer);
+  var g=L.layerGroup(), bounds=[];
+  ll.forEach(function(o){
+    L.circleMarker([o.lat,o.lon],{radius:6,color:'#22d3ee',fillColor:'#22d3ee',fillOpacity:0.9,weight:1})
+      .bindPopup('<b>'+esc(o.p.id)+'</b><br>'+attrDescription(o.p).replace(/\n/g,'<br>')).addTo(g);
+    bounds.push([o.lat,o.lon]);
+  });
+  g.addTo(AD.map); AD.layer=g;
+  AD.map.invalidateSize();
+  if(bounds.length) AD.map.fitBounds(bounds,{padding:[30,30],maxZoom:19});
+  if(info) info.textContent='تم عرض '+ll.length+' نقطة'+(AD._fail?' • فشل '+AD._fail:'');
+  setTimeout(function(){ if(AD.map) AD.map.invalidateSize(); }, 250);
+};
+function attrLoadFile(file){
+  if(!file) return;
+  AD.name=file.name.replace(/\.[^.]+$/,'')||'attr';
+  var fr=new FileReader();
+  fr.onload=function(){
+    try{
+      var txt;
+      if(/\.(xlsx|xls|xlsm)$/i.test(file.name)){
+        var t=T();
+        txt=t&&t.excelToText?t.excelToText(fr.result):null;
+        if(!txt && typeof XLSX!=='undefined'){
+          var wb=XLSX.read(new Uint8Array(fr.result),{type:'array'});
+          var lines=[];
+          wb.SheetNames.forEach(function(n){
+            XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:true,defval:''}).forEach(function(r){
+              if(r&&r.length) lines.push(r.map(function(c){return String(c==null?'':c).trim();}).join(','));
+            });
+          });
+          txt=lines.join('\n');
+        }
+      } else {
+        txt=new TextDecoder('utf-8').decode(new Uint8Array(fr.result));
+      }
+      var data=parseTableText(txt, ($('attr-order')||{}).value!=='NE');
+      AD.pts=data.pts||[]; AD.lines=data.lines||[];
+      AD.pts.forEach(function(p){ p.attrs=p.attrs||{}; if(!p.attrs.layer&&p.attrs.type) p.attrs.layer=p.attrs.type; });
+      attrRenderSummary();
+      attrStatus('تم قراءة '+AD.pts.length+' نقطة'+(AD.lines.length?' • '+AD.lines.length+' خط':''));
+    }catch(e){ attrStatus('تعذر القراءة: '+(e&&e.message?e.message:e), true); }
+  };
+  fr.readAsArrayBuffer(file);
+}
+
+
+window.gisInit = init;
+window.makeKmzBlob = makeKmzBlob;
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+// hook showView to init map size
+var _sv = window.showView;
+if(typeof _sv==='function'){
+  window.showView=function(name){
+    var r=_sv.apply(this, arguments);
+    if(name==='gis'){ setTimeout(function(){ if(typeof gisShowPanel==='function') gisShowPanel('menu'); if(G.map) G.map.invalidateSize(); }, 200); }
+    if(name==='const'){ setTimeout(function(){ if(typeof slabEnsureThkFields==='function') slabEnsureThkFields(); }, 50); }
+    return r;
+  };
+}
+})();
+</script>
+
+
+<script id="sitesurvey-script">
+(function(){
+'use strict';
+var SS = { a: [], b: [], rows: [], nameA: '', nameB: '', map: null, layer: null };
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function T(){ return window.__sdrTools || null; }
+
+function statusA(msg, bad){ var el=$('ss-status-a'); if(el){ el.textContent=msg||''; el.style.color=bad?'var(--warning)':'var(--muted)'; } }
+function statusB(msg, bad){ var el=$('ss-status-b'); if(el){ el.textContent=msg||''; el.style.color=bad?'var(--warning)':'var(--muted)'; } }
+
+function parseFileToPts(file, orderEN, cb){
+  var t = T();
+  if(!t || !t.parseSDR){ cb(null, 'أدوات القراءة غير جاهزة'); return; }
+  var fr = new FileReader();
+  var lower = (file.name||'').toLowerCase();
+  fr.onload = function(){
+    try {
+      var txt;
+      if(/\.(xlsx|xls|xlsm)$/i.test(lower)){
+        txt = t.excelToText ? t.excelToText(fr.result) : '';
+      } else {
+        try { txt = new TextDecoder('utf-8').decode(fr.result); }
+        catch(e){ txt = new TextDecoder('windows-1252').decode(fr.result); }
+      }
+      var r = t.parseSDR(txt, !!orderEN);
+      if(!r || !r.pts || !r.pts.length){ cb(null, 'لم يُعثر على نقاط في الملف'); return; }
+      cb(r.pts.map(function(p){
+        return {id: String(p.id||''), e: +p.e, n: +p.n, z: isFinite(p.z)?+p.z:0, code: p.code||''};
+      }), null);
+    } catch(e){ cb(null, 'تعذر القراءة: '+(e.message||e)); }
+  };
+  fr.onerror = function(){ cb(null, 'فشل قراءة الملف'); };
+  fr.readAsArrayBuffer(file);
+}
+
+function loadSide(which){
+  var input = $(which==='a'?'ss-file-a':'ss-file-b');
+  if(!input || !input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var orderEN = ($('ss-order')||{}).value === 'EN';
+  var setSt = which==='a'?statusA:statusB;
+  setSt('جاري القراءة…');
+  parseFileToPts(file, orderEN, function(pts, err){
+    if(err){ setSt(err, true); if(which==='a') SS.a=[]; else SS.b=[]; return; }
+    if(which==='a'){ SS.a = pts; SS.nameA = file.name; }
+    else { SS.b = pts; SS.nameB = file.name; }
+    setSt('تم: '+pts.length+' نقطة — '+file.name);
+  });
+}
+
+function dist2(a,b){ var de=a.e-b.e, dn=a.n-b.n; return de*de+dn*dn; }
+
+window.ssCompare = function(){
+  if(!SS.a.length || !SS.b.length){
+    alert('حمّل الملفين أولًا (الأصلي + الموقع)');
+    return;
+  }
+  var tol = parseFloat(($('ss-tol')||{}).value);
+  if(!(tol > 0)) tol = 0.10;
+  var tol2 = tol * tol;
+
+  /* فهرس بالـ ID */
+  var byIdB = {};
+  SS.b.forEach(function(p){ if(p.id) byIdB[p.id] = p; });
+
+  var usedB = {};
+  var rows = [];
+  var matchOk = 0, matchBad = 0, onlyA = 0, onlyB = 0;
+  var sumDZ = 0, sumH = 0, nMatch = 0;
+
+  SS.a.forEach(function(pa){
+    var pb = byIdB[pa.id];
+    if(pb){
+      usedB[pb.id] = 1;
+      var de = pb.e - pa.e, dn = pb.n - pa.n, dz = pb.z - pa.z;
+      var h = Math.sqrt(de*de + dn*dn);
+      var ok = h <= tol;
+      if(ok) matchOk++; else matchBad++;
+      sumDZ += dz; sumH += h; nMatch++;
+      rows.push({id: pa.id, de: de, dn: dn, dz: dz, h: h, ok: ok, kind: ok?'ok':'bad', pa: pa, pb: pb});
+    } else {
+      /* أقرب نقطة بالموقع لو مفيش نفس الـ ID */
+      var best = null, bestD = Infinity;
+      for(var i=0;i<SS.b.length;i++){
+        var cand = SS.b[i];
+        if(usedB[cand.id]) continue;
+        var d2 = dist2(pa, cand);
+        if(d2 < bestD){ bestD = d2; best = cand; }
+      }
+      if(best && bestD <= tol2 * 25){ /* ابحث في نطاق أوسع 5× للربط المكاني */
+        usedB[best.id] = 1;
+        var de2 = best.e - pa.e, dn2 = best.n - pa.n, dz2 = best.z - pa.z;
+        var h2 = Math.sqrt(de2*de2 + dn2*dn2);
+        var ok2 = h2 <= tol;
+        if(ok2) matchOk++; else matchBad++;
+        sumDZ += dz2; sumH += h2; nMatch++;
+        rows.push({id: pa.id + '≈' + best.id, de: de2, dn: dn2, dz: dz2, h: h2, ok: ok2, kind: ok2?'ok':'bad', pa: pa, pb: best});
+      } else {
+        onlyA++;
+        rows.push({id: pa.id, de: null, dn: null, dz: null, h: null, ok: false, kind: 'onlyA', pa: pa, pb: null});
+      }
+    }
+  });
+  SS.b.forEach(function(pb){
+    if(usedB[pb.id]) return;
+    onlyB++;
+    rows.push({id: pb.id, de: null, dn: null, dz: null, h: null, ok: false, kind: 'onlyB', pa: null, pb: pb});
+  });
+
+  SS.rows = rows;
+  var box = $('ss-results');
+  if(box) box.style.display = 'block';
+  var kpi = $('ss-kpi');
+  if(kpi){
+    kpi.innerHTML =
+      '<div class="kpi"><span class="kpi-l">مطابق</span><span class="kpi-v" style="color:#4ade80">'+matchOk+'</span><span class="kpi-u">نقطة</span></div>'+
+      '<div class="kpi"><span class="kpi-l">انحراف</span><span class="kpi-v" style="color:#fbbf24">'+matchBad+'</span><span class="kpi-u">نقطة</span></div>'+
+      '<div class="kpi"><span class="kpi-l">أصلي فقط</span><span class="kpi-v" style="color:#38bdf8">'+onlyA+'</span></div>'+
+      '<div class="kpi"><span class="kpi-l">موقع فقط</span><span class="kpi-v" style="color:#f87171">'+onlyB+'</span></div>'+
+      '<div class="kpi main"><span class="kpi-l">متوسط الإزاحة الأفقية</span><span class="kpi-v">'+(nMatch?(sumH/nMatch).toFixed(3):'—')+'</span><span class="kpi-u">م</span></div>'+
+      '<div class="kpi"><span class="kpi-l">متوسط ΔZ</span><span class="kpi-v">'+(nMatch?(sumDZ/nMatch).toFixed(3):'—')+'</span><span class="kpi-u">م</span></div>';
+  }
+  var tb = document.querySelector('#ss-table tbody');
+  if(tb){
+    var html = '';
+    rows.forEach(function(r){
+      var st = r.kind==='ok' ? '<span style="color:#4ade80">مطابق</span>'
+        : r.kind==='bad' ? '<span style="color:#fbbf24">انحراف</span>'
+        : r.kind==='onlyA' ? '<span style="color:#38bdf8">أصلي فقط</span>'
+        : '<span style="color:#f87171">موقع فقط</span>';
+      html += '<tr>'+
+        '<td>'+esc(r.id)+'</td>'+
+        '<td dir="ltr">'+(r.de==null?'—':r.de.toFixed(3))+'</td>'+
+        '<td dir="ltr">'+(r.dn==null?'—':r.dn.toFixed(3))+'</td>'+
+        '<td dir="ltr">'+(r.dz==null?'—':r.dz.toFixed(3))+'</td>'+
+        '<td dir="ltr">'+(r.h==null?'—':r.h.toFixed(3))+'</td>'+
+        '<td>'+st+'</td></tr>';
+    });
+    tb.innerHTML = html;
+  }
+};
+
+window.ssClear = function(){
+  SS = { a: [], b: [], rows: [], nameA: '', nameB: '', map: SS.map, layer: null };
+  if($('ss-file-a')) $('ss-file-a').value = '';
+  if($('ss-file-b')) $('ss-file-b').value = '';
+  statusA('لم يُحمَّل بعد'); statusB('لم يُحمَّل بعد');
+  var box = $('ss-results'); if(box) box.style.display = 'none';
+};
+
+window.ssShowMap = function(){
+  if(!SS.a.length && !SS.b.length){ alert('لا توجد نقاط'); return; }
+  if(typeof L === 'undefined'){ alert('مكتبة الخريطة غير محمّلة'); return; }
+  var t = T();
+  if(!t || !t.convertPts){ alert('أدوات التحويل غير جاهزة'); return; }
+
+  function toLL(pts){
+    var sys = (($('ss-sys')||{}).value) || 'auto';
+    var zone = parseInt(($('ss-zone')||{}).value, 10) || 36;
+    var res = t.convertPts(pts, {sys: sys, zone: zone, north: true, country: 'eg'});
+    return res.ll || [];
+  }
+  var llA = toLL(SS.a);
+  var llB = toLL(SS.b);
+  if(!llA.length && !llB.length){
+    /* maybe already geographic small numbers */
+    alert('تعذر تحويل الإحداثيات للعرض. تأكد أن الملفات بإحداثيات مسقطة صحيحة.');
+    return;
+  }
+
+  var OV = $('ss-map-ov');
+  if(!OV){
+    OV = document.createElement('div');
+    OV.id = 'ss-map-ov';
+    OV.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0b1220;flex-direction:column;direction:rtl;';
+    var bs = 'padding:8px 12px;border-radius:10px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:0.85rem;cursor:pointer;';
+    OV.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#0f172a;">'+
+        '<button id="ss-ov-close" type="button" style="'+bs+'">✕ إغلاق</button>'+
+        '<span style="flex:1;text-align:center;font-size:0.82rem;color:#e0f2fe;">مقارنة الرفع — <span style="color:#38bdf8">● أصلي</span> &nbsp; <span style="color:#fbbf24">● موقع</span></span>'+
+        '<button id="ss-ov-fit" type="button" style="'+bs+'">⤢</button>'+
+      '</div>'+
+      '<div id="ss-ov-map" style="flex:1;min-height:0;"></div>';
+    document.body.appendChild(OV);
+    document.getElementById('ss-ov-close').onclick = function(){ OV.style.display='none'; };
+  }
+  OV.style.display = 'flex';
+
+  var mapEl = document.getElementById('ss-ov-map');
+  if(!SS.map){
+    SS.map = L.map(mapEl, {zoomControl: true});
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 21, maxNativeZoom: 19, attribution: 'Esri'
+    }).addTo(SS.map);
+  }
+  if(SS.layer) try { SS.map.removeLayer(SS.layer); } catch(e){}
+  var g = L.layerGroup();
+  var bounds = [];
+  llA.forEach(function(o){
+    L.circleMarker([o.lat, o.lon], {radius: 7, color: '#fff', weight: 1.5, fillColor: '#38bdf8', fillOpacity: 0.95})
+      .bindPopup('<b style="color:#38bdf8">أصلي</b><br>'+esc(o.p.id)+'<br>Z: '+(isFinite(o.p.z)?o.p.z.toFixed(3):'—'))
+      .addTo(g);
+    bounds.push([o.lat, o.lon]);
+  });
+  llB.forEach(function(o){
+    L.circleMarker([o.lat, o.lon], {radius: 6, color: '#fff', weight: 1.5, fillColor: '#fbbf24', fillOpacity: 0.95})
+      .bindPopup('<b style="color:#fbbf24">موقع</b><br>'+esc(o.p.id)+'<br>Z: '+(isFinite(o.p.z)?o.p.z.toFixed(3):'—'))
+      .addTo(g);
+    bounds.push([o.lat, o.lon]);
+  });
+  /* خطوط ربط بين المتطابقات */
+  SS.rows.forEach(function(r){
+    if(!r.pa || !r.pb) return;
+    var a = llA.find(function(o){ return o.p === r.pa || (o.p && o.p.id === r.pa.id); });
+    var b = llB.find(function(o){ return o.p === r.pb || (o.p && o.p.id === r.pb.id); });
+    if(a && b){
+      L.polyline([[a.lat,a.lon],[b.lat,b.lon]], {
+        color: r.ok ? '#4ade80' : '#f87171', weight: 2, dashArray: r.ok ? null : '4 4', opacity: 0.85
+      }).addTo(g);
+    }
+  });
+  g.addTo(SS.map);
+  SS.layer = g;
+  SS.map.invalidateSize();
+  if(bounds.length) SS.map.fitBounds(bounds, {padding: [40,40], maxZoom: 19});
+  document.getElementById('ss-ov-fit').onclick = function(){
+    SS.map.invalidateSize();
+    if(bounds.length) SS.map.fitBounds(bounds, {padding: [40,40], maxZoom: 19});
+  };
+  setTimeout(function(){ SS.map.invalidateSize(); }, 250);
+  var info = $('ss-map-info');
+  if(info) info.textContent = 'أزرق = أصلي ('+llA.length+') • ذهبي = موقع ('+llB.length+') • خط أخضر = مطابق • خط أحمر متقطع = انحراف';
+};
+
+window.ssExportExcel = function(){
+  if(!SS.rows.length){ alert('نفّذ المقارنة أولًا'); return; }
+  if(typeof XLSX === 'undefined'){ alert('مكتبة Excel غير محمّلة'); return; }
+  var data = [['ID','ΔE_m','ΔN_m','ΔZ_m','Horizontal_m','Status','E_orig','N_orig','Z_orig','E_field','N_field','Z_field']];
+  SS.rows.forEach(function(r){
+    var st = r.kind==='ok'?'OK':r.kind==='bad'?'DELTA':r.kind==='onlyA'?'ORIG_ONLY':'FIELD_ONLY';
+    data.push([
+      r.id,
+      r.de, r.dn, r.dz, r.h, st,
+      r.pa?r.pa.e:'', r.pa?r.pa.n:'', r.pa?r.pa.z:'',
+      r.pb?r.pb.e:'', r.pb?r.pb.n:'', r.pb?r.pb.z:''
+    ]);
+  });
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Compare');
+  XLSX.writeFile(wb, 'AES_SiteSurvey_Compare.xlsx');
+};
+
+
+
+function ssDownloadText(name, content, mime){
+  /* تحميل موثوق على الموبايل: saveFile ثم Share ثم رابط */
+  mime = mime || 'application/dxf';
+  try {
+    if (typeof window.saveFile === 'function') {
+      var ret = window.saveFile(content, name, mime);
+      if (ret && typeof ret.then === 'function') {
+        ret.catch(function(){ ssFallbackDl(name, content, mime); });
+        return;
+      }
+      return;
+    }
+  } catch(e){}
+  ssFallbackDl(name, content, mime);
+}
+function ssFallbackDl(name, content, mime){
+  try {
+    var blob = new Blob([content], {type: mime});
+    if (typeof File !== 'undefined' && navigator.share) {
+      try {
+        var file = new File([blob], name, {type: 'application/dxf'});
+        if (!navigator.canShare || navigator.canShare({files:[file]})) {
+          navigator.share({files:[file], title: name}).catch(function(){ ssAnchorDl(name, blob); });
+          return;
+        }
+      } catch(e){}
+    }
+    ssAnchorDl(name, blob);
+  } catch(e){
+    alert('تعذر التحميل: '+(e.message||e));
+  }
+}
+function ssAnchorDl(name, blob){
+  try { if (navigator.msSaveOrOpenBlob) { navigator.msSaveOrOpenBlob(blob, name); return; } } catch(e){}
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = name; a.rel = 'noopener'; a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  /* iOS: افتح في تاب جديد لو download اترفض */
+  setTimeout(function(){
+    try {
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) window.open(url, '_blank');
+    } catch(e){}
+  }, 400);
+  setTimeout(function(){ try { a.remove(); } catch(e){} }, 2000);
+  setTimeout(function(){ try { URL.revokeObjectURL(url); } catch(e){} }, 120000);
+}
+
+function ssBuildDxf(kind){
+  /*
+    DXF ASCII R12 — متوافق DWG FastView / AutoCAD:
+    - CIRCLE بدل POINT
+    - طبقة 0 + طبقات مسمّاة
+    - EXTMIN/EXTMAX / LIMITS
+    - STYLE STANDARD
+    - أسطر CRLF
+  */
+  var out = [];
+  function g(c,v){ out.push(String(c)); out.push(String(v)); }
+  var all = [];
+  if(kind === 'a' || kind === 'both') (SS.a||[]).forEach(function(pt){ if(pt&&isFinite(pt.e)&&isFinite(pt.n)) all.push(pt); });
+  if(kind === 'b' || kind === 'both') (SS.b||[]).forEach(function(pt){ if(pt&&isFinite(pt.e)&&isFinite(pt.n)) all.push(pt); });
+  if(!all.length) return null;
+
+  var minE=Infinity,maxE=-Infinity,minN=Infinity,maxN=-Infinity,minZ=1e99,maxZ=-1e99;
+  all.forEach(function(pt){
+    if(pt.e<minE)minE=pt.e; if(pt.e>maxE)maxE=pt.e;
+    if(pt.n<minN)minN=pt.n; if(pt.n>maxN)maxN=pt.n;
+    var z=isFinite(pt.z)?pt.z:0; if(z<minZ)minZ=z; if(z>maxZ)maxZ=z;
+  });
+  var span = Math.max(maxE-minE, maxN-minN, 1);
+  var pad = span * 0.08;
+  var rad = Math.max(span * 0.006, 0.12); /* نصف قطر ظاهر عند Zoom Extents */
+  var th  = Math.max(span * 0.01, 0.25);
+
+  var layers = [
+    ['0', 7],
+    ['ORIG', 5],
+    ['FIELD', 2],
+    ['OK', 3],
+    ['DELTA', 1],
+    ['TXT', 7]
+  ];
+
+  g(0,'SECTION'); g(2,'HEADER');
+  g(9,'$ACADVER'); g(1,'AC1009');
+  g(9,'$DWGCODEPAGE'); g(3,'ANSI_1252');
+  g(9,'$INSUNITS'); g(70,6); /* meters */
+  g(9,'$INSBASE'); g(10,'0.0'); g(20,'0.0'); g(30,'0.0');
+  g(9,'$EXTMIN'); g(10,(minE-pad).toFixed(6)); g(20,(minN-pad).toFixed(6)); g(30, Number(minZ).toFixed(6));
+  g(9,'$EXTMAX'); g(10,(maxE+pad).toFixed(6)); g(20,(maxN+pad).toFixed(6)); g(30, Number(maxZ).toFixed(6));
+  g(9,'$LIMMIN'); g(10,(minE-pad).toFixed(6)); g(20,(minN-pad).toFixed(6));
+  g(9,'$LIMMAX'); g(10,(maxE+pad).toFixed(6)); g(20,(maxN+pad).toFixed(6));
+  g(9,'$PDMODE'); g(70,35);
+  g(9,'$PDSIZE'); g(40, rad.toFixed(4));
+  g(0,'ENDSEC');
+
+  g(0,'SECTION'); g(2,'TABLES');
+  g(0,'TABLE'); g(2,'LTYPE'); g(70,1);
+  g(0,'LTYPE'); g(2,'CONTINUOUS'); g(70,0); g(3,'Solid line'); g(72,65); g(73,0); g(40,'0.0');
+  g(0,'ENDTAB');
+  g(0,'TABLE'); g(2,'LAYER'); g(70, layers.length);
+  layers.forEach(function(L){
+    g(0,'LAYER'); g(2,L[0]); g(70,0); g(62,L[1]); g(6,'CONTINUOUS');
+  });
+  g(0,'ENDTAB');
+  g(0,'TABLE'); g(2,'STYLE'); g(70,1);
+  g(0,'STYLE'); g(2,'STANDARD'); g(70,0); g(40,'0.0'); g(41,'1.0'); g(50,'0.0'); g(71,0);
+  g(42,'0.2'); g(3,'txt'); g(4,'');
+  g(0,'ENDTAB');
+  g(0,'ENDSEC');
+
+  g(0,'SECTION'); g(2,'ENTITIES');
+
+  function circle(layer, e, n, z, r){
+    g(0,'CIRCLE'); g(8, layer);
+    g(10, Number(e).toFixed(4)); g(20, Number(n).toFixed(4)); g(30, Number(z||0).toFixed(4));
+    g(40, Number(r).toFixed(4));
+  }
+  function txt(layer, e, n, h, s){
+    s = String(s == null ? '' : s).replace(/[\r\n\t]/g,' ').substring(0, 120);
+    if(!s) return;
+    g(0,'TEXT'); g(8, layer); g(7,'STANDARD');
+    g(10, Number(e).toFixed(4)); g(20, Number(n).toFixed(4)); g(30,'0.0');
+    g(40, Number(h).toFixed(4)); g(1, s); g(50,'0.0');
+  }
+  function line(layer, a, b){
+    g(0,'LINE'); g(8, layer);
+    g(10, Number(a.e).toFixed(4)); g(20, Number(a.n).toFixed(4)); g(30, Number(a.z||0).toFixed(4));
+    g(11, Number(b.e).toFixed(4)); g(21, Number(b.n).toFixed(4)); g(31, Number(b.z||0).toFixed(4));
+  }
+
+  if(kind === 'a' || kind === 'both'){
+    (SS.a||[]).forEach(function(pt){
+      if(!pt||!isFinite(pt.e)||!isFinite(pt.n)) return;
+      circle('ORIG', pt.e, pt.n, pt.z, rad);
+      circle('0', pt.e, pt.n, pt.z, rad); /* layer 0 for picky apps */
+      txt('TXT', pt.e + rad*1.8, pt.n + rad*1.8, th, String(pt.id||'') + (isFinite(pt.z)?(' '+Number(pt.z).toFixed(2)):'') );
+    });
+  }
+  if(kind === 'b' || kind === 'both'){
+    (SS.b||[]).forEach(function(pt){
+      if(!pt||!isFinite(pt.e)||!isFinite(pt.n)) return;
+      circle('FIELD', pt.e, pt.n, pt.z, rad*0.85);
+      circle('0', pt.e, pt.n, pt.z, rad*0.85);
+      txt('TXT', pt.e + rad*1.8, pt.n - rad*2.2, th*0.9, String(pt.id||'') );
+    });
+  }
+  if(kind === 'both' && SS.rows && SS.rows.length){
+    SS.rows.forEach(function(r){
+      if(r.pa && r.pb){
+        line(r.ok ? 'OK' : 'DELTA', r.pa, r.pb);
+        /* وسيط: قيمة الانحراف الأفقي */
+        if(isFinite(r.h) && r.h > 0){
+          var mx = (r.pa.e+r.pb.e)/2, my=(r.pa.n+r.pb.n)/2;
+          txt('TXT', mx, my, th*0.75, (r.ok?'OK ':'dH=') + Number(r.h).toFixed(3) + 'm');
+        }
+      }
+    });
+  }
+
+  g(0,'ENDSEC');
+  g(0,'EOF');
+  return out.join('\r\n') + '\r\n';
+}
+
+window.ssExportDxf = function(kind){
+  kind = kind || 'both';
+  if(kind === 'a' && !(SS.a&&SS.a.length)){ alert('حمّل الملف الأصلي أولًا'); return; }
+  if(kind === 'b' && !(SS.b&&SS.b.length)){ alert('حمّل ملف الموقع أولًا'); return; }
+  if(kind === 'both' && !(SS.a&&SS.a.length) && !(SS.b&&SS.b.length)){ alert('حمّل الملفات أولًا'); return; }
+  var dxf = ssBuildDxf(kind);
+  if(!dxf){ alert('لا توجد نقاط صالحة للتصدير'); return; }
+  var name = kind === 'a' ? 'AES_ORIG.dxf' : kind === 'b' ? 'AES_FIELD.dxf' : 'AES_COMPARE.dxf';
+  ssDownloadText(name, dxf, 'application/dxf');
+  var info = $('ss-map-info');
+  if(info) info.textContent = 'تم تجهيز '+name+' — على الموبايل: شارك الملف إلى الملفات أو افتحه مباشرة في DWG FastView / AutoCAD';
+};
+
+/* ===== Sketch preview (E/N plan view) — مقياس 1:1 + تدوير + زوم ===== */
+var SK = { k: 1, tx: 0, ty: 0, rot: 0, showNames: true, ready: false, bounds: null, cx: 200, cy: 180 };
+
+function ssSketchEls(){
+  return { svg: $('ss-sketch'), wrap: $('ss-sketch-wrap') };
+}
+
+function ssComputeBounds(){
+  var pts = [];
+  SS.a.forEach(function(pt){ if(isFinite(pt.e)&&isFinite(pt.n)) pts.push(pt); });
+  SS.b.forEach(function(pt){ if(isFinite(pt.e)&&isFinite(pt.n)) pts.push(pt); });
+  if(!pts.length) return null;
+  var minE=Infinity,maxE=-Infinity,minN=Infinity,maxN=-Infinity;
+  pts.forEach(function(pt){
+    if(pt.e<minE)minE=pt.e; if(pt.e>maxE)maxE=pt.e;
+    if(pt.n<minN)minN=pt.n; if(pt.n>maxN)maxN=pt.n;
+  });
+  if(minE===maxE){ minE-=1; maxE+=1; }
+  if(minN===maxN){ minN-=1; maxN+=1; }
+  /* مربع بحجم أكبر ضلع — يحافظ على الاتجاه الحقيقي بدون تشويه */
+  var span = Math.max(maxE-minE, maxN-minN);
+  var midE = (minE+maxE)/2, midN = (minN+maxN)/2;
+  var pad = span * 0.10 || 1;
+  var half = span/2 + pad;
+  return {minE: midE-half, maxE: midE+half, minN: midN-half, maxN: midN+half, midE: midE, midN: midN, span: span+2*pad};
+}
+
+function ssWorldToSvg(e, n, b, W, H){
+  /* مقياس موحّد: E→X ، N→أعلى (Y مقلوب في SVG) */
+  var s = Math.min(W, H) / (b.maxE - b.minE);
+  var x = (W - (b.maxE-b.minE)*s)/2 + (e - b.minE) * s;
+  var y = (H - (b.maxN-b.minN)*s)/2 + (b.maxN - n) * s;
+  return {x: x, y: y};
+}
+
+function ssApplyXform(){
+  var g = document.getElementById('ss-sketch-g');
+  if(!g) return;
+  /* تدوير حول مركز اللوحة ثم ترجمة وتكبير */
+  var cx = SK.cx, cy = SK.cy;
+  g.setAttribute('transform',
+    'translate('+SK.tx+','+SK.ty+') translate('+cx+','+cy+') rotate('+SK.rot+') scale('+SK.k+') translate('+(-cx)+','+(-cy)+')');
+}
+
+window.ssDrawSketch = function(){
+  var el = ssSketchEls().svg;
+  if(!el) return;
+  if(!SS.a.length && !SS.b.length){
+    el.innerHTML = '<text x="200" y="180" text-anchor="middle" fill="#94a3b8" font-size="14">حمّل الملفات ونفّذ المقارنة</text>';
+    return;
+  }
+  var b = ssComputeBounds();
+  if(!b) return;
+  SK.bounds = b;
+  var W = 400, H = 360;
+  SK.cx = W/2; SK.cy = H/2;
+  var gParts = [];
+  gParts.push('<rect width="'+W+'" height="'+H+'" fill="#050a12"/>');
+  /* north arrow (fixed in screen space drawn outside transform group for reference - inside group so rotates with plan) */
+  gParts.push('<g stroke="rgba(56,189,248,0.10)" stroke-width="0.5">');
+  for(var gi=0; gi<=10; gi++){
+    var gx=(gi/10)*W, gy=(gi/10)*H;
+    gParts.push('<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="'+H+'"/>');
+    gParts.push('<line x1="0" y1="'+gy+'" x2="'+W+'" y2="'+gy+'"/>');
+  }
+  gParts.push('</g>');
+
+  function drawSet(pts, color, r){
+    pts.forEach(function(pt){
+      if(!isFinite(pt.e)||!isFinite(pt.n)) return;
+      var c = ssWorldToSvg(pt.e, pt.n, b, W, H);
+      gParts.push('<circle cx="'+c.x.toFixed(2)+'" cy="'+c.y.toFixed(2)+'" r="'+r+'" fill="'+color+'" stroke="#fff" stroke-width="0.7"/>');
+      if(SK.showNames && pts.length <= 150){
+        gParts.push('<text x="'+(c.x+5).toFixed(2)+'" y="'+(c.y-5).toFixed(2)+'" fill="'+color+'" font-size="8" font-family="ui-monospace,Consolas,monospace">'+esc(pt.id)+'</text>');
+      }
+    });
+  }
+
+  if(SS.rows && SS.rows.length){
+    SS.rows.forEach(function(row){
+      if(!row.pa || !row.pb) return;
+      var a = ssWorldToSvg(row.pa.e, row.pa.n, b, W, H);
+      var bb = ssWorldToSvg(row.pb.e, row.pb.n, b, W, H);
+      var col = row.ok ? '#4ade80' : '#f87171';
+      var dash = row.ok ? '' : ' stroke-dasharray="3 2"';
+      gParts.push('<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+bb.x.toFixed(2)+'" y2="'+bb.y.toFixed(2)+'" stroke="'+col+'" stroke-width="1.6" opacity="0.92"'+dash+'/>');
+      /* تسمية فرق المقارنة في منتصف الخط */
+      if(isFinite(row.h)){
+        var mx=(a.x+bb.x)/2, my=(a.y+bb.y)/2;
+        var lab = row.ok ? ('OK '+row.h.toFixed(3)+'m') : ('ΔH '+row.h.toFixed(3)+'m');
+        if(isFinite(row.dz) && Math.abs(row.dz)>=0.001) lab += ' ΔZ '+row.dz.toFixed(3);
+        gParts.push('<rect x="'+(mx-28).toFixed(1)+'" y="'+(my-8).toFixed(1)+'" width="56" height="12" rx="2" fill="rgba(5,10,18,0.75)"/>');
+        gParts.push('<text x="'+mx.toFixed(1)+'" y="'+(my+2.5).toFixed(1)+'" text-anchor="middle" fill="'+col+'" font-size="7" font-family="ui-monospace,Consolas,monospace">'+lab+'</text>');
+      }
+    });
+  }
+
+  drawSet(SS.a, '#38bdf8', 3.6);
+  drawSet(SS.b, '#fbbf24', 3.2);
+
+  /* مؤشر الشمال والشرق — نفس توجه CAD (N أعلى، E يمين) */
+  var topC = ssWorldToSvg(b.midE, b.maxN - (b.maxN-b.minN)*0.03, b, W, H);
+  gParts.push('<g transform="translate('+topC.x.toFixed(1)+','+topC.y.toFixed(1)+')">');
+  gParts.push('<polygon points="0,-16 5.5,2 -5.5,2" fill="#f87171"/>');
+  gParts.push('<text y="16" text-anchor="middle" fill="#f87171" font-size="10" font-weight="800">N</text>');
+  gParts.push('</g>');
+  var ax = ssWorldToSvg(b.minE + (b.maxE-b.minE)*0.08, b.minN + (b.maxN-b.minN)*0.08, b, W, H);
+  gParts.push('<g transform="translate('+ax.x.toFixed(1)+','+ax.y.toFixed(1)+')" stroke="#94a3b8" fill="#94a3b8">');
+  gParts.push('<line x1="0" y1="0" x2="28" y2="0" stroke-width="1.5"/>'); /* East */
+  gParts.push('<polygon points="28,0 22,-4 22,4" fill="#38bdf8" stroke="none"/>');
+  gParts.push('<text x="32" y="4" fill="#38bdf8" font-size="9" font-weight="700">E</text>');
+  gParts.push('<line x1="0" y1="0" x2="0" y2="-28" stroke-width="1.5"/>'); /* North */
+  gParts.push('<polygon points="0,-28 -4,-22 4,-22" fill="#f87171" stroke="none"/>');
+  gParts.push('<text x="6" y="-22" fill="#f87171" font-size="9" font-weight="700">N</text>');
+  gParts.push('</g>');
+
+  gParts.push('<rect x="8" y="8" width="122" height="48" rx="6" fill="rgba(15,23,42,0.88)" stroke="rgba(56,189,248,0.35)"/>');
+  gParts.push('<circle cx="20" cy="24" r="4" fill="#38bdf8"/><text x="30" y="27" fill="#e0f2fe" font-size="9">أصلي ('+SS.a.length+')</text>');
+  gParts.push('<circle cx="20" cy="42" r="4" fill="#fbbf24"/><text x="30" y="45" fill="#e0f2fe" font-size="9">موقع ('+SS.b.length+')</text>');
+
+  el.innerHTML = '<g id="ss-sketch-g">'+gParts.join('')+'</g>';
+  ssApplyXform();
+  SK.ready = true;
+  ssSketchBind(el);
+};
+
+window.ssSketchFit = function(){
+  SK.k = 1; SK.tx = 0; SK.ty = 0; SK.rot = 0;
+  ssDrawSketch();
+};
+window.ssSketchRot = function(deg){
+  SK.rot = (SK.rot + deg) % 360;
+  ssApplyXform();
+};
+window.ssSketchToggleNames = function(){
+  SK.showNames = !SK.showNames;
+  ssDrawSketch();
+};
+
+function ssSketchBind(svg){
+  if(svg._ssBound) return;
+  svg._ssBound = 1;
+  var ptrs = {};
+  var lastAng = null, lastDist = null;
+  function ids(){ return Object.keys(ptrs); }
+  function mid(){
+    var a = ids(); if(a.length<2) return null;
+    var p0=ptrs[a[0]], p1=ptrs[a[1]];
+    return {x:(p0.x+p1.x)/2, y:(p0.y+p1.y)/2};
+  }
+  svg.addEventListener('pointerdown', function(e){
+    ptrs[e.pointerId] = {x:e.clientX, y:e.clientY};
+    try{ svg.setPointerCapture(e.pointerId); }catch(_){}
+    svg.style.cursor = 'grabbing';
+    if(ids().length >= 2){
+      var a = ids(), p0=ptrs[a[0]], p1=ptrs[a[1]];
+      lastDist = Math.hypot(p0.x-p1.x, p0.y-p1.y) || 1;
+      lastAng = Math.atan2(p1.y-p0.y, p1.x-p0.x);
+    }
+  });
+  svg.addEventListener('pointermove', function(e){
+    var p = ptrs[e.pointerId]; if(!p) return;
+    var all = ids();
+    if(all.length === 1){
+      SK.tx += (e.clientX - p.x);
+      SK.ty += (e.clientY - p.y);
+      p.x = e.clientX; p.y = e.clientY;
+      ssApplyXform();
+    } else if(all.length >= 2){
+      p.x = e.clientX; p.y = e.clientY;
+      var a = all, p0=ptrs[a[0]], p1=ptrs[a[1]];
+      if(!p0||!p1) return;
+      var dist = Math.hypot(p0.x-p1.x, p0.y-p1.y) || 1;
+      var ang = Math.atan2(p1.y-p0.y, p1.x-p0.x);
+      if(lastDist){
+        SK.k = Math.max(0.25, Math.min(12, SK.k * (dist/lastDist)));
+      }
+      if(lastAng != null){
+        SK.rot += (ang - lastAng) * 180 / Math.PI;
+      }
+      lastDist = dist;
+      lastAng = ang;
+      ssApplyXform();
+    }
+  });
+  function up(e){
+    delete ptrs[e.pointerId];
+    if(ids().length < 2){ lastAng = null; lastDist = null; }
+    if(!ids().length) svg.style.cursor='grab';
+  }
+  svg.addEventListener('pointerup', up);
+  svg.addEventListener('pointercancel', up);
+  svg.addEventListener('wheel', function(e){
+    e.preventDefault();
+    var factor = Math.exp(-(e.deltaY||0)*0.0015);
+    SK.k = Math.max(0.25, Math.min(12, SK.k * factor));
+    ssApplyXform();
+  }, {passive:false});
+}
+
+/* hook compare → redraw sketch */
+var _ssCompare = window.ssCompare;
+window.ssCompare = function(){
+  _ssCompare.apply(this, arguments);
+  SK.k = 1; SK.tx = 0; SK.ty = 0; SK.rot = 0;
+  setTimeout(function(){ ssDrawSketch(); }, 30);
+};
+var _ssClear = window.ssClear;
+window.ssClear = function(){
+  _ssClear.apply(this, arguments);
+  SK.k = 1; SK.tx = 0; SK.ty = 0; SK.rot = 0;
+  ssDrawSketch();
+};
+
+function init(){
+  var fa = $('ss-file-a'), fb = $('ss-file-b');
+  if(fa && !fa._ss){ fa._ss = 1; fa.addEventListener('change', function(){ loadSide('a'); }); }
+  if(fb && !fb._ss){ fb._ss = 1; fb.addEventListener('change', function(){ loadSide('b'); }); }
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+</script>
+
 </body>
 </html>
