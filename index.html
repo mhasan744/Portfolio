@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" media="print" onload="this.media='all'">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
   <style>
+    html{overflow-anchor:none}
     :root {
       --bg: #070b14;
       --card: #0f172a;
@@ -2599,7 +2600,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
                 <p>Original vs Field • Compare</p>
               </div>
             </div>
-<div class="menu-card" onclick="showView('qty-menu')">
+<div class="menu-card" onclick="openToolGate('qty-menu')">
               <div class="menu-icon qty">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round">
                   <path d="M2.5 15.5L8 9l4 4 3.5-5 6 7.5"/><path d="M2.5 19.5h19"/>
@@ -2635,7 +2636,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
                 <p>UTM ↔ Lat/Lon</p>
               </div>
             </div>
-            <div class="menu-card" onclick="showView('trav')">
+            <div class="menu-card" onclick="openToolGate('trav')">
               <div class="menu-icon trav">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
                   <path d="M4 18l4-10 6 4 6-8"/>
@@ -2659,7 +2660,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
                 <p>Length • Area</p>
               </div>
             </div>
-            <div class="menu-card" onclick="showView('land')">
+            <div class="menu-card" onclick="openToolGate('land')">
               <div class="menu-icon land">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
                   <rect x="3" y="5" width="18" height="14"/><path d="M9 5v14M15 5v14"/>
@@ -2668,6 +2669,206 @@ body.admin-edit #view-home .menu-card{clip-path:none}
               <div class="menu-text">
                 <h2><span class="en">Land Division</span><span class="ar">تقسيم أراضي</span></h2>
                 <p>Share by plot</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="drone-scene drone-scene-cv drone-scene-sm" id="drone-scene-cv" aria-hidden="true">
+          <div class="drone-craft" id="drone-craft-cv">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="armB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cbd5e1"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient>
+  <linearGradient id="mBodyB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b1220"/><stop offset=".35" stop-color="#475569"/><stop offset=".55" stop-color="#94a3b8"/><stop offset="1" stop-color="#0f172a"/></linearGradient>
+  <radialGradient id="mTopB" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".6" stop-color="#475569"/><stop offset="1" stop-color="#1e293b"/></radialGradient>
+  <linearGradient id="goldB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fef3c7"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#92400e"/></linearGradient>
+  <radialGradient id="discB"><stop offset="0" stop-color="rgba(186,230,253,.05)"/><stop offset=".8" stop-color="rgba(186,230,253,.16)"/><stop offset="1" stop-color="rgba(186,230,253,.30)"/></radialGradient>
+  <linearGradient id="hullSideB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#020617"/><stop offset=".3" stop-color="#0c4a6e"/><stop offset=".6" stop-color="#0b3a5c"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <radialGradient id="hullTopB" cx=".35" cy=".25" r=".95"><stop offset="0" stop-color="#3b82b6"/><stop offset=".35" stop-color="#1e3a5f"/><stop offset=".75" stop-color="#0f172a"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  <radialGradient id="sphereB" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".4" stop-color="#475569"/><stop offset="1" stop-color="#020617"/></radialGradient>
+  <linearGradient id="glassB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#075985"/><stop offset="1" stop-color="#020617"/></linearGradient>
+  <filter id="blurB" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="glowB" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+
+<!-- ground shadow -->
+<ellipse cx="100" cy="120" rx="58" ry="7" fill="rgba(0,0,0,.45)" filter="url(#blurB)"/>
+
+<!-- back arms + back motors -->
+<line x1="92" y1="46.2" x2="48" y2="36.2" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+<line x1="92" y1="44" x2="48" y2="34" stroke="url(#armB)" stroke-width="5" stroke-linecap="round"/>
+<line x1="92" y1="43" x2="48" y2="33" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+<line x1="108" y1="46.2" x2="152" y2="36.2" stroke="#0b1220" stroke-width="5" stroke-linecap="round"/>
+<line x1="108" y1="44" x2="152" y2="34" stroke="url(#armB)" stroke-width="5" stroke-linecap="round"/>
+<line x1="108" y1="43" x2="152" y2="33" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+
+<g transform="translate(46,34) scale(0.86)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p1">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+
+<g transform="translate(154,34) scale(0.86)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p2">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+
+<!-- landing skids (back rail) -->
+<g stroke="#475569" stroke-width="1.4" stroke-linecap="round" fill="none">
+  <path d="M84,66 L78,98"/><path d="M116,66 L122,98"/>
+  <line x1="66" y1="96" x2="134" y2="96"/>
+</g>
+
+<!-- front arms -->
+<line x1="90" y1="60.2" x2="44" y2="78.2" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+<line x1="90" y1="58" x2="44" y2="76" stroke="url(#armB)" stroke-width="6" stroke-linecap="round"/>
+<line x1="90" y1="57" x2="44" y2="75" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+<line x1="110" y1="60.2" x2="156" y2="78.2" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+<line x1="110" y1="58" x2="156" y2="76" stroke="url(#armB)" stroke-width="6" stroke-linecap="round"/>
+<line x1="110" y1="57" x2="156" y2="75" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+
+<!-- ===== fuselage ===== -->
+<path d="M70,48 C70,35 84,28 100,28 C116,28 130,35 130,48 L130,62 C130,71 116,78 100,78 C84,78 70,71 70,62 Z" fill="url(#hullSideB)" stroke="#0b1220" stroke-width=".8"/>
+<path d="M70,62 C70,71 84,78 100,78 C116,78 130,71 130,62" fill="none" stroke="url(#goldB)" stroke-width="1.6"/>
+<path d="M70,58 C70,67 84,74 100,74 C116,74 130,67 130,58" fill="none" stroke="rgba(56,189,248,.45)" stroke-width=".7"/>
+<!-- top shell -->
+<path d="M70,48 C70,35 84,28 100,28 C116,28 130,35 130,48 C130,57 116,64 100,64 C84,64 70,57 70,48 Z" fill="url(#hullTopB)" stroke="url(#goldB)" stroke-width="1.4"/>
+<!-- shell seams / panels -->
+<path d="M82,44 C88,39 112,39 118,44 C112,52 88,52 82,44 Z" fill="rgba(2,6,23,.55)" stroke="#38bdf8" stroke-width=".7" opacity=".85"/>
+<g stroke="#22d3ee" stroke-width=".6" opacity=".55" stroke-linecap="round">
+  <line x1="90" y1="44" x2="110" y2="44"/><line x1="93" y1="47" x2="107" y2="47"/>
+</g>
+<g stroke="#0b1220" stroke-width="1.1" opacity=".9" stroke-linecap="round">
+  <line x1="74" y1="52" x2="82" y2="55"/><line x1="76" y1="49" x2="84" y2="52"/>
+  <line x1="126" y1="52" x2="118" y2="55"/><line x1="124" y1="49" x2="116" y2="52"/>
+</g>
+<!-- specular highlight -->
+<ellipse cx="86" cy="38" rx="11" ry="3.2" fill="rgba(255,255,255,.38)" transform="rotate(-18 86 38)" filter="url(#blurB)"/>
+<path d="M76,42 C80,36 90,32 100,32" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round"/>
+<!-- front sensor window -->
+<path d="M84,64 C92,67 108,67 116,64 L114,71 C106,74 94,74 86,71 Z" fill="url(#glassB)" stroke="#fbbf24" stroke-width=".9"/>
+<path d="M88,66 C95,68 105,68 112,66" fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".8"/>
+<!-- nav LEDs -->
+<g filter="url(#glowB)">
+  <circle cx="75" cy="63" r="2" fill="#4ade80"/><circle cx="125" cy="63" r="2" fill="#f87171"/>
+</g>
+
+<!-- GPS puck + mast -->
+<line x1="100" y1="29" x2="100" y2="19" stroke="#94a3b8" stroke-width="1.6"/>
+<ellipse cx="100" cy="19" rx="8" ry="2.8" fill="#0f172a" stroke="#22d3ee" stroke-width=".8"/>
+<ellipse cx="100" cy="17.8" rx="6" ry="2" fill="#1e293b"/>
+<g filter="url(#glowB)"><circle cx="100" cy="17.5" r="1.6" fill="#22d3ee"/></g>
+
+<!-- gimbal: mount + sphere + lens + emitter -->
+<g filter="url(#glowB)">
+  <rect x="94" y="77" width="12" height="5" rx="1.5" fill="#0b1220" stroke="#22d3ee" stroke-width=".8"/>
+  <circle cx="100" cy="87" r="7.5" fill="url(#sphereB)" stroke="#fbbf24" stroke-width="1"/>
+  <ellipse cx="100" cy="87.5" rx="7.5" ry="2" fill="none" stroke="rgba(251,191,36,.6)" stroke-width=".6"/>
+  <circle cx="100" cy="88.5" r="3.4" fill="#020617" stroke="#fde68a" stroke-width=".9"/>
+  <circle cx="100" cy="88.5" r="1.6" fill="#fbbf24"/>
+  <circle cx="98.9" cy="87.4" r=".7" fill="#fff"/>
+  <polygon points="97,94 103,94 102,98 98,98" fill="url(#goldB)"/>
+  <circle cx="100" cy="99" r="2.4" fill="#fde68a"/>
+  <circle cx="100" cy="99" r="5" fill="none" stroke="#fbbf24" stroke-width=".7" opacity=".5"/>
+</g>
+
+<!-- front skid rail (closer = thicker) -->
+<g stroke="#94a3b8" stroke-width="2" stroke-linecap="round" fill="none">
+  <path d="M78,68 L70,102"/><path d="M122,68 L130,102"/>
+  <line x1="60" y1="102" x2="140" y2="102" stroke-width="2.6" stroke="#64748b"/>
+  <line x1="60" y1="101" x2="140" y2="101" stroke-width="1" stroke="rgba(255,255,255,.4)"/>
+</g>
+
+<!-- front motors -->
+
+<g transform="translate(42,78) scale(1)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p3">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+
+<g transform="translate(158,78) scale(1)">
+  <ellipse cx="0" cy="13" rx="11" ry="3.6" fill="rgba(0,0,0,.35)"/>
+  <path d="M-9,0 L-9,10 A9,3.2 0 0 0 9,10 L9,0 Z" fill="url(#mBodyB)"/>
+  <path d="M-9,5 A9,3.2 0 0 0 9,5" fill="none" stroke="url(#goldB)" stroke-width="1.3"/>
+  <ellipse cx="0" cy="0" rx="9" ry="3.2" fill="url(#mTopB)" stroke="#cbd5e1" stroke-width=".5"/>
+  <ellipse cx="0" cy="-.4" rx="3.6" ry="1.3" fill="#020617" stroke="url(#goldB)" stroke-width=".7"/>
+  <rect x="-1" y="-4.5" width="2" height="4" rx="1" fill="#94a3b8"/>
+  <g transform="translate(0,-5) scale(1,.30)">
+    <circle r="19" fill="url(#discB)"/>
+    <g class="drone-prop p4">
+      <circle r="19" fill="none" stroke="rgba(186,230,253,.55)" stroke-width="1.4"/>
+      <path d="M-19,-1.8 Q0,-4 19,-1.8 L19,1.8 Q0,4 -19,1.8 Z" fill="rgba(226,242,255,.78)"/>
+      <path d="M-1.8,-19 Q-4,0 -1.8,19 L1.8,19 Q4,0 1.8,-19 Z" fill="rgba(226,242,255,.55)"/>
+    </g>
+  </g>
+  <circle cx="0" cy="-5" r="1.9" fill="url(#goldB)"/>
+</g>
+</svg>
+          </div>
+          <div class="drone-spot" aria-hidden="true"></div>
+          <div class="drone-spot-core" aria-hidden="true"></div>
+        </div>
+
+        <div class="menu-group drone-target" id="drone-target-cv">
+          <div class="menu-group-title">
+            <span class="mgt-en">your CV</span>
+            <span class="mgt-ar">سيرتك الذاتية بنظام ATS</span>
+          </div>
+          <div class="menu-grid">
+            <div class="menu-card" onclick="CV.open('eval')">
+              <div class="menu-icon" style="background:linear-gradient(135deg,#0e7490,#06b6d4);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h9l5 5V21.5H5z"/><path d="M14 2.5v5h5"/><path d="M9 14l2 2 4-4"/></svg>
+              </div>
+              <div class="menu-text">
+                <h2><span class="en">test your cv</span><span class="ar">test your cv</span></h2>
+                <p>ارفع PDF / Word واعرف العيوب</p>
+              </div>
+            </div>
+            <div class="menu-card" onclick="CV.open('build')">
+              <div class="menu-icon" style="background:linear-gradient(135deg,#b45309,#fbbf24);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h9l5 5V21.5H5z"/><path d="M14 2.5v5h5"/><path d="M12 11v6M9 14h6"/></svg>
+              </div>
+              <div class="menu-text">
+                <h2><span class="en">Create CV</span><span class="ar">إنشاء سيرة ذاتية</span></h2>
+                <p>املأ بياناتك واحصل على PDF</p>
               </div>
             </div>
           </div>
@@ -6232,7 +6433,195 @@ function exportTravExcel() {
     });
 
 
+
+    /* ===== Tool gate (حصر كميات / ترافيرس) — same OTP as CV: code × 95 ===== */
+    var __toolGateView = null;
+    var __toolGateChallenge = '';
+    var __toolGateTitles = {
+      'qty-menu': 'حصر كميات — Earthwork Volumes',
+      'trav': 'ترافيرس — Traverse Correction',
+      'land': 'تقسيم أراضي — Land Division'
+    };
+    function toolMakeChallenge(){ return String(Math.floor(11 + Math.random() * 89)); }
+    function toolPassForChallenge(ch){
+      var n = parseInt(String(ch).replace(/\D/g, ''), 10) || 0;
+      return String(n * 95);
+    }
+    /* Timed unlock: 30 minutes, then re-lock. Codes: 11–99 → password = code×95 (4 digits) */
+    var TOOL_UNLOCK_MS = 30 * 60 * 1000;
+    var __toolUnlocked = {};
+    var __toolTimerIv = null;
+    function isToolUnlocked(view){
+      var u = __toolUnlocked[view];
+      if (!u || !u.until) return false;
+      if (Date.now() >= u.until) {
+        delete __toolUnlocked[view];
+        updateToolTimerBar();
+        return false;
+      }
+      return true;
+    }
+    function setToolUnlocked(view, ok){
+      if (ok) {
+        __toolUnlocked[view] = { until: Date.now() + TOOL_UNLOCK_MS };
+        startToolTimerBar();
+      } else {
+        delete __toolUnlocked[view];
+        updateToolTimerBar();
+      }
+    }
+    function ensureToolTimerBar(){
+      var bar = document.getElementById('tool-timer-bar');
+      if (bar) return bar;
+      bar = document.createElement('div');
+      bar.id = 'tool-timer-bar';
+      bar.setAttribute('dir','rtl');
+      bar.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;z-index:10000;padding:8px 12px;background:linear-gradient(90deg,#0f172a,#1e3a5f);color:#fbbf24;font-weight:700;font-size:0.88rem;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.35);font-family:inherit';
+      document.body.appendChild(bar);
+      return bar;
+    }
+    function formatRemain(ms){
+      if (ms < 0) ms = 0;
+      var s = Math.floor(ms / 1000);
+      var m = Math.floor(s / 60);
+      s = s % 60;
+      return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+    function updateToolTimerBar(){
+      var bar = ensureToolTimerBar();
+      var now = Date.now();
+      var best = 0;
+      var labels = [];
+      Object.keys(__toolUnlocked).forEach(function(k){
+        var u = __toolUnlocked[k];
+        if (!u || !u.until) return;
+        var left = u.until - now;
+        if (left <= 0) { delete __toolUnlocked[k]; return; }
+        if (left > best) best = left;
+        var name = (__toolGateTitles && __toolGateTitles[k]) ? __toolGateTitles[k].split('—')[0].trim() : k;
+        labels.push(name);
+      });
+      /* CV unlock */
+      if (window.__cvUntil && window.__cvUntil > now) {
+        var cleft = window.__cvUntil - now;
+        if (cleft > best) best = cleft;
+        labels.push('CV');
+      } else if (window.__cvUntil) {
+        window.__cvOk = false;
+        window.__cvUntil = 0;
+      }
+      if (best <= 0 || !labels.length) {
+        bar.style.display = 'none';
+        if (__toolTimerIv) { clearInterval(__toolTimerIv); __toolTimerIv = null; }
+        return;
+      }
+      bar.style.display = 'block';
+      bar.textContent = '⏱ متبقي ' + formatRemain(best) + ' — ' + labels.join(' · ') + ' (بعدها يلزم باسورد جديد)';
+    }
+    function startToolTimerBar(){
+      updateToolTimerBar();
+      if (__toolTimerIv) clearInterval(__toolTimerIv);
+      __toolTimerIv = setInterval(function(){
+        updateToolTimerBar();
+        /* if expired while inside tool, kick to home */
+        var expired = false;
+        Object.keys(__toolUnlocked).forEach(function(k){
+          if (!isToolUnlocked(k)) expired = true;
+        });
+        if (window.__cvUntil && Date.now() >= window.__cvUntil) {
+          window.__cvOk = false;
+          window.__cvUntil = 0;
+          expired = true;
+        }
+        if (expired) {
+          updateToolTimerBar();
+          try {
+            var home = document.getElementById('view-home');
+            var onHome = home && home.style.display !== 'none';
+            if (!onHome && typeof showView === 'function') {
+              showView('home');
+              alert('انتهى وقت الجلسة (30 دقيقة). يلزم باسورد جديد للدخول.');
+            }
+          } catch (e) {}
+        }
+      }, 1000);
+    }
+
+    function openToolGate(view){
+      if (isToolUnlocked(view)) {
+        if (typeof showView === 'function') showView(view);
+        return;
+      }
+      __toolGateView = view;
+      __toolGateChallenge = toolMakeChallenge();
+      var modal = document.getElementById('tool-gate-modal');
+      var title = document.getElementById('tool-gate-title');
+      var codeEl = document.getElementById('tool-gate-code');
+      var wa = document.getElementById('tool-gate-wa');
+      var err = document.getElementById('tool-gate-err');
+      var pass = document.getElementById('tool-gate-pass');
+      if (title) title.textContent = __toolGateTitles[view] || 'دخول الأداة';
+      if (codeEl) codeEl.textContent = __toolGateChallenge;
+      if (err) err.style.display = 'none';
+      if (pass) pass.value = '';
+      if (wa) {
+        wa.href = 'https://wa.me/201065339946?text=' + encodeURIComponent(
+          'السلام عليكم\nطلب باسورد أداة: ' + (__toolGateTitles[view] || view) +
+          '\nكود الطلب: ' + __toolGateChallenge + '\nالاسم: '
+        );
+      }
+      if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(function(){
+          try {
+            pass.focus();
+            pass.onkeydown = function(e){ if (e.key === 'Enter') { e.preventDefault(); submitToolGate(); } };
+          } catch(e){}
+        }, 80);
+      }
+    }
+    function refreshToolGate(){
+      if (!__toolGateView) return;
+      var view = __toolGateView;
+      __toolGateChallenge = toolMakeChallenge();
+      var codeEl = document.getElementById('tool-gate-code');
+      var wa = document.getElementById('tool-gate-wa');
+      var err = document.getElementById('tool-gate-err');
+      var pass = document.getElementById('tool-gate-pass');
+      if (codeEl) codeEl.textContent = __toolGateChallenge;
+      if (err) err.style.display = 'none';
+      if (pass) pass.value = '';
+      if (wa) {
+        wa.href = 'https://wa.me/201065339946?text=' + encodeURIComponent(
+          'السلام عليكم\nطلب باسورد أداة: ' + (__toolGateTitles[view] || view) +
+          '\nكود الطلب: ' + __toolGateChallenge + '\nالاسم: '
+        );
+      }
+    }
+    function closeToolGate(){
+      var modal = document.getElementById('tool-gate-modal');
+      if (modal) modal.style.display = 'none';
+      __toolGateView = null;
+      __toolGateChallenge = '';
+    }
+    function submitToolGate(){
+      var pass = document.getElementById('tool-gate-pass');
+      var err = document.getElementById('tool-gate-err');
+      var v = (pass && pass.value || '').trim();
+      var expect = toolPassForChallenge(__toolGateChallenge);
+      if (v && v === expect && __toolGateView) {
+        setToolUnlocked(__toolGateView, true);
+        var view = __toolGateView;
+        closeToolGate();
+        if (typeof showView === 'function') showView(view);
+      } else {
+        if (err) err.style.display = 'block';
+        if (pass) { pass.value = ''; pass.focus(); }
+      }
+    }
+
 function showView(name) {
+
       if (name === "apt" && !isAdmin()) {
         alert("هذه الأداة متاحة بعد إدخال الرقم السري.\nاضغط على «تقنيات المساحة الحديثة» أو AHMED ELTABAKH.");
         openAdminLogin();
@@ -10135,6 +10524,30 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       </div>
     </div>
   </div>
+  
+  <!-- Tool password gate (حصر كميات / ترافيرس) -->
+  <div id="tool-gate-modal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.72);align-items:center;justify-content:center;padding:16px;">
+    <div style="width:100%;max-width:400px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 16px;box-shadow:0 12px 40px rgba(0,0,0,0.4);">
+      <div style="text-align:center;font-size:2.2rem;margin-bottom:6px">🔐</div>
+      <h3 id="tool-gate-title" style="text-align:center;margin:0 0 8px;color:var(--accent2);font-size:1.05rem">دخول الأداة</h3>
+      <p style="text-align:center;color:var(--muted);font-size:0.82rem;line-height:1.5;margin:0 0 12px">كل طلب له باسورد جديد. ابعت <b>كود الطلب</b> على واتساب واستلم الباسورد.</p>
+      <div style="margin:10px 0 14px;padding:12px;border-radius:12px;border:1px dashed var(--accent);background:var(--input-bg);text-align:center">
+        <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px">كود الطلب</div>
+        <div id="tool-gate-code" style="font-size:1.55rem;font-weight:800;letter-spacing:3px;direction:ltr;color:var(--gold)">---</div>
+      </div>
+      <a id="tool-gate-wa" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:12px;margin-bottom:12px;background:linear-gradient(135deg,#128C7E,#25D366);color:#fff;font-weight:700">💬 راسل واتساب بكود الطلب</a>
+      <label style="display:block;font-size:0.78rem;color:var(--muted);margin-bottom:4px">كلمة المرور</label>
+      <input type="password" id="tool-gate-pass" placeholder="اكتب الباسورد هنا" autocomplete="off"
+        style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:1rem;margin-bottom:8px;box-sizing:border-box">
+      <p id="tool-gate-err" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin:0 0 8px">الباسورد غير صحيح لهذا الطلب</p>
+      <button type="button" onclick="submitToolGate()" style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;font-weight:800;font-size:0.95rem;cursor:pointer;margin-bottom:8px">دخول</button>
+      <div style="display:flex;gap:8px">
+        <button type="button" onclick="refreshToolGate()" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-weight:600;cursor:pointer">🔄 كود جديد</button>
+        <button type="button" onclick="closeToolGate()" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--muted);font-weight:600;cursor:pointer">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
   <div id="admin-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;padding:16px;">
     <div style="background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:22px 18px;max-width:340px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.5);max-height:92vh;overflow-y:auto;">
       <h3 style="text-align:center;color:var(--gold);margin-bottom:6px;font-size:1.1rem;">دخول الأدمن</h3>
@@ -13064,7 +13477,8 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     /* prefer visible order: project group first, then task */
     var proj = Array.prototype.slice.call(document.querySelectorAll('#drone-target-group .menu-card'));
     var task = Array.prototype.slice.call(document.querySelectorAll('#drone-target-task .menu-card'));
-    cards = proj.concat(task);
+    var cvc = Array.prototype.slice.call(document.querySelectorAll('#drone-target-cv .menu-card'));
+    cards = proj.concat(task, cvc);
     var n = cards.length;
     if(!n) return;
     if(reduced()){
@@ -13110,7 +13524,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
   }
 
   var landCount = 0;
-  var landNeed = 2;
+  var landNeed = 3;
 
   function onAnyLand(){
     landCount++;
@@ -13222,10 +13636,16 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
       document.getElementById('drone-target-task'),
       { delay: 900, flyMs: 6800, startX: -90, startY: -42 }
     );
+    landOne(
+      document.getElementById('drone-craft-cv'),
+      document.getElementById('drone-scene-cv'),
+      document.getElementById('drone-target-cv'),
+      { delay: 1500, flyMs: 6400, startX: -80, startY: -40 }
+    );
   }
 
   function resetAndRun(){
-    ['drone-craft','drone-craft-task'].forEach(function(id){
+    ['drone-craft','drone-craft-task','drone-craft-cv'].forEach(function(id){
       var el = document.getElementById(id);
       if(el){
         el.classList.remove('is-settled','is-flying');
@@ -13235,7 +13655,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
         el.style.removeProperty('--park-y');
       }
     });
-    ['drone-scene','drone-scene-task'].forEach(function(id){
+    ['drone-scene','drone-scene-task','drone-scene-cv'].forEach(function(id){
       var el = document.getElementById(id);
       if(el){
         el.classList.remove('is-locked');
@@ -13243,7 +13663,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
         el.style.removeProperty('--park-y');
       }
     });
-    ['drone-target-group','drone-target-task'].forEach(function(id){
+    ['drone-target-group','drone-target-task','drone-target-cv'].forEach(function(id){
       var el = document.getElementById(id); if(el) el.classList.remove('is-lit');
     });
     document.querySelectorAll('.menu-group.drone-target .menu-card').forEach(function(c){
@@ -13406,7 +13826,7 @@ var CRAFT=['drone-craft','drone-craft-task'],SCENE=['drone-scene','drone-scene-t
 function lidFrame(ts){
   requestAnimationFrame(lidFrame);
   if(!LID.cv||!LID.N||!homeVisible())return;
-  if(ts-LID.last<33)return;
+  if(ts-LID.last<55)return;
   var dt=Math.min(100,ts-LID.last);LID.last=ts;
   lidResize();
   var cr=LID.cv.getBoundingClientRect(),N=LID.N,X=LID.X,Y=LID.Y,seen=LID.seen,rev=LID.rev,sc=[],k,i;
@@ -15620,6 +16040,766 @@ function init(){
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 
+</script>
+
+<!-- ===== CV / ATS MODULE ===== -->
+<style id="cv-style">
+
+/* perf: remove per-frame re-rasterisation sources that make the home screen judder on iOS */
+html{overscroll-behavior-y:none}
+.drone-craft{filter:none!important}
+.drone-craft.is-settled{animation:none!important}
+.drone-spot,.drone-spot-core{mix-blend-mode:normal!important}
+.menu-card{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:color-mix(in srgb,var(--card) 90%,transparent)!important}
+.drone-scene{contain:layout style}
+#cv-ov{position:fixed;inset:0;z-index:3000;background:var(--bg);overflow-y:auto;display:none;padding:14px 14px 40px;-webkit-overflow-scrolling:touch}
+#cv-ov.on{display:block;overscroll-behavior:contain}
+body.cv-open>*:not(#cv-ov){display:none!important}
+body.cv-open{padding:0!important;background-image:none!important}
+#cv-ov .cv-in{max-width:580px;margin:0 auto}
+.cv-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cv-top h2{font-size:1.05rem;flex:1;color:var(--text)}
+.cv-x{padding:9px 14px;border-radius:12px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font:700 .85rem inherit;cursor:pointer}
+.cv-big{width:100%;display:flex;align-items:center;gap:12px;padding:18px 14px;margin-bottom:12px;border-radius:16px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);background:var(--card);color:var(--text);cursor:pointer;text-align:right;font:inherit}
+.cv-big .ic{font-size:1.8rem}
+.cv-big b{display:block;font-size:1rem;margin-bottom:2px}
+.cv-big span{font-size:.78rem;color:var(--muted)}
+.cv-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px}
+.cv-card h3{font-size:.95rem;margin-bottom:10px;color:var(--accent)}
+.cv-card label{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px}
+.cv-card input[type=text],.cv-card input[type=email],.cv-card input[type=tel],.cv-card textarea,.cv-card select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font:inherit;font-size:.9rem}
+.cv-card textarea{min-height:90px;resize:vertical}
+.cv-row{display:flex;gap:8px}.cv-row>div{flex:1;min-width:0}
+.cv-chk{display:flex!important;align-items:center;gap:6px;color:var(--text)!important;margin-top:8px}
+.cv-btn{width:100%;padding:13px;border-radius:12px;border:1px solid transparent;font:800 .92rem inherit;cursor:pointer;margin-top:8px;color:#fff;background:linear-gradient(135deg,#0284c7,#06b6d4)}
+.cv-btn.alt{background:var(--input-bg);color:var(--text);border-color:var(--border)}
+.cv-btn.gold{background:linear-gradient(135deg,#b45309,#fbbf24)}
+.cv-btn.red{background:#b91c1c;padding:8px;width:auto;font-size:.78rem;margin-top:10px}
+.cv-up{display:block;text-align:center;padding:26px 14px;border:2px dashed var(--accent);border-radius:16px;color:var(--text);cursor:pointer;background:var(--card)}
+.cv-up input{display:none}
+.cv-score{display:flex;align-items:center;gap:16px}
+.cv-ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex:none}
+.cv-ring i{width:74px;height:74px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:800 1.5rem inherit;font-style:normal;color:var(--text)}
+.cv-li{display:flex;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:.85rem;line-height:1.6}
+.cv-li:last-child{border:0}
+.cv-li small{display:block;color:var(--muted);font-size:.76rem}
+.cv-prev{background:#e5e7eb;border-radius:12px;overflow:hidden;height:62vh;position:relative}
+.cv-prev iframe{border:0;width:794px;height:1123px;background:#fff;transform-origin:top left;position:absolute;left:0;top:0}
+.cv-msg{font-size:.82rem;color:var(--muted);text-align:center;padding:10px}
+.cv-hint{font-size:.75rem;color:var(--muted);margin-top:6px;line-height:1.6}
+</style>
+
+<div id="cv-ov" dir="rtl"><div class="cv-in" id="cv-body"></div></div>
+
+<script>
+(function(){
+var q=function(s,r){return (r||document).querySelector(s)};
+var ov=q('#cv-ov'),body=q('#cv-body');
+var D=null,LAST={text:'',pages:1,name:'',res:null};
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function emptyD(){return{lang:'en',name:'',title:'',phone:'',phones:[''],marital:'',email:'',city:'',linkedin:'',site:'',summary:'',skills:'',langs:'',certs:'',projects:'',extra:'',certImgs:[],exp:[{title:'',company:'',project:'',owner:'',consultant:'',loc:'',start:'',end:'',cur:false,bullets:''}],edu:[{degree:'',school:'',loc:'',start:'',end:'',note:''}]}}
+function save(){}
+try{localStorage.removeItem('cv_draft')}catch(e){}
+function loadScript(u){return new Promise(function(res,rej){var s=document.createElement('script');s.src=u;s.onload=res;s.onerror=function(){rej(new Error('تعذر تحميل المكتبة — تأكد من الإنترنت'))};document.head.appendChild(s)})}
+function show(h){body.innerHTML=h;ov.scrollTop=0}
+function topbar(title,backFn){return '<div class="cv-top"><button class="cv-x" onclick="CV.'+backFn+'()">‹ رجوع</button><h2>'+title+'</h2><button class="cv-x" onclick="CV.close()">✕</button></div>'}
+
+/* ---------- screens ---------- */
+function menu(){
+ show(topbar('your CV — ATS','close')+
+ '<button class="cv-big" onclick="CV.evalScreen()"><div class="ic">📊</div><div><b>test your cv</b><span>ارفع ملف PDF أو Word واعرف العيوب والمزايا وحسّنه تلقائياً</span></div></button>'+
+ '<button class="cv-big" onclick="CV.build()"><div class="ic">📝</div><div><b>إنشاء CV جديد</b><span>املأ بياناتك واحصل على سيرة ذاتية احترافية PDF متوافقة مع ATS</span></div></button>'+
+ '<button class="cv-big" onclick="CV.resetAsk()"><div class="ic">🗑</div><div><b>مسح كل البيانات والبدء من جديد</b><span>تفريغ كل الخانات وكتابة سيرة جديدة من الصفر</span></div></button>'+
+ '<div class="cv-hint">ATS هو النظام الذي تستخدمه الشركات لفرز السير الذاتية آلياً. القالب هنا عمود واحد، خط بسيط، عناوين قياسية، بدون صور أو جداول، ليقرأه النظام بدقة.</div>');
+}
+function evalScreen(){
+ show(topbar('test your cv','close')+
+ '<label class="cv-up"><input type="file" id="cv-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"><div style="font-size:2rem">📄</div><b>اختر ملف PDF أو Word من الموبايل</b><div class="cv-hint">PDF أو DOCX</div></label><div id="cv-st" class="cv-msg"></div>');
+ q('#cv-file').addEventListener('change',function(e){var f=e.target.files[0];if(f)handleFile(f)});
+}
+
+/* ---------- extraction ---------- */
+async function extractPdf(buf){
+ if(!window.pdfjsLib){
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ }
+ var pdf=await pdfjsLib.getDocument({data:buf,verbosity:0}).promise,out=[];
+ for(var p=1;p<=pdf.numPages;p++){
+  var tc=await (await pdf.getPage(p)).getTextContent(),rows=[];
+  tc.items.forEach(function(it){if(!it.str||!it.str.trim()&&it.str!==' ')return;var y=Math.round(it.transform[5]),r=rows.find(function(r){return Math.abs(r.y-y)<=3});if(!r){r={y:y,it:[]};rows.push(r)}r.it.push({x:it.transform[4],w:it.width,s:it.str})});
+  rows.sort(function(a,b){return b.y-a.y});
+  rows.forEach(function(r){
+   var ar=/[\u0600-\u06FF]/.test(r.it.map(function(i){return i.s}).join(''));
+   r.it.sort(function(a,b){return ar?b.x-a.x:a.x-b.x});
+   var line='',prev=null;
+   r.it.forEach(function(i){if(prev!==null){var gap=ar?(prev.x-(i.x+i.w)):(i.x-(prev.x+prev.w));line+=gap>14?'   ':(gap>1?' ':'')}line+=i.s;prev=i});
+   out.push(line.replace(/[ \t]+$/,''));
+  });
+ }
+ return{text:out.join('\n'),pages:pdf.numPages};
+}
+async function extractDocx(buf){
+ if(!window.mammoth)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+ var r=await mammoth.extractRawText({arrayBuffer:buf});
+ var t=r.value||'';return{text:t,pages:Math.max(1,Math.round(t.split(/\s+/).length/500))};
+}
+async function handleFile(f){
+ var st=q('#cv-st');st.textContent='جاري قراءة الملف وتحليله...';
+ try{
+  var buf=await f.arrayBuffer(),n=f.name.toLowerCase(),r;
+  if(n.endsWith('.pdf')||f.type==='application/pdf')r=await extractPdf(buf);
+  else if(n.endsWith('.docx'))r=await extractDocx(buf);
+  else{st.textContent='صيغة .doc القديمة غير مدعومة. احفظ الملف كـ DOCX أو PDF وأعد الرفع.';return}
+  LAST={text:r.text,pages:r.pages,name:f.name,res:null};
+  LAST.res=analyze(r.text,r.pages);showResult();
+ }catch(e){console.error(e);st.textContent='تعذر قراءة الملف: '+(e&&e.message?e.message:e)+' — جرّب ملفاً آخر أو احفظه بصيغة DOCX/PDF نصي.'}
+}
+
+/* ---------- parsing ---------- */
+var SEC={
+ summary:/^(professional |career )?(summary|profile|objective|about me|about|personal statement|career objective)$|^(نبذة.*|نبذه.*|ملخص.*|الملخص.*|الهدف.*|عني|ملف شخصي|الملف الشخصي)$/i,
+ experience:/^((work|professional|employment|relevant|practical) )?(experience|work history|employment history|career history)$|^(الخبرات?( العملية| المهنية)?|الخبرة( العملية| المهنية)?|خبرات.*|الخبرات.*|الخبره.*)$/i,
+ education:/^(education|academic background|academic qualifications?|qualifications?|educational background)$|^(التعليم|المؤهلات?( العلمية| الدراسية)?|التحصيل.*|الدراسة|المؤهل.*)$/i,
+ skills:/^((technical|key|core|professional|soft|computer) )?(skills|competenc(y|ies)|skills & .*|technical skills)$|^(المهارات.*|مهارات.*)$/i,
+ certs:/^(certifications?|certificates|courses|training|licen[cs]es|training & certifications?)$|^(الدورات.*|الشهادات.*|دورات.*|التدريب.*|شهادات.*|الدورات التدريبية)$/i,
+ langs:/^(languages?)$|^(اللغات|لغات)$/i,
+ projects:/^(projects?|key projects|selected projects)$|^(المشاريع|مشاريع.*)$/i,
+ extra:/^(additional.*|volunteer.*|awards?.*|achievements?|interests|hobbies|references?)$|^(معلومات إضافية|التطوع|الجوائز|الإنجازات|الهوايات|المراجع)$/i
+};
+var MON='(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\\.?\\s*';
+var DT='(?:(?:'+MON+'|\\d{1,2}\\s*[\\/\\-.]\\s*)?(?:19|20)\\d{2})';
+var RANGE=new RegExp('('+DT+')\\s*(?:-|–|—|to|إلى|الى|حتى|until|till)\\s*('+DT+'|present|current|now|ongoing|الآن|الان|حتى الآن|حاليا|حاليًا)','i');
+var EMAIL=/[\w.+-]+@[\w-]+\.[\w.-]+/,PHONE=/(\+?\d[\d\s\-()]{7,}\d)/,LINKED=/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/[^\s|,]+/i;
+var PERSONAL=/marital|religion|date of birth|\bdob\b|\bage\s*:|nationality\s*:|الحالة الاجتماعية|الديانة|تاريخ الميلاد|العمر\s*:|الجنسية\s*:/i;
+var ODD=/[★☆✦✧■□◆◇▶►➤➢✓✔✗☎✆✉❖❝❞✪●○◦▪▫]/g;
+function clean(l){return l.replace(/\u00a0/g,' ').replace(/[ \t]{3,}/g,'   ').trim()}
+function isHead(l){var t=l.replace(/[:：\-–—_*#|]+$/,'').replace(/^[\-–—_*#|\s]+/,'').trim();if(!t||t.length>40)return null;for(var k in SEC)if(SEC[k].test(t))return k;return null}
+function unbullet(l){return l.replace(/^[\s•▪■◆●◦➤➢►\-–—*·✓✔★]+\s*/,'').trim()}
+function isBullet(l){return /^[\s]*[•▪■◆●◦➤➢►\-–—*·✓✔★]\s*\S/.test(l)}
+
+function parseCV(text){
+ var lines=text.split(/\r?\n/).map(clean).filter(function(l){return l&&!PERSONAL.test(l)});
+ var secs={},head=[],cur=null;
+ lines.forEach(function(l){var h=isHead(l);if(h){cur=h;if(!secs[h])secs[h]=[];return}if(cur)secs[cur].push(l);else head.push(l)});
+ var all=text,d=emptyD();
+ var em=all.match(EMAIL);d.email=em?em[0]:'';
+ var li=all.match(LINKED);d.linkedin=li?li[0].replace(/^https?:\/\//,''):'';
+ var hp=head.join(' ').replace(EMAIL,'').replace(LINKED,''),ph=hp.match(PHONE)||all.replace(EMAIL,'').match(PHONE);d.phone=ph?ph[1].trim():'';d.phones=[d.phone];d.marital=/\bmarried\b|متزوج/i.test(all)?'married':/\bsingle\b|أعزب|عازب/i.test(all)?'single':/\bdivorced\b|مطلق/i.test(all)?'divorced':'';
+ var nameLines=head.filter(function(l){return !EMAIL.test(l)&&!PHONE.test(l)&&!LINKED.test(l)&&l.length<60});
+ var cl=head.filter(function(l){return EMAIL.test(l)||PHONE.test(l)})[0]||'';
+ var cty=cl.replace(EMAIL,'').replace(LINKED,'').replace(PHONE,'').replace(/[|•·]+/g,' ').replace(/\s{2,}/g,' ').trim();if(cty.length<50)d.city=cty;
+ d.name=nameLines[0]||'';d.title=nameLines[1]||'';
+ d.lang=/[\u0600-\u06FF]/.test(text.slice(0,600))&&(text.match(/[\u0600-\u06FF]/g)||[]).length>(text.match(/[A-Za-z]/g)||[]).length?'ar':'en';
+ d.summary=(secs.summary||[]).map(unbullet).join(' ');
+ d.skills=(secs.skills||[]).map(unbullet).join(', ').replace(/\s*[|•·;،]\s*/g,', ').replace(/(,\s*){2,}/g,', ');
+ d.certs=(secs.certs||[]).map(unbullet).join('\n');
+ d.langs=(secs.langs||[]).map(unbullet).join('\n');
+ d.projects=(secs.projects||[]).map(unbullet).join('\n');
+ d.extra=(secs.extra||[]).map(unbullet).join('\n');
+ // experience — role / company / project(with date=blue) / meta / bullets
+ var ex=[],c=null;
+ function isCur(s){return /present|current|now|ongoing|الآن|الان|حاليا|حاليًا/i.test(s)}
+ function emptyExp(){return{title:'',company:'',project:'',owner:'',consultant:'',loc:'',start:'',end:'',cur:false,bullets:''}}
+ (secs.experience||[]).forEach(function(l){
+  var m=l.match(RANGE);
+  var rest=m?l.replace(RANGE,'').replace(/[|()\-–—,:\s]/g,''):'';
+  if(m&&!rest&&c&&!c.start&&!c.bullets){c.start=m[1].trim();c.cur=isCur(m[2]);c.end=c.cur?'':m[2].trim();return}
+  if(m&&!isBullet(l)){
+   var projTxt=l.replace(RANGE,'').replace(/[|()\-–—,]+\s*$/,'').replace(/^[|()\-–—,\s]+/,'').trim();
+   var st=m[1].trim(),en=isCur(m[2])?'':m[2].trim(),cu=isCur(m[2]);
+   if(c&&c.title&&c.company&&!c.project&&!c.bullets){c.project=projTxt;c.start=st;c.end=en;c.cur=cu;return}
+   c=emptyExp();c.project=projTxt;c.title=projTxt;c.start=st;c.end=en;c.cur=cu;ex.push(c);return;
+  }
+  if(!c){c=emptyExp();ex.push(c)}
+  if(!isBullet(l)&&/consultant|employer|main contractor|استشاري|مالك|مقاول/i.test(l)&&c){
+   var cm=l.match(/consultant\s*:\s*([^|]+)/i); if(cm) c.consultant=(c.consultant?c.consultant+'; ':'')+cm[1].trim();
+   var em=l.match(/(?:employer|project owner|مالك)\s*:\s*([^|]+)/i); if(em) c.owner=(c.owner?c.owner+'; ':'')+em[1].trim();
+   var mc=l.match(/main contractor\s*:\s*([^|]+)/i); if(mc&&!c.company) c.company=mc[1].trim();
+   if(!cm&&!em&&!mc) c.bullets+=(c.bullets?'\n':'')+unbullet(l);
+   return;
+  }
+  if(!isBullet(l)&&!c.bullets&&l.length<90){
+   if(!c.title){c.title=l;return}
+   if(!c.company){c.company=l;return}
+   if(!c.project){c.project=l;return}
+  }
+  c.bullets+=(c.bullets?'\n':'')+unbullet(l);
+ });
+ if(ex.length)d.exp=ex;
+ var ed=[],e=null;
+ (secs.education||[]).forEach(function(l){
+  var m=l.match(RANGE),y=l.match(/(?:19|20)\d{2}/);
+  if(m){e={degree:l.replace(RANGE,'').replace(/[|()\-–—,\s]+$/,'').trim(),school:'',loc:'',start:m[1],end:m[2],note:''};ed.push(e);return}
+  if(y&&!isBullet(l)&&l.length<90&&!e){e={degree:l.replace(y[0],'').replace(/[|()\-–—,\s]+$/,'').trim(),school:'',loc:'',start:'',end:y[0],note:''};ed.push(e);return}
+  if(e&&!e.school&&!isBullet(l)){e.school=l;return}
+  if(e&&e.degree){if(y&&!e.end)e.end=y[0];else e.note+=(e.note?' ':'')+unbullet(l);return}
+  e={degree:unbullet(l),school:'',loc:'',start:'',end:'',note:''};ed.push(e);
+ });
+ if(ed.length)d.edu=ed;
+ // strip personal info lines
+ ['summary','certs','langs','projects','extra'].forEach(function(k){d[k]=d[k].split('\n').filter(function(l){return !PERSONAL.test(l)}).join('\n')});
+ return d;
+}
+
+/* ---------- ATS analysis ---------- */
+function analyze(t,pages){
+ var items=[],words=(t.match(/\S+/g)||[]).length,lines=t.split(/\n/).filter(function(l){return l.trim()});
+ var heads={};lines.forEach(function(l){var h=isHead(clean(l));if(h)heads[h]=1});
+ function add(w,ok,good,bad,fix,crit){items.push({w:w,ok:ok,good:good,bad:bad,fix:fix,crit:crit})}
+ var readable=t.replace(/\s/g,'').length>=200;
+ add(15,readable,'النص قابل للقراءة آلياً','الملف لا يحتوي نصاً كافياً (غالباً صورة/ممسوح ضوئياً) وأنظمة ATS لن تقرأه','أعد إنشاء السيرة كنص حقيقي وليس صورة',true);
+ if(!readable)return finish(items,0,pages);
+ add(8,EMAIL.test(t),'البريد الإلكتروني موجود','لا يوجد بريد إلكتروني واضح','أضف بريداً مهنياً في أعلى السيرة');
+ add(7,PHONE.test(t.replace(EMAIL,'')),'رقم الهاتف موجود','لا يوجد رقم هاتف واضح','أضف رقم هاتف بصيغة دولية');
+ add(6,!!heads.summary,'يوجد قسم نبذة/ملخص مهني','لا يوجد قسم نبذة مهنية','أضف نبذة من 3-4 أسطر تلخص خبرتك وهدفك');
+ add(12,!!heads.experience,'قسم الخبرات موجود بعنوان قياسي','لم يُعثر على قسم خبرات بعنوان قياسي (Experience / الخبرات)','استخدم عنواناً قياسياً مثل Work Experience');
+ add(8,!!heads.education,'قسم التعليم موجود','لم يُعثر على قسم تعليم بعنوان قياسي','أضف قسم Education بعنوان واضح');
+ add(10,!!heads.skills,'قسم المهارات موجود','لا يوجد قسم مهارات','أضف قسم Skills بكلمات مفتاحية مطابقة للوظيفة');
+ var dates=(t.match(new RegExp(RANGE.source,'gi'))||[]).length;
+ add(8,dates>=1,'تواريخ الخبرات واضحة ('+dates+')','لا توجد تواريخ واضحة للخبرات','اكتب التواريخ بصيغة 01/2020 – 03/2023');
+ var bl=lines.filter(isBullet).length;
+ add(5,bl>=3,'استخدام نقاط (bullets) لوصف المهام','لا توجد نقاط منظمة للمهام','اكتب كل إنجاز في نقطة منفصلة');
+ var nodate=t.replace(new RegExp(RANGE.source,'gi'),'').replace(PHONE,'').replace(/(?:19|20)\d{2}/g,'');
+ var nums=(nodate.match(/\d+\s*%|\$\s*\d+|\d{2,}/g)||[]).length;
+ add(8,nums>=3,'يتضمن أرقاماً ونتائج قابلة للقياس','قليل من الأرقام والإنجازات المقاسة','أضف أرقاماً: نسب، ميزانيات، حجم فريق، توفير وقت');
+ var verbs=(t.match(/\b(managed|led|developed|implemented|designed|built|created|improved|increased|reduced|delivered|coordinated|supervised|achieved|launched|analy[sz]ed|optimi[sz]ed|established|executed|surveyed|prepared)\b|أدرت|قدت|طورت|نفذت|صممت|أنشأت|حسنت|خفضت|أشرفت|نسقت|حققت|أطلقت|حللت|الإشراف|تنفيذ|إدارة/gi)||[]).length;
+ add(5,verbs>=3,'أفعال إنجاز قوية','قليل من أفعال الإنجاز','ابدأ كل نقطة بفعل قوي مثل Led / Managed / نفّذت');
+ add(6,words>=200&&words<=1000&&pages<=2,'الطول مناسب ('+words+' كلمة، '+pages+' صفحة)',words<200?'السيرة قصيرة جداً ('+words+' كلمة)':'السيرة طويلة ('+words+' كلمة / '+pages+' صفحات)','اجعلها من 400 إلى 800 كلمة وبحد أقصى صفحتين');
+ var gap=lines.filter(function(l){return /\S {3,}\S/.test(l)}).length/Math.max(1,lines.length);
+ add(6,gap<0.15,'التنسيق عمود واحد بدون جداول واضحة','يبدو أن السيرة بأعمدة أو جداول ('+Math.round(gap*100)+'% من الأسطر) وقد يخلط ATS ترتيب النص','حوّلها إلى عمود واحد بدون جداول');
+ var odd=(t.match(ODD)||[]).length;
+ add(4,odd<=3,'لا رموز زخرفية مربكة','رموز زخرفية كثيرة ('+odd+') قد لا يقرأها ATS','استبدلها بنقطة عادية •');
+ add(2,LINKED.test(t),'رابط LinkedIn موجود','لا يوجد رابط LinkedIn','أضف رابط ملفك على LinkedIn');
+ add(3,!PERSONAL.test(t),'لا بيانات شخصية غير ضرورية','توجد بيانات شخصية غير ضرورية (عمر/ديانة/حالة اجتماعية)','احذفها فهي غير مطلوبة وقد تسبب تحيزاً');
+ return finish(items,words,pages);
+}
+function finish(items,words,pages){
+ var tot=0,got=0;items.forEach(function(i){tot+=i.w;if(i.ok)got+=i.w});
+ var sc=tot?Math.round(got/tot*100):0;
+ return{score:sc,good:items.filter(function(i){return i.ok}),bad:items.filter(function(i){return !i.ok}),words:words,pages:pages};
+}
+
+function showResult(){
+ var r=LAST.res,col=r.score>=75?'#22c55e':r.score>=50?'#fbbf24':'#ef4444',lab=r.score>=75?'جيدة':r.score>=50?'متوسطة':'ضعيفة';
+ var crit=r.bad.some(function(b){return b.crit});
+ var h=topbar('test your cv — Result','evalScreen')+
+ '<div class="cv-card"><div class="cv-score"><div class="cv-ring" style="background:conic-gradient('+col+' '+r.score*3.6+'deg,var(--border) 0)"><i>'+r.score+'%</i></div><div><b>توافق ATS: '+lab+'</b><div class="cv-hint">'+esc(LAST.name)+'<br>'+r.words+' كلمة • '+r.pages+' صفحة</div></div></div></div>'+
+ '<div class="cv-card"><h3>❌ العيوب ('+r.bad.length+')</h3>'+(r.bad.length?r.bad.map(function(b){return '<div class="cv-li"><span>❌</span><div>'+esc(b.bad)+'<small>الحل: '+esc(b.fix)+'</small></div></div>'}).join(''):'<div class="cv-msg">لا توجد عيوب 👌</div>')+'</div>'+
+ '<div class="cv-card"><h3>✅ المزايا ('+r.good.length+')</h3>'+(r.good.length?r.good.map(function(g){return '<div class="cv-li"><span>✅</span><div>'+esc(g.good)+'</div></div>'}).join(''):'<div class="cv-msg">—</div>')+'</div>';
+ if(crit)h+='<div class="cv-card cv-msg">الملف صورة بدون نص، لا يمكن تعديله تلقائياً. أنشئ سيرة جديدة من «إنشاء CV جديد».</div><button class="cv-btn" onclick="CV.build()">📝 إنشاء CV جديد</button>';
+ else h+='<button class="cv-btn gold" onclick="CV.autoFix()">🛠 تعديل وحفظ</button><button class="cv-btn alt" onclick="CV.fixToEditor()">✏️ فتح في المحرر لإكمال النواقص</button><button class="cv-btn alt" onclick="CV.translateFromEval(\'ar\')">🌐 ترجمة احترافية للعربية</button><button class="cv-btn alt" onclick="CV.translateFromEval(\'en\')">🌐 Translate to English</button><div id="cv-tr-st" class="cv-msg"></div>';
+ show(h);
+}
+function autoFix(){D=parseCV(LAST.text);save();preview('evalBack')}
+function fixToEditor(){D=parseCV(LAST.text);save();build()}
+function evalBack(){showResult()}
+
+/* ---------- builder ---------- */
+function F(k,label,type,ph){return '<label>'+label+'</label><input type="'+(type||'text')+'" data-k="'+k+'" value="'+esc(D[k])+'" placeholder="'+(ph||'')+'">'}
+function PH(){return '<label>أرقام الهاتف</label>'+D.phones.map(function(p,i){return '<div style="display:flex;gap:6px;margin-bottom:6px"><input type="tel" data-ph="'+i+'" value="'+esc(p)+'" placeholder="+20 10 0000 0000">'+(D.phones.length>1?'<button class="cv-btn red" style="margin:0" onclick="CV.delPhone('+i+')">✕</button>':'')+'</div>'}).join('')+'<button class="cv-btn alt" style="margin-top:2px" onclick="CV.addPhone()">+ إضافة رقم هاتف آخر</button>'}
+function MS(){var o=[['','— اختر —'],['single','أعزب / Single'],['married','متزوج / Married'],['divorced','مطلق / Divorced'],['widowed','أرمل / Widowed']];return '<label>الحالة الاجتماعية</label><select data-k="marital">'+o.map(function(x){return '<option value="'+x[0]+'"'+(D.marital===x[0]?' selected':'')+'>'+x[1]+'</option>'}).join('')+'</select>'}
+function addPhone(){D.phones.push('');build()}
+function delPhone(i){D.phones.splice(i,1);if(!D.phones.length)D.phones=[''];build()}
+function build(){
+ if(!D)D=emptyD();
+ if(!D.phones||!D.phones.length)D.phones=[D.phone||''];
+ if(D.marital==null)D.marital='';
+ var h='<div class="cv-top"><button class="cv-x" onclick="CV.close()">‹ رجوع</button><h2>إنشاء سيرة ذاتية</h2><button class="cv-x" style="color:#fff;background:#b91c1c;border-color:#b91c1c" onclick="CV.clearAll()">🗑 مسح</button></div>'+
+ '<div class="cv-card"><h3>لغة السيرة</h3><select data-k="lang"><option value="en"'+(D.lang==='en'?' selected':'')+'>English (الأفضل لمعظم أنظمة ATS)</option><option value="ar"'+(D.lang==='ar'?' selected':'')+'>العربية</option></select></div>'+
+ '<div class="cv-card"><h3>👤 البيانات الشخصية</h3>'+F('name','الاسم الكامل')+F('title','المسمى الوظيفي المستهدف')+PH()+F('email','البريد الإلكتروني','email')+MS()+F('city','المدينة، الدولة')+F('linkedin','رابط LinkedIn (اختياري)')+F('site','موقع / Portfolio (اختياري)')+'</div>'+
+ '<div class="cv-card"><h3>📝 نبذة عنك</h3><textarea data-k="summary" placeholder="3-4 أسطر: سنوات الخبرة، التخصص، أهم المهارات، الهدف">'+esc(D.summary)+'</textarea></div>'+
+ '<div class="cv-card"><h3>💼 الخبرات العملية</h3>'+D.exp.map(function(x,i){return '<div style="border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px"><b style="font-size:.8rem">خبرة '+(i+1)+'</b>'+L('exp',i,'title','المسمى الوظيفي')+L('exp',i,'company','اسم الشركة')+L('exp',i,'project','اسم المشروع')+L('exp',i,'owner','مالك المشروع / Employer (اختياري)')+L('exp',i,'consultant','استشاري المشروع (اختياري)')+L('exp',i,'loc','المدينة / الدولة')+'<div class="cv-row"><div>'+L('exp',i,'start','من (MM/YYYY)','','01/2020')+'</div><div>'+L('exp',i,'end','إلى (MM/YYYY)','','03/2023')+'</div></div><label class="cv-chk"><input type="checkbox" data-l="exp" data-i="'+i+'" data-f="cur"'+(x.cur?' checked':'')+'> ما زلت أعمل هنا</label><label>المهام والإنجازات (كل سطر نقطة)</label><textarea data-l="exp" data-i="'+i+'" data-f="bullets">'+esc(x.bullets)+'</textarea><button class="cv-btn red" onclick="CV.del(\'exp\','+i+')">حذف</button></div>'}).join('')+'<button class="cv-btn alt" onclick="CV.add(\'exp\')">+ إضافة خبرة</button></div>'+
+ '<div class="cv-card"><h3>🎓 التعليم</h3>'+D.edu.map(function(x,i){return '<div style="border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:10px"><b style="font-size:.8rem">مؤهل '+(i+1)+'</b>'+L('edu',i,'degree','المؤهل / التخصص')+L('edu',i,'school','الجامعة / المعهد')+L('edu',i,'loc','المدينة / الدولة')+'<div class="cv-row"><div>'+L('edu',i,'start','من','','2014')+'</div><div>'+L('edu',i,'end','إلى','','2018')+'</div></div>'+L('edu',i,'note','ملاحظة (التقدير / المعدل)')+'<button class="cv-btn red" onclick="CV.del(\'edu\','+i+')">حذف</button></div>'}).join('')+'<button class="cv-btn alt" onclick="CV.add(\'edu\')">+ إضافة مؤهل</button></div>'+
+ '<div class="cv-card"><h3>🛠 المهارات</h3><textarea data-k="skills" placeholder="مفصولة بفواصل: AutoCAD, Civil 3D, Total Station, Excel...">'+esc(D.skills)+'</textarea></div>'+
+ '<div class="cv-card"><h3>📜 الدورات والشهادات</h3><textarea data-k="certs" placeholder="كل سطر شهادة: PMP – PMI – 2022">'+esc(D.certs)+'</textarea></div>'+
+ '<div class="cv-card"><h3>🚀 المشاريع</h3><textarea data-k="projects" placeholder="كل سطر مشروع مع وصف مختصر ونتيجته">'+esc(D.projects)+'</textarea></div>'+
+ '<div class="cv-card"><h3>🌐 اللغات</h3><textarea data-k="langs" placeholder="Arabic – Native&#10;English – Professional">'+esc(D.langs)+'</textarea></div>'+
+ '<div class="cv-card"><h3>➕ معلومات إضافية</h3><textarea data-k="extra" placeholder="تطوع، جوائز، عضويات، رخصة قيادة...">'+esc(D.extra)+'</textarea></div>'+
+ '<div class="cv-card"><h3>📎 شهادات الخبرة (صور / PDF)</h3><div class="cv-hint">كل شهادة هتتحط في صفحة لوحدها في آخر الـ CV. تقدر ترفع صورة أو ملف PDF.</div>'+
+ (D.certImgs&&D.certImgs.length?D.certImgs.map(function(c,i){return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="flex:1;font-size:.85rem">📄 '+esc(c.name)+' <small style="color:var(--muted)">('+(c.pages?c.pages.length:0)+' صفحة)</small></span><button class="cv-btn red" style="margin:0;padding:6px 10px" onclick="CV.delCert('+i+')">حذف</button></div>'}).join(''):'<div class="cv-msg">لا توجد شهادات مرفوعة بعد</div>')+
+ '<label class="cv-up" style="margin-top:10px;padding:18px 12px"><input type="file" id="cv-cert-file" accept="image/*,.pdf,application/pdf" multiple><div style="font-size:1.6rem">📎</div><b>أضف شهادة خبرة (صورة أو PDF)</b><div class="cv-hint">يمكن اختيار أكثر من ملف</div></label><div id="cv-cert-st" class="cv-msg"></div></div>'+
+ '<button class="cv-btn gold" onclick="CV.preview(\'build\')">👁 معاينة وإنشاء PDF</button>';
+ show(h);
+ var cf=q('#cv-cert-file');
+ if(cf) cf.addEventListener('change',function(e){var fs=e.target.files;if(!fs||!fs.length)return;CV.addCerts(fs);});
+}
+function L(list,i,f,label,_,ph){return '<label>'+label+'</label><input type="text" data-l="'+list+'" data-i="'+i+'" data-f="'+f+'" value="'+esc(D[list][i][f])+'" placeholder="'+(ph||'')+'">'}
+function add(l){D[l].push(l==='exp'?{title:'',company:'',project:'',owner:'',consultant:'',loc:'',start:'',end:'',cur:false,bullets:''}:{degree:'',school:'',loc:'',start:'',end:'',note:''});save();build()}
+function del(l,i){D[l].splice(i,1);if(!D[l].length)add(l);else{save();build()}}
+body.addEventListener('input',function(e){
+ var t=e.target;if(!D)return;
+ if(t.dataset.ph!==undefined){D.phones[+t.dataset.ph]=t.value}
+ else if(t.dataset.k){D[t.dataset.k]=t.value}
+ else if(t.dataset.l){D[t.dataset.l][+t.dataset.i][t.dataset.f]=t.type==='checkbox'?t.checked:t.value}
+ else return;save();
+});
+body.addEventListener('change',function(e){if(e.target.dataset&&e.target.dataset.k==='lang'){D.lang=e.target.value;save()}});
+
+
+
+/* ---------- professional EN/AR translation ---------- */
+async function trAPI(q,sl,tl){
+ if(!q||!String(q).trim()) return q||'';
+ var s=String(q), out='', i=0, chunk=450;
+ while(i<s.length){
+  var part=s.slice(i,i+chunk);
+  // try break at newline/space near end
+  if(i+chunk<s.length){ var cut=Math.max(part.lastIndexOf('\n'),part.lastIndexOf(' ')); if(cut>200) part=s.slice(i,i+cut+1); }
+  i+=part.length;
+  var url='https://translate.googleapis.com/translate_a/single?client=gtx&sl='+encodeURIComponent(sl)+'&tl='+encodeURIComponent(tl)+'&dt=t&q='+encodeURIComponent(part);
+  var res=await fetch(url); if(!res.ok) throw new Error('ترجمة فشلت — تأكد من الإنترنت');
+  var data=await res.json();
+  var t=''; if(data&&data[0]) data[0].forEach(function(row){ if(row&&row[0]) t+=row[0]; });
+  out+=t;
+ }
+ return out;
+}
+async function translateCV(toLang){
+ if(!D) return;
+ var from=D.lang==='ar'?'ar':'en';
+ var to=toLang==='ar'?'ar':'en';
+ if(from===to){ alert(to==='ar'?'السيرة بالفعل بالعربية':'CV is already in English'); return; }
+ var st=document.getElementById('cv-tr-st');
+ function msg(m){ if(st) st.textContent=m; }
+ msg(to==='ar'?'جاري الترجمة الاحترافية إلى العربية...':'Translating professionally to English...');
+ try{
+  async function T(v){ return await trAPI(v,from,to); }
+  if(D.title) D.title=await T(D.title);
+  if(D.summary) D.summary=await T(D.summary);
+  if(D.skills) D.skills=await T(D.skills);
+  if(D.certs) D.certs=await T(D.certs);
+  if(D.projects) D.projects=await T(D.projects);
+  if(D.langs) D.langs=await T(D.langs);
+  if(D.extra) D.extra=await T(D.extra);
+  if(D.city){ /* keep city mostly */ }
+  for(var i=0;i<(D.exp||[]).length;i++){
+   var x=D.exp[i];
+   msg((to==='ar'?'ترجمة الخبرات... ':'Translating experience... ')+(i+1)+'/'+D.exp.length);
+   if(x.title) x.title=await T(x.title);
+   if(x.company) x.company=await T(x.company);
+   if(x.project) x.project=await T(x.project);
+   if(x.owner) x.owner=await T(x.owner);
+   if(x.consultant) x.consultant=await T(x.consultant);
+   if(x.loc) x.loc=await T(x.loc);
+   if(x.bullets) x.bullets=await T(x.bullets);
+  }
+  for(var j=0;j<(D.edu||[]).length;j++){
+   var e=D.edu[j];
+   if(e.degree) e.degree=await T(e.degree);
+   if(e.school) e.school=await T(e.school);
+   if(e.loc) e.loc=await T(e.loc);
+   if(e.note) e.note=await T(e.note);
+  }
+  D.lang=to;
+  save();
+  msg(to==='ar'?'✓ تمت الترجمة إلى العربية':'✓ Translated to English');
+  preview(window._cvPrevBack||'build');
+ }catch(err){
+  console.error(err);
+  msg('تعذر الترجمة: '+(err&&err.message?err.message:err));
+  alert('تعذر الترجمة. تأكد من الاتصال بالإنترنت ثم أعد المحاولة.');
+ }
+}
+async function translateFromEval(toLang){
+ /* parse first if needed, then translate, then preview */
+ if(!D||!(D.name||D.summary||(D.exp&&D.exp.length))){
+  if(LAST&&LAST.text) D=parseCV(LAST.text);
+  else { alert('ارفع السيرة أولاً'); return; }
+ }
+ window._cvPrevBack='evalBack';
+ await translateCV(toLang);
+}
+
+/* ---------- certificate attachments ---------- */
+async function pdfPagesToImages(buf){
+ if(!window.pdfjsLib){
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ }
+ var pdf=await pdfjsLib.getDocument({data:buf,verbosity:0}).promise, pages=[];
+ for(var p=1;p<=pdf.numPages;p++){
+  var page=await pdf.getPage(p), scale=1.5, vp=page.getViewport({scale:scale});
+  var canvas=document.createElement('canvas'); canvas.width=vp.width; canvas.height=vp.height;
+  await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+  pages.push(canvas.toDataURL('image/jpeg',0.88));
+ }
+ return pages;
+}
+function fileToDataURL(f){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(r.result)};r.onerror=rej;r.readAsDataURL(f)})}
+async function addCerts(fileList){
+ if(!D)D=emptyD(); if(!D.certImgs)D.certImgs=[];
+ var st=q('#cv-cert-st'); if(st) st.textContent='جاري رفع الشهادات...';
+ try{
+  for(var i=0;i<fileList.length;i++){
+   var f=fileList[i], n=(f.name||'').toLowerCase(), pages=[];
+   if(n.endsWith('.pdf')||f.type==='application/pdf'){
+    var buf=await f.arrayBuffer();
+    pages=await pdfPagesToImages(buf);
+   } else if(f.type.indexOf('image/')===0 || /\.(jpe?g|png|webp|gif)$/i.test(n)){
+    pages=[await fileToDataURL(f)];
+   } else {
+    if(st) st.textContent='صيغة غير مدعومة: '+f.name+' (صورة أو PDF فقط)';
+    continue;
+   }
+   if(pages.length) D.certImgs.push({name:f.name,pages:pages});
+  }
+  if(st) st.textContent='تم إضافة الشهادات ✓';
+  save(); build();
+ }catch(e){console.error(e); if(st) st.textContent='تعذر رفع الملف: '+(e&&e.message?e.message:e)}
+}
+function delCert(i){if(!D||!D.certImgs)return; D.certImgs.splice(i,1); save(); build()}
+
+/* ---------- render ---------- */
+var LBL={en:{summary:'Professional Summary',skills:'Core Technical Skills',experience:'Professional Experience',education:'Education',certs:'Certifications & Courses',projects:'Projects',langs:'Languages',extra:'Additional Information',present:'Present'},
+ ar:{summary:'الملخص المهني',skills:'المهارات التقنية',experience:'الخبرات العملية',education:'التعليم',certs:'الدورات والشهادات',projects:'المشاريع',langs:'اللغات',extra:'معلومات إضافية',present:'حتى الآن'}};
+function lines(s){return String(s||'').split('\n').map(function(l){return unbullet(l.trim())}).filter(Boolean)}
+function ul(a){return a.length?'<ul>'+a.map(function(l){return '<li>'+esc(l)+'</li>'}).join('')+'</ul>':''}
+var MAR={single:['Single','أعزب'],married:['Married','متزوج'],divorced:['Divorced','مطلق'],widowed:['Widowed','أرمل']};
+function cvHTML(d){
+ var T=LBL[d.lang==='ar'?'ar':'en'],rtl=d.lang==='ar';
+ var phs=(d.phones&&d.phones.length?d.phones:[d.phone]).map(function(x){return String(x||'').trim()}).filter(Boolean);
+ var contactParts=[];
+ if(d.city) contactParts.push(esc(d.city));
+ if(phs.length) contactParts.push((rtl?'موبايل: ':'Mobile: ')+phs.map(esc).join(' / '));
+ if(d.email) contactParts.push((rtl?'البريد: ':'Email: ')+esc(d.email));
+ if(d.linkedin) contactParts.push(esc(d.linkedin));
+ if(d.site) contactParts.push(esc(d.site));
+ var contact=contactParts.join(' | ');
+ var h='<h1>'+esc(d.name||'Your Name')+'</h1>';
+ if(d.title) h+='<div class="t">'+esc(d.title)+'</div>';
+ if(contact) h+='<div class="c">'+contact+'</div>';
+ if(MAR[d.marital]) h+='<div class="c">'+(rtl?'الحالة الاجتماعية: ':'Marital Status: ')+MAR[d.marital][rtl?1:0]+'</div>';
+ function S(k,inner){return inner?'<h2>'+T[k]+'</h2>'+inner:''}
+ h+=S('summary',d.summary?'<p>'+esc(d.summary)+'</p>':'');
+ var exItems=d.exp.filter(function(x){return x.title||x.company||x.project||x.bullets});
+ /* RULE: any line with a date beside it = NEW PROJECT → thick blue bold + hard separator above & below */
+ var lastRole='', lastCo='';
+ var exHtml=exItems.map(function(x,i){
+  var dt=[x.start,x.cur?T.present:x.end].filter(Boolean).join(' – ');
+  var role=(x.title||'').trim();
+  var proj=(x.project||'').trim();
+  var company=[x.company,x.loc].filter(Boolean).join(' – ');
+  var body='';
+  if(role && role!==proj && role!==lastRole){ body+='<div class="role">'+esc(role)+'</div>'; lastRole=role; }
+  if(company && company!==lastCo){ body+='<div class="co">'+esc(company)+'</div>'; lastCo=company; }
+  /* PROJECT: bold + blue + date */
+  if(proj || dt){
+    var label=proj || role || '';
+    body+='<div class="proj">'+(label?esc(label):'')+(label&&dt?' | ':'')+(dt?esc(dt):'')+'</div>';
+  }
+  var meta=[];
+  if(x.owner) meta.push((rtl?'مالك المشروع / Employer: ':'Project Owner / Employer: ')+esc(x.owner));
+  if(x.consultant) meta.push((rtl?'استشاري: ':'Consultant: ')+esc(x.consultant));
+  if(meta.length) body+='<div class="meta">'+meta.join(' | ')+'</div>';
+  body+=ul(lines(x.bullets));
+  return '<div class="j j-sep">'+body+'</div>';
+ }).join('');
+ h+=S('experience',exHtml);
+ var ed=d.edu.filter(function(x){return x.degree||x.school}).map(function(x){
+  var dt=[x.start,x.end].filter(Boolean).join(' – ');
+  return '<div class="j"><div class="role">'+esc([x.degree,x.school].filter(Boolean).join(' | '))+'</div>'+(x.loc||dt?'<div class="meta">'+esc([x.loc,dt].filter(Boolean).join(' | '))+'</div>':'')+(x.note?'<div class="meta">'+esc(x.note)+'</div>':'')+'</div>';
+ }).join('');
+ h+=S('education',ed);
+ var sk=String(d.skills||'').split(/[,\n،;|]+/).map(function(s){return s.trim()}).filter(Boolean);
+ h+=S('skills',sk.length?'<p class="sk">'+sk.map(esc).join(' • ')+'</p>':'');
+ h+=S('certs',ul(lines(d.certs)));
+ h+=S('projects',ul(lines(d.projects)));
+ h+=S('langs',ul(lines(d.langs)));
+ h+=S('extra',ul(lines(d.extra)));
+ var pad=rtl?'right':'left';
+ /* Certificate pages — each on its own page at the very end */
+ var certHtml='';
+ if(d.certImgs&&d.certImgs.length){
+  d.certImgs.forEach(function(c){
+   (c.pages||[]).forEach(function(src,pi){
+    certHtml+='<div class="cert-page"><div class="cert-label">'+esc(c.name)+(c.pages.length>1?' — '+(pi+1)+'/'+c.pages.length:'')+'</div><img src="'+src+'" alt="'+esc(c.name)+'"/></div>';
+   });
+  });
+ }
+ var css='@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,"Segoe UI",Tahoma,sans-serif;color:#0f172a;font-size:10.5pt;line-height:1.5;margin:0;padding:14mm;background:#fff}h1{font-size:22pt;font-weight:800;margin:0 0 3px;letter-spacing:0.8px;color:#0f172a;text-transform:uppercase;text-align:center}.t{font-size:12.5pt;font-weight:600;margin:0 0 8px;color:#334155;text-align:center}.c{font-size:9.5pt;margin:0 0 3px;color:#475569;line-height:1.55;text-align:center}h2{font-size:11pt;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#1e5a8a;border-bottom:2px solid #1e5a8a;margin:16px 0 9px;padding-bottom:3px}p{margin:0 0 6px;text-align:justify}p.sk{line-height:1.7}ul{margin:4px 0 6px;padding-'+pad+':18px}li{margin-bottom:3px;line-height:1.45}.j{margin-bottom:4px;page-break-inside:avoid;padding-bottom:10px}.j-sep{border-bottom:2px solid #64748b;margin-bottom:18px;padding-bottom:16px}.role{font-weight:700;font-size:11pt;color:#0f172a;margin-bottom:2px}.co{font-size:10pt;font-weight:600;color:#1e293b;margin-bottom:3px}.proj{font-size:11.2pt;font-weight:800;color:#1e5a8a;margin:12px 0 6px;letter-spacing:0.3px;padding-top:8px;border-top:1.5px solid #94a3b8}.meta{font-size:9.3pt;color:#64748b;margin-bottom:3px}.cert-page{page-break-before:always;break-before:page;margin:0;padding:0;text-align:center}.cert-page .cert-label{font-size:9pt;color:#64748b;margin-bottom:8px;font-weight:600}.cert-page img{max-width:100%;max-height:250mm;object-fit:contain;display:block;margin:0 auto}@media print{body{padding:0}.cert-page{page-break-before:always;break-before:page}}';
+ return '<!DOCTYPE html><html lang="'+(rtl?'ar':'en')+'" dir="'+(rtl?'rtl':'ltr')+'"><head><meta charset="utf-8"><title>'+esc(d.name||'CV')+'</title><style>'+css+'</style></head><body>'+h+certHtml+'</body></html>';
+}
+function preview(backFn){
+ window._cvPrevBack=backFn||'build';
+ var html=cvHTML(D);
+ var isAr=D&&D.lang==='ar';
+ var trBtn=isAr
+  ? '<button type="button" class="cv-btn alt" style="margin:0" onclick="CV.translateCV(\'en\')">🌐 ترجمة EN</button>'
+  : '<button type="button" class="cv-btn alt" style="margin:0" onclick="CV.translateCV(\'ar\')">🌐 ترجمة AR</button>';
+ show(topbar('معاينة السيرة',backFn||'build')+
+ '<div class="cv-prev" id="cv-pv"><iframe id="cv-fr"></iframe></div>'+
+ '<div class="cv-card" style="margin-top:10px"><h3 style="margin-bottom:8px">الإجراءات</h3>'+
+ '<button type="button" class="cv-btn gold" style="width:100%;margin-bottom:8px" onclick="CV.print()">🖨️ طباعة</button>'+
+ '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'+
+ '<button type="button" class="cv-btn" style="background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;margin:0" onclick="CV.savePdf()">📄 حفظ PDF</button>'+
+ '<button type="button" class="cv-btn" style="background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;margin:0" onclick="CV.downloadWord()">📝 حفظ Word</button>'+
+ '</div>'+
+ '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+ '<button type="button" class="cv-btn alt" style="margin:0" onclick="CV.build()">✏️ تعديل</button>'+
+ trBtn+
+ '</div>'+
+ '<div id="cv-tr-st" class="cv-msg"></div>'+
+ '<div class="cv-hint" style="margin-top:8px"><b>طباعة / PDF:</b> من نافذة الطباعة عطّل «Headers and footers / الرؤوس والتذييلات» عشان ما يظهرش التاريخ واسم الصفحة.<br><b>Word:</b> ملف نظيف بدون تاريخ أو اسم أداة.<br><b>تعديل / ترجمة:</b> من الأزرار فوق.</div></div>');
+ var fr=q('#cv-fr');fr.srcdoc=html;
+ var box=q('#cv-pv'),sc=box.clientWidth/794;fr.style.transform='scale('+sc+')';box.style.height=Math.round(1123*sc)+'px';box.style.maxHeight='none';
+}
+function cvBlobUrl(html){
+ var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+ return URL.createObjectURL(blob);
+}
+function cvTriggerDownload(blob, filename){
+ var st=document.getElementById('cv-tr-st');
+ function msg(t){ if(st) st.textContent=t; }
+ /* 1) Web Share API (mobile) */
+ try{
+  if(navigator.share && navigator.canShare){
+   var file=new File([blob], filename, {type: blob.type||'application/octet-stream'});
+   if(navigator.canShare({files:[file]})){
+    navigator.share({files:[file], title:filename}).then(function(){ msg('✓ تم المشاركة/الحفظ'); }).catch(function(){ cvFallbackDownload(blob, filename); });
+    return;
+   }
+  }
+ }catch(e){ console.warn(e); }
+ cvFallbackDownload(blob, filename);
+}
+function cvFallbackDownload(blob, filename){
+ var url=URL.createObjectURL(blob);
+ var host=document.getElementById('cv-body')||document.getElementById('cv-ov')||document.body;
+ var a=document.createElement('a');
+ a.href=url; a.download=filename; a.rel='noopener'; a.target='_blank';
+ a.style.cssText='position:fixed;left:12px;top:12px;z-index:999999;padding:10px 14px;background:#0284c7;color:#fff;border-radius:10px;font-weight:700;text-decoration:none';
+ a.textContent='اضغط هنا لتحميل '+filename;
+ host.appendChild(a);
+ try{ a.click(); }catch(e){}
+ var st=document.getElementById('cv-tr-st');
+ if(st) st.textContent='إذا لم يبدأ التحميل اضغط الزر الأزرق أعلى الشاشة';
+ setTimeout(function(){ try{ host.removeChild(a); }catch(e){} try{ URL.revokeObjectURL(url); }catch(e){} }, 60000);
+}
+function printCV(){
+ if(!D){ alert('لا توجد بيانات'); return; }
+ var st=document.getElementById('cv-tr-st');
+ function msg(t){ if(st) st.textContent=t; }
+ msg('جاري فتح الطباعة...');
+ try{
+  var html=cvHTML(D);
+  var pureName=(D.name&&String(D.name).trim())?String(D.name).trim():'CV';
+  html=html.replace(/<title>[^<]*<\/title>/i,'<title>'+esc(pureName)+'</title>');
+  var url=cvBlobUrl(html);
+  var w=window.open(url,'_blank');
+  if(!w){
+   /* popup blocked — print iframe if present */
+   var fr=document.getElementById('cv-fr');
+   if(fr && fr.contentWindow){
+    try{ fr.contentWindow.focus(); fr.contentWindow.print(); msg('تم إرسال أمر الطباعة'); return; }catch(e1){}
+   }
+   msg('المتصفح منع النافذة — اسمح بالنوافذ المنبثقة');
+   alert('اسمح بالنوافذ المنبثقة (Pop-ups) لهذا الموقع ثم أعد المحاولة.');
+   return;
+  }
+  var printed=false;
+  function go(){
+   if(printed) return; printed=true;
+   try{ w.document.title=pureName; }catch(e){}
+   try{ w.focus(); w.print(); msg('✓ نافذة الطباعة فُتحت — اختَر الطابعة أو حفظ PDF'); }
+   catch(e){ msg('تعذر الطباعة: '+(e.message||e)); }
+  }
+  setTimeout(go, 600);
+  setTimeout(go, 1500);
+ }catch(e){
+  console.error(e);
+  msg('خطأ: '+(e&&e.message?e.message:e));
+  alert('تعذر الطباعة: '+(e&&e.message?e.message:e));
+ }
+}
+function savePdf(){
+ if(!D){ alert('لا توجد بيانات'); return; }
+ var st=document.getElementById('cv-tr-st');
+ function msg(t){ if(st) st.textContent=t; }
+ msg('جاري إنشاء ملف PDF...');
+ var pureName=(D.name&&String(D.name).trim())?String(D.name).trim():'CV';
+ var fname=pureName.replace(/[\\/:*?"<>|]+/g,'').trim()+' - CV.pdf';
+ var html=cvHTML(D);
+ /* render off-screen for html2pdf */
+ var host=document.getElementById('cv-body')||document.getElementById('cv-ov')||document.body;
+ var wrap=document.createElement('div');
+ wrap.id='cv-pdf-render';
+ wrap.style.cssText='position:fixed;left:-9999px;top:0;width:794px;background:#fff;z-index:-1;';
+ wrap.innerHTML=html;
+ /* if full html doc, use body content only in an iframe-like structure */
+ try{
+  var bodyMatch=html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  var styleMatch=html.match(/<style[^>]*>([\s\S]*)<\/style>/i);
+  var styles=styleMatch?styleMatch[1]:'';
+  var bodyHtml=bodyMatch?bodyMatch[1]:html;
+  wrap.innerHTML='<div id="cv-pdf-inner" style="width:794px;padding:20px;background:#fff;color:#000;">'+
+   '<style>'+styles+' @page{margin:12mm} body{margin:0;padding:0}</style>'+bodyHtml+'</div>';
+ }catch(e){ wrap.innerHTML=html; }
+ host.appendChild(wrap);
+ var el=document.getElementById('cv-pdf-inner')||wrap;
+
+ function cleanup(){ try{ host.removeChild(wrap); }catch(e){} }
+
+ function doHtml2Pdf(){
+  var opt={
+   margin:[10,10,10,10],
+   filename:fname,
+   image:{type:'jpeg',quality:0.95},
+   html2canvas:{scale:2, useCORS:true, logging:false, backgroundColor:'#ffffff'},
+   jsPDF:{unit:'mm', format:'a4', orientation:'portrait'},
+   pagebreak:{mode:['css','legacy'], avoid:['.j','.proj','.role']}
+  };
+  return html2pdf().set(opt).from(el).toPdf().get('pdf').then(function(pdf){
+   var blob=pdf.output('blob');
+   cleanup();
+   cvTriggerDownload(blob, fname);
+   msg('✓ تم تحميل PDF: '+fname);
+  });
+ }
+
+ function run(){
+  doHtml2Pdf().catch(function(err){
+   console.error(err);
+   cleanup();
+   msg('تعذر إنشاء PDF تلقائياً — سيتم فتح الطباعة لحفظ PDF');
+   alert('تعذر حفظ PDF مباشرة. سيتم فتح نافذة الطباعة؛ اختَر «حفظ كـ PDF / Save as PDF».');
+   printCV();
+  });
+ }
+
+ if(window.html2pdf){ run(); return; }
+ msg('جاري تحميل مكتبة PDF...');
+ loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
+  .then(function(){ msg('جاري إنشاء ملف PDF...'); run(); })
+  .catch(function(e){
+   cleanup();
+   console.error(e);
+   msg('تعذر تحميل مكتبة PDF — فتح الطباعة');
+   alert('تأكد من الإنترنت. سيتم فتح الطباعة لحفظ PDF.');
+   printCV();
+  });
+}
+
+function downloadWord(){
+ if(!D){ alert('لا توجد بيانات'); return; }
+ var st=document.getElementById('cv-tr-st');
+ function msg(t){ if(st) st.textContent=t; }
+ msg('جاري تجهيز ملف Word...');
+ try{
+  var full=cvHTML(D);
+  var bodyMatch=full.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  var styleMatch=full.match(/<style[^>]*>([\s\S]*)<\/style>/i);
+  var bodyHtml=bodyMatch?bodyMatch[1]:full;
+  var styles=styleMatch?styleMatch[1]:'';
+  var pureName=(D.name&&String(D.name).trim())?String(D.name).trim():'CV';
+  var wordDoc='<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>'+esc(pureName)+'</title><style>'+styles+'</style></head><body>'+bodyHtml+'</body></html>';
+  var blob=new Blob(['\ufeff',wordDoc],{type:'application/msword'});
+  var fname=pureName.replace(/[\\/:*?"<>|]+/g,'').trim()+' - CV.doc';
+  cvTriggerDownload(blob, fname);
+  msg('✓ تم تحميل Word: '+fname);
+ }catch(e){
+  console.error(e);
+  msg('خطأ Word: '+(e&&e.message?e.message:e));
+  alert('تعذر حفظ Word: '+(e&&e.message?e.message:e));
+ }
+}
+
+/* ---------- open/close ---------- */
+var Y=0;
+function isCvUnlocked(){
+ if(!window.__cvOk) return false;
+ if(window.__cvUntil && Date.now()>=window.__cvUntil){ window.__cvOk=false; window.__cvUntil=0; try{if(typeof updateToolTimerBar==='function')updateToolTimerBar()}catch(e){} return false; }
+ return true;
+}
+function setCvUnlocked(ok){
+ window.__cvOk=!!ok;
+ if(ok){ window.__cvUntil=Date.now()+30*60*1000; try{if(typeof startToolTimerBar==='function')startToolTimerBar()}catch(e){} }
+ else { window.__cvUntil=0; try{if(typeof updateToolTimerBar==='function')updateToolTimerBar()}catch(e){} }
+}
+/* Per-request OTP: each gate open = new challenge; password derived from challenge */
+function makeCvChallenge(){return String(Math.floor(11+Math.random()*89))}
+function cvPassForChallenge(ch){
+ /* الباسورد = كود الطلب × 95 */
+ var n=parseInt(String(ch).replace(/\D/g,''),10)||0;
+ return String(n*95);
+}
+var __cvIntent='eval';
+var __cvChallenge='';
+function open_(w){
+ __cvIntent=w||'eval';
+ if(!ov.classList.contains('on'))Y=window.pageYOffset||0;
+ ov.classList.add('on');
+ document.body.classList.add('cv-open');
+ if(isCvUnlocked()){
+  if(w==='eval')evalScreen();
+  else if(w==='build'){D=emptyD();build()}
+  else if(w==='reset')resetAsk();
+  else evalScreen();
+ } else {
+  cvGate();
+ }
+}
+function cvGate(){
+ __cvChallenge=makeCvChallenge();
+ try{sessionStorage.setItem('aes_cv_ch',__cvChallenge)}catch(e){}
+ var wa='https://wa.me/201065339946?text='+encodeURIComponent('السلام عليكم\nطلب باسورد أداة السيرة الذاتية (CV)\nكود الطلب: '+__cvChallenge+'\nالاسم: ');
+ show(
+  '<div class="cv-top"><button class="cv-x" onclick="CV.close()">✕</button><h2>دخول أداة الـ CV</h2><span style="width:36px"></span></div>'+
+  '<div class="cv-card" style="text-align:center">'+
+  '<div style="font-size:2.4rem;margin-bottom:8px">🔐</div>'+
+  '<b style="display:block;margin-bottom:6px">كل طلب له باسورد جديد</b>'+
+  '<div class="cv-hint" style="margin-bottom:12px">ابعت <b>كود الطلب</b> على واتساب، وهتوصّلك كلمة مرور خاصة بهذا الطلب فقط.</div>'+
+  '<div style="margin:12px 0;padding:14px;border-radius:12px;border:1px dashed var(--accent);background:var(--input-bg)">'+
+  '<div style="font-size:.75rem;color:var(--muted);margin-bottom:4px">كود الطلب</div>'+
+  '<div style="font-size:1.6rem;font-weight:800;letter-spacing:4px;direction:ltr;color:var(--gold)" id="cv-ch-code">'+esc(__cvChallenge)+'</div>'+
+  '</div>'+
+  '<a href="'+wa+'" target="_blank" rel="noopener" class="cv-btn" style="display:block;text-decoration:none;margin-bottom:14px;background:linear-gradient(135deg,#128C7E,#25D366)">💬 راسل واتساب بكود الطلب</a>'+
+  '<label style="display:block;text-align:right;font-size:.8rem;color:var(--muted);margin-bottom:4px">كلمة المرور (اللي هتوصلك على واتساب)</label>'+
+  '<input type="password" id="cv-gate-pass" placeholder="الباسورد الخاص بهذا الطلب" autocomplete="off" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-size:1rem;margin-bottom:8px">'+
+  '<div id="cv-gate-err" class="cv-msg" style="color:#f87171;display:none">الباسورد غير صحيح لهذا الطلب</div>'+
+  '<button type="button" class="cv-btn gold" onclick="CV.submitCvGate()">دخول</button>'+
+  '<button type="button" class="cv-btn alt" style="margin-top:8px" onclick="CV.cvGate()">🔄 طلب كود جديد</button>'+
+  '</div>'
+ );
+ setTimeout(function(){
+  var inp=q('#cv-gate-pass');
+  if(inp){ inp.focus(); inp.onkeydown=function(e){ if(e.key==='Enter'){ e.preventDefault(); CV.submitCvGate(); } }; }
+ },80);
+}
+function submitCvGate(){
+ var inp=q('#cv-gate-pass');
+ var v=(inp&&inp.value||'').trim();
+ var err=q('#cv-gate-err');
+ var ch=__cvChallenge||(function(){try{return sessionStorage.getItem('aes_cv_ch')||''}catch(e){return ''}})();
+ var expect=cvPassForChallenge(ch);
+ if(v && v===expect){
+  setCvUnlocked(true);
+  try{sessionStorage.removeItem('aes_cv_ch')}catch(e){}
+  __cvChallenge='';
+  if(err) err.style.display='none';
+  var w=__cvIntent||'eval';
+  if(w==='eval')evalScreen();
+  else if(w==='build'){D=emptyD();build()}
+  else if(w==='reset')resetAsk();
+  else evalScreen();
+ } else {
+  if(err) err.style.display='block';
+  if(inp){ inp.value=''; inp.focus(); }
+ }
+}
+
+
+function resetAsk(){
+ show(topbar('مسح كل البيانات','build')+'<div class="cv-card" style="text-align:center"><div style="font-size:2.2rem">🗑</div><b>هتمسح كل البيانات المكتوبة ونتيجة التقييم</b><div class="cv-hint">كل الخانات هتتفضى وتبدأ سيرة جديدة من الصفر. لا يمكن التراجع.</div></div><button class="cv-btn red" style="width:100%;font-size:.95rem;padding:13px" onclick="CV.resetNow()">نعم، امسح كل شيء وابدأ من جديد</button><button class="cv-btn alt" onclick="CV.build()">إلغاء</button>');
+}
+function clearAll(){D=emptyD();LAST={text:'',pages:1,name:'',res:null};build()}
+function resetNow(){D=emptyD();LAST={text:'',pages:1,name:'',res:null};try{localStorage.removeItem('cv_draft')}catch(e){}build()}
+function close_(){ov.classList.remove('on');document.body.classList.remove('cv-open');window.scrollTo(0,Y)}
+window.CV={addPhone:addPhone,delPhone:delPhone,clearAll:clearAll,resetNow:resetNow,resetAsk:resetAsk,open:open_,close:close_,menu:menu,evalScreen:evalScreen,build:build,add:add,del:del,preview:preview,print:printCV,savePdf:savePdf,downloadWord:downloadWord,autoFix:autoFix,fixToEditor:fixToEditor,evalBack:evalBack,addCerts:addCerts,delCert:delCert,translateCV:translateCV,translateFromEval:translateFromEval,submitCvGate:submitCvGate,cvGate:cvGate};
+
+})();
 </script>
 
 </body>
