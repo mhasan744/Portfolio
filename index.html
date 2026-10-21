@@ -1041,7 +1041,99 @@
       color: var(--accent2);
       margin-bottom: 12px;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
+    .croquis-fs-btn {
+      border: 1px solid rgba(56,189,248,0.45);
+      background: rgba(15,23,42,0.9);
+      color: #7dd3fc;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .croquis-fs-btn:active { transform: scale(0.97); }
+    #croquis-fs-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(0,0,0,0.94);
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #croquis-fs-overlay.open { display: flex; }
+    #croquis-fs-overlay .fs-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: #e2e8f0;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    #croquis-fs-overlay .fs-close {
+      border: none;
+      background: #ef4444;
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    #croquis-fs-overlay .fs-body {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      padding: 8px;
+    }
+    #croquis-fs-overlay .fs-body svg {
+      width: 100%;
+      height: auto;
+      max-height: calc(100vh - 80px);
+    }
+    /* satellite low alert near HUD */
+    #cp-sat-alert {
+      display: none;
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: calc(var(--cp-nav, 64px) + 58px);
+      z-index: 99990;
+      background: linear-gradient(135deg,#7f1d1d,#991b1b);
+      color: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      direction: rtl;
+    }
+    #cp-sat-alert.show { display: block !important; animation: satPulse 1.2s ease-in-out infinite; }
+    @keyframes satPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.35); }
+      50% { box-shadow: 0 0 0 8px rgba(248,113,113,0); }
+    }
+    #cp-hud.sat-low .cp-bar { border-color: #f87171 !important; }
+    #cp-hud.sat-low #cp-sat { color: #fca5a5 !important; }
     #diagram-svg {
       width: 100%;
       min-width: 480px;
@@ -2535,7 +2627,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
             <span class="mgt-ar">اختار مشروعك</span>
           </div>
           <div class="menu-stack">
-            <div class="menu-card menu-card-row" onclick="showView('const')">
+            <div class="menu-card menu-card-row" onclick="showView('const-menu')">
               <div class="menu-icon const">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
                   <path d="M2 20h20M4 20V8l4-3 4 3v12M12 20V9l4-3 4 3v11"/>
@@ -2544,7 +2636,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
               </div>
               <div class="menu-text">
                 <h2><span class="en">Constructions</span><span class="ar">الإنشاءات</span></h2>
-                <p>Slabs • Stairs</p>
+                <p>سقف • سلم • تأسيس</p>
               </div>
             </div>
             <div class="menu-card menu-card-row" onclick="showView('infra-menu')">
@@ -3142,6 +3234,31 @@ body.admin-edit #view-home .menu-card{clip-path:none}
             <p>صبة • أسمنت • رمل • زلط</p>
           </div>
         </div>
+        <button type="button" onclick="showView('code-search')" style="
+          width:100%;
+          min-height:72px;
+          margin-top:4px;
+          padding:16px 14px;
+          border:none;
+          border-radius:14px;
+          cursor:pointer;
+          font-family:inherit;
+          font-size:1rem;
+          font-weight:800;
+          color:#fff;
+          letter-spacing:0.3px;
+          background:linear-gradient(135deg,#15803d 0%,#22c55e 100%);
+          box-shadow:0 6px 20px rgba(34,197,94,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          gap:10px;
+          text-align:center;
+          line-height:1.35;
+        ">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" style="flex-shrink:0"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/></svg>
+          <span>البحث في الكود المصري</span>
+        </button>
       </div>
     </div>
 
@@ -3196,6 +3313,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
 
       <div class="results" id="mh-results" style="display:none;">
         <h2>نتائج المانهول / المطبق</h2>
+        <div id="mh-code-auto" style="display:none;"></div>
 
         <!-- شيت الكود المصري -->
         <div class="mh-sheet mh-sheet-code">
@@ -3285,6 +3403,32 @@ body.admin-edit #view-home .menu-card{clip-path:none}
           <div id="mh-svg-wrap" style="overflow:auto;background:#0b1220;border-radius:10px;border:1px solid var(--border);"></div>
         </div>
       </div>
+    </div>
+
+    <!-- ===== CODE SEARCH (الكود المصري) ===== -->
+    <div id="view-code-search" class="app-view">
+      <button class="back-btn" onclick="showView('infra-menu')">› الرجوع</button>
+      <div class="app-header">
+        <h2>🔎 البحث في الكود المصري</h2>
+        <p>الكود المصري لتصميم وتنفيذ شبكات الصرف الصحي 2010</p>
+      </div>
+
+      <div class="section" id="code-search-card" style="--accent:#22c55e;--accent2:#4ade80;border-color:#22c55e;">
+        <div style="display:flex;gap:8px;align-items:stretch;">
+          <input type="text" id="code-q" placeholder="اكتب أي شيء: عرض الحفر، مسافة المناهيل، اختبار القمع…" style="flex:1;min-width:0;" onkeydown="if(event.key==='Enter'){codeSearchRun();}">
+          <button type="button" class="btn-calc" style="flex:0 0 auto;width:auto;padding:0 18px;margin:0;background:linear-gradient(135deg,#15803d,#22c55e);" onclick="codeSearchRun()">بحث</button>
+        </div>
+        <div id="code-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
+        <div id="code-status" style="font-size:0.75rem;color:var(--muted);margin-top:10px;line-height:1.7;"></div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <label class="btn-reset" style="flex:0 0 auto;width:auto;white-space:nowrap;margin:0;padding:8px 12px;font-size:0.78rem;cursor:pointer;">
+            📂 تحميل نص الكود (PDF / TXT)
+            <input type="file" id="code-file" accept=".pdf,.txt,.md" style="display:none;" onchange="codeLoadFile(this)">
+          </label>
+          <button type="button" class="btn-reset" id="code-clear-btn" style="flex:0 0 auto;width:auto;white-space:nowrap;margin:0;padding:8px 12px;font-size:0.78rem;display:none;" onclick="codeClear()">مسح الكود المحمّل</button>
+        </div>
+      </div>
+      <div id="code-results" style="margin-top:12px;"></div>
     </div>
 
     <!-- ===== INFRASTRUCTURE CONCRETE ===== -->
@@ -3606,7 +3750,8 @@ body.admin-edit #view-home .menu-card{clip-path:none}
 
       <div class="diagram-box" id="diagram-box" style="display:none;">
         <div class="diagram-title">كروكي الماسورة والقراءات المحسوبة</div>
-        <svg id="diagram-svg" viewBox="0 0 520 340" xmlns="http://www.w3.org/2000/svg">
+        <div id="pipe-summary"></div>
+        <svg id="diagram-svg" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg" direction="ltr" style="direction:ltr;">
           <defs>
             <linearGradient id="pipeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stop-color="#64748b"/>
@@ -3622,61 +3767,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
               <path d="M0,0 L7,3.5 L0,7 Z" fill="#fbbf24"/>
             </marker>
           </defs>
-
-          <g opacity="0.07">
-            <line x1="0" y1="50" x2="520" y2="50" stroke="#94a3b8" stroke-width="0.5"/>
-            <line x1="0" y1="100" x2="520" y2="100" stroke="#94a3b8" stroke-width="0.5"/>
-            <line x1="0" y1="150" x2="520" y2="150" stroke="#94a3b8" stroke-width="0.5"/>
-            <line x1="0" y1="200" x2="520" y2="200" stroke="#94a3b8" stroke-width="0.5"/>
-            <line x1="0" y1="250" x2="520" y2="250" stroke="#94a3b8" stroke-width="0.5"/>
-          </g>
-
-          <line x1="20" y1="36" x2="500" y2="36" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="6,4"/>
-          <text x="28" y="26" fill="#38bdf8" font-size="11" font-weight="bold">HI منسوب سطح الميزان</text>
-          <text x="400" y="26" fill="#7dd3fc" font-size="12" font-weight="bold" id="svg-hi">—</text>
-
-          <rect x="55" y="36" width="11" height="120" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
-          <line x1="55" y1="66" x2="66" y2="66" stroke="#64748b" stroke-width="1"/>
-          <line x1="55" y1="96" x2="66" y2="96" stroke="#64748b" stroke-width="1"/>
-          <line x1="55" y1="126" x2="66" y2="126" stroke="#64748b" stroke-width="1"/>
-          <line x1="55" y1="146" x2="66" y2="146" stroke="#64748b" stroke-width="1"/>
-          <text x="42" y="105" fill="#94a3b8" font-size="9" transform="rotate(-90 42 105)">قامة</text>
-
-          <line x1="75" y1="36" x2="75" y2="140" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrY)"/>
-          <text x="82" y="95" fill="#fbbf24" font-size="10" font-weight="bold" id="svg-fs">—</text>
-
-          <g id="pipe-group">
-            <ellipse cx="280" cy="175" rx="185" ry="26" fill="url(#pipeGrad)" stroke="#64748b" stroke-width="1.5"/>
-            <ellipse cx="280" cy="175" rx="185" ry="14" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,2"/>
-            <ellipse cx="95" cy="175" rx="11" ry="26" fill="#475569" stroke="#64748b" stroke-width="1.5"/>
-            <ellipse cx="465" cy="175" rx="11" ry="26" fill="#475569" stroke="#64748b" stroke-width="1.5"/>
-          </g>
-
-          <line x1="280" y1="149" x2="280" y2="201" stroke="#4ade80" stroke-width="1.5" marker-start="url(#arrG)" marker-end="url(#arrG)"/>
-          <text x="290" y="180" fill="#4ade80" font-size="11" font-weight="bold" id="svg-d">Ø</text>
-
-          <line x1="90" y1="201" x2="470" y2="201" stroke="#f87171" stroke-width="1.2" stroke-dasharray="4,3"/>
-          <text x="250" y="216" fill="#f87171" font-size="10" font-weight="bold">IL منسوب القاع</text>
-
-          <g id="points-group"></g>
-
-          <text x="95" y="250" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle">البداية</text>
-          <text x="95" y="265" fill="#7dd3fc" font-size="10" text-anchor="middle" id="svg-il-s">IL = —</text>
-          <text x="95" y="279" fill="#fbbf24" font-size="10" text-anchor="middle" id="svg-fs-s">قراءة = —</text>
-
-          <text x="465" y="250" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle">النهاية</text>
-          <text x="465" y="265" fill="#7dd3fc" font-size="10" text-anchor="middle" id="svg-il-e">IL = —</text>
-          <text x="465" y="279" fill="#fbbf24" font-size="10" text-anchor="middle" id="svg-fs-e">قراءة = —</text>
-
-          <line x1="110" y1="310" x2="450" y2="310" stroke="#a78bfa" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr)"/>
-          <text x="280" y="308" fill="#a78bfa" font-size="11" text-anchor="middle" id="svg-len">الطول</text>
-
-          <g transform="translate(20, 325)">
-            <circle cx="0" cy="0" r="3" fill="#fbbf24"/>
-            <text x="8" y="3.5" fill="#94a3b8" font-size="9">قراءة ظهر الماسورة</text>
-            <circle cx="120" cy="0" r="3" fill="#38bdf8"/>
-            <text x="128" y="3.5" fill="#94a3b8" font-size="9">المسافة</text>
-          </g>
+          <g id="sk-dyn"></g>
         </svg>
       </div>
     </div>
@@ -3931,16 +4022,53 @@ body.admin-edit #view-home .menu-card{clip-path:none}
     </div>
 
     <!-- ===== CONSTRUCTIONS ===== -->
-    <div id="view-const" class="app-view">
+    <!-- ===== CONSTRUCTIONS MENU ===== -->
+    <div id="view-const-menu" class="app-view">
       <button class="back-btn" onclick="showView('home')">› الرجوع للقائمة</button>
       <div class="app-header">
-        <h2>Constructions — الانشاءات</h2>
-        <p>وزن الأسقف الخرسانية • مناسيب السلم</p>
+        <h2>Constructions — الإنشاءات</h2>
+        <p>اختر القسم</p>
       </div>
+      <div class="menu-stack">
+        <div class="menu-card menu-card-row" onclick="showView('const-slab')">
+          <div class="menu-icon" style="background:linear-gradient(135deg,#9a3412,#ea580c);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 18h18M5 18V10l7-5 7 5v8M9 18v-5h6v5"/></svg>
+          </div>
+          <div class="menu-text">
+            <h2><span class="en">Slab Levels</span><span class="ar">مناسيب السقف</span></h2>
+            <p>قراءات السقف • سُمك • كروكي</p>
+          </div>
+        </div>
+        <div class="menu-card menu-card-row" onclick="showView('const-stairs')">
+          <div class="menu-icon" style="background:linear-gradient(135deg,#7c2d12,#c2410c);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 20h4v-4h4v-4h4V8h4V4"/></svg>
+          </div>
+          <div class="menu-text">
+            <h2><span class="en">Stair Levels</span><span class="ar">مناسيب السلم</span></h2>
+            <p>درجات • قراءات • كروكي</p>
+          </div>
+        </div>
+        <div class="menu-card menu-card-row" onclick="showView('const-found');var el=document.getElementById('view-const-found');if(el){el.classList.add('active');el.style.display='block';}">
+          <div class="menu-icon" style="background:linear-gradient(135deg,#422006,#a16207);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M4 20h16M6 20V14h12v6M8 14V9h8v5M10 9V5h4v4"/></svg>
+          </div>
+          <div class="menu-text">
+            <h2><span class="en">Foundation Levels</span><span class="ar">مناسيب التأسيس</span></h2>
+            <p>عادية • مسلحة • ميدة • أعمدة</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <!-- ===== SLAB LEVELING ===== -->
+    <!-- ===== SLAB ===== -->
+    <div id="view-const-slab" class="app-view">
+      <button class="back-btn" onclick="showView('const-menu')">› الرجوع</button>
+      <div class="app-header">
+        <h2>Slab Levels — مناسيب السقف</h2>
+        <p>قراءات ميزان السقف مع كروكي: عادية • مسلحة • عمود • سقف</p>
+      </div>
       <div class="section">
-        <div class="section-title">① وزن سقف خرسانة</div>
+        <div class="section-title"><span class="num">1</span> Slab Levels — مناسيب السقف</div>
 
                 <div class="form-group">
           <label>منسوب الروبير (BM)</label>
@@ -4037,9 +4165,22 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         </div>
       </div>
 
-      <!-- ===== STAIRS (optional / separate) ===== -->
+        <div class="diagram-box" id="slab-diagram-box" style="display:none;margin-top:14px;">
+          <div class="diagram-title">كروكي وزن السقف (قطاع واقعي)</div>
+          <div id="slab-svg-wrap" style="overflow-x:auto;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STAIRS ===== -->
+    <div id="view-const-stairs" class="app-view">
+      <button class="back-btn" onclick="showView('const-menu')">› الرجوع</button>
+      <div class="app-header">
+        <h2>مناسيب السلم</h2>
+        <p>حساب مناسيب الدرج وقراءات القامة مع كروكي واضح</p>
+      </div>
       <div class="section">
-        <div class="section-title">② مناسيب السلم (اختياري)</div>
+        <div class="section-title"><span class="num">1</span> مناسيب السلم</div>
         <div class="form-group">
           <label>منسوب الروبير (BM)</label>
           <input type="number" id="stair-bm" step="0.001" placeholder="مثال: 14.000" oninput="updateStairHI()">
@@ -4092,11 +4233,105 @@ body.admin-edit #view-home .menu-card{clip-path:none}
           <p class="note" style="margin-top:10px;">
             قراءة القامة = HI − منسوب الدرجة
           </p>
-
           <div class="diagram-box" style="margin-top:14px;">
             <div class="diagram-title">كروكي السلم</div>
             <div id="stair-svg-wrap" style="overflow-x:auto;"></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FOUNDATION LEVELS ===== -->
+    <div id="view-const-found" class="app-view">
+      <button type="button" class="back-btn" onclick="showView('const-menu')">› الرجوع</button>
+      <div class="app-header">
+        <h2>مناسيب التأسيس</h2>
+        <p>روبير • عادية • مسلحة • ميدة/سمل • قراءات + كروكي</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">1</span> الروبير و سطح الميزان</div>
+        <div class="form-group">
+          <label>منسوب الروبير (BM)</label>
+          <input type="number" id="fnd-bm" step="0.001" placeholder="مثال: 12.500" oninput="updateFndHI()">
+        </div>
+        <div class="form-group">
+          <label>قراءة القامة على الروبير</label>
+          <input type="number" id="fnd-bs" step="0.001" placeholder="مثال: 1.250" oninput="updateFndHI()">
+        </div>
+        <div class="form-group">
+          <label>منسوب سطح الميزان (HI) — يُحسب تلقائيًا</label>
+          <input type="number" id="fnd-hi" step="0.001" placeholder="—" readonly style="opacity:0.85;border-color:var(--accent);">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">2</span> منسوب العادية (اختياري)</div>
+        <div class="form-group">
+          <label>منسوب خرسانة العادية (م)</label>
+          <input type="number" id="fnd-plain" step="0.001" placeholder="اختياري — مثال: 11.800">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">3</span> منسوب المسلحة (اختياري — 3 خانات)</div>
+        <div class="form-group">
+          <label>مسلحة 1</label>
+          <input type="number" id="fnd-rc1" step="0.001" placeholder="اختياري">
+        </div>
+        <div class="form-group">
+          <label>مسلحة 2</label>
+          <input type="number" id="fnd-rc2" step="0.001" placeholder="اختياري">
+        </div>
+        <div class="form-group">
+          <label>مسلحة 3</label>
+          <input type="number" id="fnd-rc3" step="0.001" placeholder="اختياري">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">4</span> منسوب الميدة / السمل (اختياري — 3 خانات)</div>
+        <div class="form-group">
+          <label>ميدة / سمل 1</label>
+          <input type="number" id="fnd-bm1" step="0.001" placeholder="اختياري">
+        </div>
+        <div class="form-group">
+          <label>ميدة / سمل 2</label>
+          <input type="number" id="fnd-bm2" step="0.001" placeholder="اختياري">
+        </div>
+        <div class="form-group">
+          <label>ميدة / سمل 3</label>
+          <input type="number" id="fnd-bm3" step="0.001" placeholder="اختياري">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="btn-row">
+          <button type="button" class="btn-calc" onclick="calcFound()">احسب القراءات والكروكي</button>
+          <button type="button" class="btn-reset" onclick="resetFound()">مسح</button>
+        </div>
+      </div>
+
+      <div id="fnd-results" style="display:none;">
+        <div class="section">
+          <div class="section-title">شيت القراءات</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>العنصر</th>
+                  <th>المنسوب (م)</th>
+                  <th>قراءة القامة (م)</th>
+                </tr>
+              </thead>
+              <tbody id="fnd-body"></tbody>
+            </table>
+          </div>
+          <p class="note" style="margin-top:10px;">قراءة القامة = HI − المنسوب &nbsp;|&nbsp; HI = BM + قراءة الروبير</p>
+        </div>
+        <div class="diagram-box" style="margin-top:12px;">
+          <div class="diagram-title">كروكي التأسيس</div>
+          <div id="fnd-svg-wrap" style="overflow-x:auto;"></div>
         </div>
       </div>
     </div>
@@ -4107,6 +4342,18 @@ body.admin-edit #view-home .menu-card{clip-path:none}
       <div class="app-header">
         <h2>نقل روبير</h2>
         <p>سلسلة مناسيب: كل نقطة محسوبة تصبح المرجع للنقطة التالية</p>
+      </div>
+
+      <div class="section" id="bm-type-sec">
+        <div class="section-title"><span class="num">0</span> نوع سلسلة نقل الروبير</div>
+        <div class="form-group">
+          <label>السلسلة مغلقة ولا مفتوحة؟</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;">
+            <button type="button" class="btn-calc" id="bm-type-open" onclick="setBmType('open')" style="flex:1;min-width:120px;background:linear-gradient(135deg,#0369a1,#0ea5e9);">مفتوحة</button>
+            <button type="button" class="btn-calc" id="bm-type-closed" onclick="setBmType('closed')" style="flex:1;min-width:120px;background:linear-gradient(135deg,#7c2d12,#ea580c);">مغلقة</button>
+          </div>
+          <p class="note" id="bm-type-note" style="margin-top:8px;">اختر <b>مفتوحة</b> للكروكي الخطي العادي، أو <b>مغلقة</b> لو هترجع على نفس الروبير (القفل على آخر نقطة).</p>
+        </div>
       </div>
 
       <div class="section" id="bm-setup-sec">
@@ -5152,6 +5399,23 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <p>تصحيح خطأ القفل بطريقة Bowditch</p>
       </div>
       <div class="section">
+        <div class="section-title"><span class="num">0</span> استيراد نقاط (Excel / SDR / نص)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+          <button type="button" class="btn-calc" onclick="document.getElementById('t-file').click()" style="flex:1;min-width:140px;background:linear-gradient(135deg,#14532d,#22c55e);display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3-3 3 3"/></svg>
+            استيراد ملف
+          </button>
+          <button type="button" class="btn-reset" onclick="document.getElementById('t-paste-box').style.display=document.getElementById('t-paste-box').style.display==='none'?'block':'none'" style="flex:1;min-width:140px;">لصق نص</button>
+        </div>
+        <input type="file" id="t-file" accept=".csv,.txt,.sdr,.xlsx,.xls,.raw,.crd" style="display:none" onchange="importTravFile(event)">
+        <div id="t-paste-box" style="display:none;margin-bottom:10px;">
+          <label style="display:block;margin-bottom:6px;font-size:0.85rem;color:var(--muted);">الصق النقاط (E N أو E,N لكل سطر) — آخر سطر = نقطة القفل إن وُجدت</label>
+          <textarea id="t-paste" rows="5" placeholder="مثال:&#10;100.00 200.00&#10;150.25 210.50&#10;180.00 190.00&#10;100.05 200.02" style="width:100%;direction:ltr;text-align:left;font-family:monospace;border-radius:10px;padding:10px;background:var(--card);color:var(--text);border:1px solid var(--border);"></textarea>
+          <button type="button" class="btn-calc" onclick="importTravText()" style="width:100%;margin-top:8px;">تطبيق النص وتصحيح</button>
+        </div>
+        <p class="note" id="t-import-note">يدعم: CSV / TXT / SDR / Excel. الأعمدة: E ثم N (أو Y ثم X). آخر نقطة تُعتبر نقطة القفل لو السلسلة مغلقة.</p>
+      </div>
+      <div class="section">
         <div class="section-title"><span class="num">1</span> عدد نقاط الترافيرس</div>
         <div class="form-group">
           <label>عدد النقاط (بدون نقطة القفل) — 3 على الأقل</label>
@@ -5332,12 +5596,66 @@ body.admin-edit #view-home .menu-card{clip-path:none}
           <input type="number" id="road-cl-end" step="0.001" placeholder="مثال: 12.650">
         </div>
         <div class="form-group">
+          <label>محطة البداية (م) — مثال 1500 = 1+500</label>
+          <input type="number" id="road-sta0" step="0.01" placeholder="مثال: 0">
+        </div>
+        <div class="form-group">
           <label>قراءة كل كام متر طوليًا؟</label>
           <input type="number" id="road-long-int" step="0.1" min="0.1" placeholder="مثال: 5" value="5">
         </div>
       </div>
 
-      <div class="btn-row">
+            <div class="section">
+        <div class="section-title">④ Superelevation (الميل الجانبي في المنحنيات) — اختياري</div>
+        <div class="form-group">
+          <label>اتجاه المنحنى</label>
+          <select id="road-se-mode">
+            <option value="none">بدون</option>
+            <option value="right">منحنى يمين (الحافة اليسار خارجية)</option>
+            <option value="left">منحنى شمال (الحافة اليمين خارجية)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الميل الجانبي الكامل e (%)</label>
+          <input type="number" id="road-se-e" step="0.1" placeholder="مثال: 6">
+        </div>
+        <div class="form-group">
+          <label>طول Tangent Runout (م) — إزالة الميل العكسي</label>
+          <input type="number" id="road-se-lt" step="0.1" placeholder="مثال: 10">
+        </div>
+        <div class="form-group">
+          <label>طول Runoff (م) — الوصول لـ e الكامل</label>
+          <input type="number" id="road-se-lr" step="0.1" placeholder="مثال: 30">
+        </div>
+        <p class="note">يُحسب من بداية القطاع الطولي (مسافة 0) على أساس Crown بالنسبة المدخلة في ② وعلى منسوب المحور المحسوب في ③.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">⑤ طبقات الرصف والكميات — اختياري</div>
+        <div class="form-group">
+          <label>سُمك الأسفلت (سم)</label>
+          <input type="number" id="road-t-asp" step="0.1" placeholder="مثال: 10">
+        </div>
+        <div class="form-group">
+          <label>سُمك Base (سم)</label>
+          <input type="number" id="road-t-base" step="0.1" placeholder="مثال: 20">
+        </div>
+        <div class="form-group">
+          <label>سُمك Subbase (سم)</label>
+          <input type="number" id="road-t-sub" step="0.1" placeholder="مثال: 25">
+        </div>
+        <div class="form-group">
+          <label>منسوب الأرض الطبيعية NGL عند البداية (م)</label>
+          <input type="number" id="road-ngl-s" step="0.001" placeholder="مثال: 12.500">
+        </div>
+        <div class="form-group">
+          <label>منسوب الأرض الطبيعية NGL عند النهاية (م)</label>
+          <input type="number" id="road-ngl-e" step="0.001" placeholder="مثال: 12.400">
+        </div>
+        <p class="note">الحفر/الردم تقريبي: مقطع مستطيل بعرض الطريق (بدون ميول جانبية) بطريقة Average End Area.</p>
+      </div>
+
+<div class="btn-row">
         <button class="btn-calc" onclick="calcRoad()">احسب قراءات الطريق</button>
         <button class="btn-reset" onclick="resetRoad()">مسح</button>
       </div>
@@ -5376,6 +5694,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
               <table>
                 <thead>
                   <tr>
+                    <th>المحطة</th>
                     <th>المسافة (م)</th>
                     <th>منسوب المحور (م)</th>
                     <th>قراءة القامة (م)</th>
@@ -5389,6 +5708,8 @@ body.admin-edit #view-home .menu-card{clip-path:none}
             <div class="diagram-title">كروكي القطاع الطولي (المحور)</div>
             <div id="road-long-svg" style="overflow-x:auto;"></div>
           </div>
+          <div id="road-se-out" style="display:none; margin-top:14px;"></div>
+          <div id="road-qty-out" style="display:none; margin-top:14px;"></div>
         </div>
       </div>
     </div>
@@ -6839,8 +7160,15 @@ function showView(name) {
       $("view-infra-conc").classList.toggle("active", name === "infra-conc");
       $("view-infra").classList.toggle("active", name === "infra");
       if ($("view-infra-mh")) $("view-infra-mh").classList.toggle("active", name === "infra-mh");
+      if ($("view-code-search")) $("view-code-search").classList.toggle("active", name === "code-search");
       $("view-coord").classList.toggle("active", name === "coord");
-      $("view-const").classList.toggle("active", name === "const");
+      ["const-menu","const-slab","const-stairs","const-found","const"].forEach(function(v) {
+        var el = $("view-" + v);
+        if (!el) return;
+        var on = (name === v);
+        el.classList.toggle("active", on);
+        el.style.display = on ? "block" : "";
+      });
       $("view-bm").classList.toggle("active", name === "bm");
       $("view-roads").classList.toggle("active", name === "roads");
       $("view-map").classList.toggle("active", name === "map");
@@ -7135,6 +7463,382 @@ function showView(name) {
 
     
 
+    /* ===== بحث في الكود (على نص الكود اللي المستخدم يحمّله — مفيش قيم متألفة) ===== */
+    const CODE_DB = { name: "", chunks: [] };
+    const CODE_LS_KEY = "egcode_db_v1";
+    const CODE_STOP = new Set(["ما","ماهو","ماهي","هو","هي","في","من","علي","الي","عن","هل","كم","ايه","اي","لو","ان","او","و","ب","ل","عند","عندما","كام","يكون","تكون","يجب","بين","هذا","هذه","ذلك","مع"]);
+    const CODE_SYN = [
+      ["منهول","مانهول","مناهيل","مطبق","مطابق","غرفه","تفتيش","manhole"],
+      ["ماسوره","مواسير","خط","خطوط","انبوب"],
+      ["مسافه","مسافات","تباعد","بعد"],
+      ["قطر","اقطار","diameter"],
+      ["عمق","اعماق","ارتفاع"],
+      ["ميل","ميول","انحدار","slope"],
+      ["غطاء","اغطيه","فتحه"],
+      ["سلم","سلالم","درج","درجات"],
+      ["سمك","سماكه","جدار","جدران"],
+      ["خرسانه","خرسانيه","صبه"],
+      ["ارضيه","قاع","قاعده","بلاطه"],
+      ["مخروط","رقبه","عنق"],
+      ["ساقط","سقوط","drop"],
+      ["سرعه","سرعات","velocity"],
+      ["غمر","تغطيه","ردم","cover"],
+      ["حفر","خندق","خنادق","حفريات","trench"],
+      ["جدول","جداول","table"],
+      ["عرض","اتساع"],
+      ["اختبار","فحص","تجربه","استلام","test"],
+      ["قمع","قمه","funnel"],
+      ["تسرب","تسريب","تسرّب","نفاذ","leakage"],
+      ["فرشه","رمل","بدينج","bedding"]
+    ];
+    function arNorm(s) {
+      return String(s || "").normalize("NFKC")
+        .replace(/[\u064B-\u0652\u0640]/g, "")
+        .replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه")
+        .replace(/[٠-٩]/g, function (d) { return "٠١٢٣٤٥٦٧٨٩".indexOf(d); })
+        .toLowerCase();
+    }
+    function codeStem(t) {
+      t = t.replace(/^(وال|بال|لل|ال)/, "");
+      if (t.length > 4) t = t.replace(/(ات|ون|ين|ان)$/, "");
+      return t;
+    }
+    function codeTokens(s) {
+      const m = arNorm(s).match(/[\p{L}\p{N}.]+/gu) || [];
+      return m.map(function (t) { return t.replace(/^\.+|\.+$/g, ""); }).filter(function (t) { return t && !CODE_STOP.has(t); }).map(codeStem);
+    }
+    function codeGroup(tok) {
+      for (let i = 0; i < CODE_SYN.length; i++) {
+        for (let j = 0; j < CODE_SYN[i].length; j++) {
+          if (codeStem(CODE_SYN[i][j]) === tok) return "g" + i;
+        }
+      }
+      return tok;
+    }
+    function codeEsc(s) { return String(s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+    function codeBuildIndex() {
+      const df = {};
+      CODE_DB.chunks.forEach(function (c) {
+        const tf = {};
+        codeTokens(c.t).forEach(function (t) { const g = codeGroup(t); tf[g] = (tf[g] || 0) + 1; });
+        c.tf = tf; c.n = arNorm(c.t);
+        Object.keys(tf).forEach(function (g) { df[g] = (df[g] || 0) + 1; });
+      });
+      CODE_DB.df = df;
+    }
+    function codeChunkText(text, page) {
+      const out = [];
+      const paras = String(text).replace(/\r/g, "").split(/\n\s*\n/);
+      paras.forEach(function (p) {
+        const lines = p.split("\n").map(function (x) { return x.trim(); }).filter(Boolean);
+        let buf = "";
+        lines.forEach(function (ln) {
+          if ((buf + " " + ln).length > 520 && buf) { out.push({ p: page, t: buf }); buf = ln; }
+          else buf = buf ? buf + " " + ln : ln;
+        });
+        if (buf.length > 25) out.push({ p: page, t: buf });
+      });
+      return out;
+    }
+    function codeUpdateStatus(msg) {
+      const st = $("code-status"); if (!st) return;
+      const n = CODE_DB.chunks.length;
+      st.textContent = msg || (n ? ("✓ الكود المحمّل: " + CODE_DB.name + " — " + codeArDigits(n) + " فقرة") : "لسه مفيش نص كود محمّل — حمّل ملف الكود (PDF أو TXT) عشان البحث يطلع إجابات من الكود نفسه.");
+      if ($("code-clear-btn")) $("code-clear-btn").style.display = n ? "inline-block" : "none";
+    }
+    function codeSave() {
+      try {
+        localStorage.setItem(CODE_LS_KEY, JSON.stringify({ name: CODE_DB.name, chunks: CODE_DB.chunks.map(function (c) { return { p: c.p, t: c.t }; }) }));
+        return true;
+      } catch (e) { return false; }
+    }
+    function codeInit() {
+      try {
+        const raw = localStorage.getItem(CODE_LS_KEY);
+        if (raw) { const o = JSON.parse(raw); CODE_DB.name = o.name || ""; CODE_DB.chunks = o.chunks || []; codeBuildIndex(); }
+      } catch (e) {}
+      const chips = $("code-chips");
+      if (chips && !chips.innerHTML) {
+        ["أقصى مسافة بين المناهيل", "عرض الحفر", "اختبار القمع", "اختبار التسرب", "قطر المنهول وعمقه", "الميل الأدنى للماسورة", "فرشة الرمل", "سلالم المنهول", "غطاء المنهول"].forEach(function (q) {
+          const b = document.createElement("button");
+          b.type = "button"; b.textContent = q;
+          b.style.cssText = "background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.5);color:#4ade80;border-radius:999px;padding:5px 12px;font-size:0.74rem;cursor:pointer;font-family:inherit;width:auto;min-width:0;flex:0 0 auto;white-space:nowrap;margin:0;";
+          b.onclick = function () { $("code-q").value = q; codeSearchRun(); };
+          chips.appendChild(b);
+        });
+      }
+      codeUpdateStatus();
+    }
+    function codeLoadPdfLib() {
+      return new Promise(function (res, rej) {
+        if (window.pdfjsLib) return res();
+        const s = document.createElement("script");
+        s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+        s.onload = res; s.onerror = function () { rej(new Error("تعذر تحميل مكتبة PDF — تأكد من الإنترنت")); };
+        document.head.appendChild(s);
+      });
+    }
+    async function codeLoadFile(input) {
+      const f = input.files && input.files[0];
+      if (!f) return;
+      codeUpdateStatus("جاري قراءة الملف…");
+      try {
+        let chunks = [];
+        if (/\.pdf$/i.test(f.name)) {
+          await codeLoadPdfLib();
+          pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+          const buf = await f.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: buf, verbosity: 0 }).promise;
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const pg = await pdf.getPage(i);
+            const tc = await pg.getTextContent();
+            let line = "", lastY = null, txt = "";
+            tc.items.forEach(function (it) {
+              const y = it.transform ? Math.round(it.transform[5]) : 0;
+              if (lastY !== null && Math.abs(y - lastY) > 3) { txt += line.trim() + "\n"; line = ""; }
+              line += it.str + " "; lastY = y;
+            });
+            txt += line.trim();
+            chunks = chunks.concat(codeChunkText(codeFixPageText(txt), i));
+            if (i % 20 === 0) codeUpdateStatus("جاري القراءة… صفحة " + i + " من " + pdf.numPages);
+          }
+        } else {
+          const t = await f.text();
+          const pages = t.split(/\f|\n={3,}\s*(?:page|صفحة)\s*\d+\s*={3,}\n/i);
+          pages.forEach(function (pt, idx) { chunks = chunks.concat(codeChunkText(codeFixPageText(pt), pages.length > 1 ? idx + 1 : null)); });
+        }
+        if (!chunks.length) { codeUpdateStatus("⚠ مفيش نص اتقرى من الملف (لو PDF ممسوح ضوئيًا يحتاج OCR)."); return; }
+        CODE_DB.name = f.name; CODE_DB.chunks = chunks; codeBuildIndex();
+        const ok = codeSave();
+        codeUpdateStatus("✓ اتحمّل: " + f.name + " — " + codeArDigits(chunks.length) + " فقرة" + (ok ? "" : " (الملف كبير ومتحفظش — هيفضل لحد ما تقفل الصفحة)"));
+      } catch (e) {
+        codeUpdateStatus("⚠ تعذر قراءة الملف: " + (e && e.message ? e.message : e));
+      }
+      input.value = "";
+    }
+    function codeClear() {
+      CODE_DB.name = ""; CODE_DB.chunks = [];
+      try { localStorage.removeItem(CODE_LS_KEY); } catch (e) {}
+      if ($("code-results")) $("code-results").innerHTML = "";
+      codeUpdateStatus();
+    }
+    function codeSearch(q, limit) {
+      const qt = codeTokens(q);
+      const groups = []; qt.forEach(function (t) { const g = codeGroup(t); if (groups.indexOf(g) < 0) groups.push(g); });
+      if (!groups.length || !CODE_DB.chunks.length) return { groups: groups, hits: [] };
+      const N = CODE_DB.chunks.length, qn = arNorm(q).replace(/[؟?]/g, "").trim();
+      const wantsTable = /جدول|جداول|table/i.test(q);
+      const hits = [];
+      CODE_DB.chunks.forEach(function (c) {
+        let sc = 0, matched = 0;
+        groups.forEach(function (g) {
+          const tf = c.tf[g];
+          if (tf) { matched++; sc += Math.log(1 + N / (CODE_DB.df[g] || 1)) * (1 + Math.log(tf)); }
+        });
+        if (!matched) return;
+        sc *= (matched / groups.length);
+        if (qn.length > 6 && c.n.indexOf(qn) >= 0) sc *= 1.8;
+        if (wantsTable) {
+          if (c.isTable || (/\n/.test(c.t) && ((c.t.match(/[0-9٠-٩]+/g) || []).length >= 4))) sc *= 2.2;
+          if (/جدول/.test(c.t)) sc *= 1.5;
+        }
+        hits.push({ c: c, s: sc, m: matched });
+      });
+      hits.sort(function (a, b) { return b.s - a.s; });
+      return { groups: groups, qt: qt, hits: hits.slice(0, limit || 5) };
+    }
+    const CODE_NUM_UNIT = "(?:مم|ملم|سم|متر|م2|م3|م٢|م٣|م²|م³|م|%|٪|ثانية|ثانيه|دقيقة|دقيقه|ساعة|ساعه|بار|كجم|لتر|يوم|درجة|درجه)";
+    const CODE_NUM = "[0-9٠-٩]+(?:[.,٫][0-9٠-٩]+)?";
+    /* كل الأرقام عربية (٠-٩) والفاصلة العشرية ٫ */
+    function codeArDigits(s) {
+      return String(s)
+        .replace(/([0-9٠-٩])[.,]([0-9٠-٩])/g, "$1٫$2")
+        .replace(/[0-9]/g, function (d) { return "٠١٢٣٤٥٦٧٨٩".charAt(+d); });
+    }
+    /* تنضيف الجملة: مسافات وعلامات ترقيم عربية */
+    function codeCleanSentence(z) {
+      return String(z).replace(/\u0640/g, "").replace(/\s+/g, " ")
+        .replace(/\s+([.،؛:؟!])/g, "$1")
+        .replace(/,(?=\s*[\u0600-\u06FF])/g, "،")
+        .replace(/\(\s+/g, "(").replace(/\s+\)/g, ")")
+        .trim();
+    }
+    function codeCleanPara(txt) {
+      var s = String(txt || "").replace(/\u0640/g, "");
+      s = s.replace(/[ \t]+/g, " ");
+      s = s.replace(/\s*\n\s*/g, "\n");
+      s = s.replace(/\s+([.،؛:؟!])/g, "$1");
+      s = s.replace(/,(?=\s*[\u0600-\u06FF])/g, "،");
+      s = s.replace(/\(\s+/g, "(").replace(/\s+\)/g, ")");
+      s = s.replace(/([.؟!])\s*/g, "$1 ");
+      s = s.replace(/؛\s*/g, "؛ ");
+      return s.trim();
+    }
+    function codeFixPageText(txt) {
+      const norm = ["من", "في", "علي", "الي", "عن", "التي", "الذي", "يجب", "ان", "او", "مع", "هذا", "ذلك"];
+      const rev = norm.map(function (w) { return w.split("").reverse().join(""); });
+      const toks = arNorm(txt).split(/[^\p{L}]+/u);
+      let n = 0, r = 0;
+      toks.forEach(function (t) { if (norm.indexOf(t) >= 0) n++; if (rev.indexOf(t) >= 0) r++; });
+      if (!(r >= 3 && r > n * 1.5)) return txt;
+      return txt.split("\n").map(function (ln) {
+        const flipped = ln.split("").reverse().join("");
+        return flipped.replace(/[0-9٠-٩][0-9٠-٩.,٫]*|[A-Za-z]+/g, function (m) { return m.split("").reverse().join(""); });
+      }).join("\n");
+    }
+    function codeFmtSentence(sent, gset) {
+      sent = codeArDigits(codeCleanSentence(sent));
+      const re = new RegExp("(" + CODE_NUM + "(?:\\s*(?:-|–|إلى|الى)\\s*" + CODE_NUM + ")?(?:\\s*" + CODE_NUM_UNIT + "(?![\\p{L}]))?)|([\\p{L}\\p{N}]+)", "gu");
+      let out = "", last = 0, m, hasNum = false;
+      const seen = {};
+      while ((m = re.exec(sent)) !== null) {
+        out += codeEsc(sent.slice(last, m.index));
+        if (m[1]) {
+          if (new RegExp(CODE_NUM_UNIT + "$").test(m[1].trim())) hasNum = true;
+          out += '<bdi style="color:#fbbf24;font-weight:800;white-space:nowrap;">' + codeEsc(m[1]) + '</bdi>';
+        } else {
+          const g = codeGroup(codeStem(arNorm(m[2])));
+          if (gset[g]) { seen[g] = 1; out += '<mark style="background:rgba(34,197,94,0.30);color:#bbf7d0;border-radius:3px;padding:0 3px;">' + codeEsc(m[2]) + '</mark>'; }
+          else out += codeEsc(m[2]);
+        }
+        last = re.lastIndex;
+      }
+      out += codeEsc(sent.slice(last));
+      const n = Object.keys(seen).length;
+      return { html: out, hit: n > 0, n: n, hasNum: hasNum };
+    }
+    function codeValues(text) {
+      const re = new RegExp(CODE_NUM + "(?:\\s*(?:-|–|إلى|الى)\\s*" + CODE_NUM + ")?\\s*" + CODE_NUM_UNIT + "(?![\\p{L}])", "gu");
+      const seen = {}, out = [];
+      (codeArDigits(text).match(re) || []).forEach(function (v) {
+        v = v.replace(/\s+/g, " ").trim();
+        if (!seen[v] && out.length < 8) { seen[v] = 1; out.push(v); }
+      });
+      return out;
+    }
+    function codeTryTable(text) {
+      var lines = String(text).split(/\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+      if (lines.length < 2) return null;
+      function splitCols(ln) {
+        if (ln.indexOf("|") >= 0) return ln.split("|").map(function (c) { return c.trim(); }).filter(function (c) { return c.length; });
+        var parts = ln.split(/\s{2,}|\t+/).map(function (c) { return c.trim(); }).filter(Boolean);
+        if (parts.length >= 2) return parts;
+        var nums = (ln.match(/[0-9٠-٩]+/g) || []).length;
+        if (nums >= 2) {
+          parts = ln.split(/\s+/).filter(Boolean);
+          if (parts.length >= 3) return parts;
+        }
+        return null;
+      }
+      var rows = [], colCount = 0;
+      for (var i = 0; i < lines.length; i++) {
+        var cols = splitCols(lines[i]);
+        if (!cols || cols.length < 2) {
+          if (/جدول|table/i.test(lines[i]) && rows.length === 0) { rows.push({ title: lines[i], cols: null }); continue; }
+          if (rows.length >= 2) break;
+          return null;
+        }
+        colCount = Math.max(colCount, cols.length);
+        rows.push({ title: null, cols: cols });
+      }
+      if (rows.filter(function (r) { return r.cols; }).length < 2) return null;
+      rows.forEach(function (r) {
+        if (!r.cols) return;
+        while (r.cols.length < colCount) r.cols.push("");
+        if (r.cols.length > colCount) r.cols = r.cols.slice(0, colCount);
+      });
+      var title = "";
+      var dataRows = rows.filter(function (r) { if (r.title) { title = r.title; return false; } return true; });
+      if (dataRows.length < 2) return null;
+      var html = '<div style="overflow-x:auto;margin:8px 0 10px;border-radius:10px;border:1px solid rgba(34,197,94,0.4);">';
+      if (title) html += '<div style="padding:8px 12px;background:rgba(34,197,94,0.15);font-weight:800;color:#4ade80;font-size:0.9rem;">' + codeEsc(codeArDigits(title)) + '</div>';
+      html += '<table style="width:100%;border-collapse:collapse;font-size:0.85rem;direction:rtl;">';
+      dataRows.forEach(function (r, ri) {
+        var tag = ri === 0 ? "th" : "td";
+        var bg = ri === 0 ? "background:linear-gradient(135deg,#15803d,#22c55e);color:#fff;" : (ri % 2 === 0 ? "background:rgba(34,197,94,0.06);" : "");
+        html += "<tr>";
+        r.cols.forEach(function (c) {
+          html += "<" + tag + ' style="padding:9px 8px;text-align:center;border-bottom:1px solid rgba(148,163,184,0.2);' + bg + '">' + codeEsc(codeArDigits(c)) + "</" + tag + ">";
+        });
+        html += "</tr>";
+      });
+      html += "</table></div>";
+      return html;
+    }
+    function codeFmtFull(text, gset) {
+      var cleaned = codeCleanPara(text);
+      if (/\n/.test(text) && ((text.match(/[0-9٠-٩]+/g) || []).length >= 4)) {
+        var tbl = codeTryTable(text);
+        if (tbl) return { html: tbl, isTable: true, plain: cleaned };
+      }
+      var sents = cleaned.replace(/([.؛;!؟?])\s+/g, "$1\u0001").split("\u0001").map(function (z) { return z.trim(); }).filter(function (z) { return z.length > 2; });
+      if (!sents.length) sents = [cleaned];
+      var parts = sents.map(function (s) { return codeFmtSentence(s, gset).html; });
+      var html = parts.map(function (p) {
+        return '<p style="margin:0 0 10px;font-size:0.95rem;line-height:2.05;color:#f1f5f9;text-align:justify;">' + p + "</p>";
+      }).join("");
+      return { html: html, isTable: false, plain: cleaned };
+    }
+    function codeRenderHits(res, target, title) {
+      const box = $(target); if (!box) return;
+      const RTL = 'dir="rtl" style="direction:rtl;text-align:right;"';
+      if (!res.hits.length) {
+        box.innerHTML = '<div ' + RTL.replace('style="', 'style="padding:12px;border:1px dashed var(--border);border-radius:10px;color:var(--muted);font-size:0.9rem;line-height:1.9;') + '>مفيش نتيجة في النص المحمّل لسؤالك. جرّب كلمات أبسط، مثلًا: «مسافة المناهيل» أو «عرض الحفر» أو «جدول عرض الحفر».</div>';
+        return;
+      }
+      const gset = {}; res.groups.forEach(function (g) { gset[g] = 1; });
+      let h = '<div ' + RTL + '>';
+      if (title) h += '<div style="font-weight:800;color:#4ade80;margin-bottom:6px;font-size:0.95rem;">' + codeArDigits(title) + '</div>';
+      h += '<div style="font-size:0.74rem;color:var(--muted);margin-bottom:10px;line-height:1.8;">عدد النتائج: <b style="color:#e2e8f0;">' + codeArDigits(res.hits.length) + '</b> — مرتبة من الأقرب للأبعد. النص كامل ومقروء من الكود المحمّل.</div>';
+      res.hits.forEach(function (x, i) {
+        const first = i === 0;
+        const fmt = codeFmtFull(x.c.t, gset);
+        const vals = codeValues(x.c.t);
+        const accent = first ? "#22c55e" : "rgba(148,163,184,0.35)";
+        h += '<div style="background:color-mix(in srgb, var(--card) 88%, transparent);border:1px solid ' + accent + ';border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 4px 18px rgba(0,0,0,0.12);">';
+        h += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap;">' +
+          '<span style="font-size:0.78rem;font-weight:800;color:' + (first ? "#4ade80" : "#94a3b8") + ';">نتيجة ' + codeArDigits(i + 1) + (first ? " — الأقرب" : "") + '</span>' +
+          (x.c.p ? '<span style="font-size:0.72rem;color:#64748b;background:rgba(148,163,184,0.12);padding:3px 8px;border-radius:6px;white-space:nowrap;">صفحة ' + codeArDigits(x.c.p) + '</span>' : '') +
+          '</div>';
+        if (vals.length) {
+          h += '<div style="font-size:0.72rem;color:#94a3b8;font-weight:800;margin-bottom:5px;">القيم الواردة في النص</div>' +
+            '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">' + vals.map(function (v) {
+              return '<bdi style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.5);color:#fbbf24;font-weight:800;font-size:0.88rem;border-radius:8px;padding:4px 10px;">' + codeEsc(v) + '</bdi>';
+            }).join("") + '</div>';
+        }
+        if (fmt.isTable) {
+          h += '<div style="font-size:0.72rem;color:#4ade80;font-weight:800;margin-bottom:4px;">الجدول من الكود</div>' + fmt.html;
+        } else {
+          h += '<div style="font-size:0.72rem;color:#4ade80;font-weight:800;margin-bottom:6px;">نص الكود (كامل ومقروء)</div>' +
+            '<div style="background:rgba(15,23,42,0.45);border-radius:10px;padding:12px 14px;border:1px solid rgba(56,189,248,0.15);">' + fmt.html + '</div>';
+        }
+        h += '<div style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(148,163,184,0.25);font-size:0.7rem;color:#64748b;">المصدر: ' + codeEsc(CODE_DB.name) + (x.c.p ? ' — صفحة ' + codeArDigits(x.c.p) : '') + '</div>';
+        h += '</div>';
+      });
+      h += '</div>';
+      box.innerHTML = h;
+    }
+    function codeSearchRun() {
+      const q = ($("code-q").value || "").trim();
+      const box = $("code-results");
+      if (!q) { box.innerHTML = ""; return; }
+      if (!CODE_DB.chunks.length) {
+        box.innerHTML = '<div style="padding:10px;border:1px dashed var(--gold);border-radius:10px;color:var(--gold);font-size:0.85rem;line-height:1.8;">محتاج نص الكود الأول: اضغط «📂 تحميل نص الكود» واختار ملف الكود المصري لتصميم وتنفيذ شبكات الصرف الصحي 2010 (PDF أو TXT)، وبعدها أي سؤال هيطلع من نصه. بيتحفظ بعد التحميل ومش هتحتاج تحمّله تاني.</div>';
+        return;
+      }
+      codeRenderHits(codeSearch(q, 6), "code-results", null);
+    }
+    function codeAutoLookup(depth) {
+      const box = $("mh-code-auto"); if (!box) return;
+      if (!CODE_DB.chunks.length) { box.style.display = "none"; box.innerHTML = ""; return; }
+      box.style.display = "block";
+      box.innerHTML = "";
+      const res = codeSearch("قطر المنهول سمك جدار عمق " + depth.toFixed(2) + " متر", 2);
+      codeRenderHits(res, "mh-code-auto", "من الكود — اشتراطات المناهيل عند عمق " + codeArDigits(depth.toFixed(2)) + " م");
+    }
+    document.addEventListener("DOMContentLoaded", codeInit);
+    if (document.readyState !== "loading") { try { codeInit(); } catch (e) {} }
+
     /* ===== Manhole (مطبق) levels + sketch ===== */
     function updateManholeHI() {
       const bm = num("mh-bm");
@@ -7202,7 +7906,7 @@ function showView(name) {
       if ($("mh-r-cone")) $("mh-r-cone").textContent = code ? ("رقبة " + code.neckH.toFixed(2) + " + مخروط " + code.cone.toFixed(2)) : "—";
       if ($("mh-r-wall")) $("mh-r-wall").textContent = code ? (code.wall.toFixed(2) + " م") : "—";
       if ($("mh-note")) {
-        $("mh-note").textContent = code ? code.note : "";
+        $("mh-note").textContent = code ? (code.note + " ⚠ القيم دي تقريبية ومش منقولة من بنود الكود — اتأكد منها من «البحث في الكود المصري» (من قائمة البنية التحتية).") : "";
       }
       // جدول المناسيب والقراءات
       if ($("mh-r-hi")) $("mh-r-hi").textContent = hi.toFixed(3);
@@ -7230,142 +7934,181 @@ function showView(name) {
         cat: code.cat,
         hi: hi, rdExc: rdExc, rdIl: rdIl, rdGl: (hi - gl)
       });
+      try { codeAutoLookup(depth); } catch (e) {}
       if (typeof playCalcSound === "function") playCalcSound();
     }
     function drawManholeSketch(p) {
       const wrap = $("mh-svg-wrap");
       if (!wrap) return;
-      const W = 400, H = 460;
-      const padT = 42, padB = 56;
-      const neckH = p.neckH || 0.25;
-      const coneH = p.cone || 0.5;
-      const coverThk = p.coverThk || 0.1;
-      const baseH = p.base || 0.25;
+      const W = 430, padT = 64, padB = 78;
+      const neckH = p.neckH || 0.25, coneH = p.cone || 0.5, coverThk = p.coverThk || 0.1, baseH = p.base || 0.25;
       const shaftH = Math.max(0.15, p.depth - neckH - coneH - coverThk);
       const total = coverThk + neckH + coneH + shaftH + baseH;
-      const scale = (H - padT - padB) / total;
-      const cx = W / 2;
+      const s = Math.min(110, 420 / total);
+      const H = Math.round(padT + total * s + padB);
+      const cx = W / 2 + 6;
 
-      // horizontal scale from diameters
-      const shaftR = Math.min(100, 28 + (p.shaftDia || p.dia || 1.2) * 36);
-      const neckR = Math.min(shaftR * 0.55, 18 + (p.neckDia || 0.7) * 28);
-      const coverR = Math.min(neckR + 6, 12 + (p.coverDia || 0.6) * 40);
-      const wall = Math.max(8, (p.wall || 0.2) * 36);
-      const outerShaftR = shaftR + wall;
-      const outerNeckR = neckR + wall * 0.85;
+      const shaftDia = p.shaftDia || p.dia || 1.2;
+      const shaftR = Math.max(34, shaftDia / 2 * s);
+      const neckR = Math.max(16, (p.neckDia || 0.7) / 2 * s);
+      const wall = Math.max(8, (p.wall || 0.2) * s);
+      const coverW = Math.min((p.coverDia || 0.6) * s, neckR * 2 - 4);
 
       const yGL = padT;
-      const yCoverB = yGL + coverThk * scale;
-      const yNeckB = yCoverB + neckH * scale;
-      const yConeB = yNeckB + coneH * scale;
-      const yShaftB = yConeB + shaftH * scale;
-      const yBaseB = yShaftB + baseH * scale;
+      const yCoverB = yGL + coverThk * s;
+      const yNeckB = yCoverB + neckH * s;
+      const yConeB = yNeckB + coneH * s;
+      const yFloor = yConeB + shaftH * s;          // = IL (أعلى صبة الأرضية)
+      const yBaseB = yFloor + baseH * s;           // قاع الحفر
+      const xL = cx - shaftR, xR = cx + shaftR;    // الوش الداخلي
+      const nx0 = xL, nx1 = xL + neckR * 2;         // رقبة لامركزية: الجدار الأيسر رأسي (ناحية السلم)
+      const ncx = (nx0 + nx1) / 2;
+      const dp = Math.max(14, Math.min(30, 0.30 * s));   // قطر الماسورة المرسوم
+      const pw = 3;                                     // سمك جدار الماسورة
 
-      const parts = [];
-      parts.push('<svg id="mh-svg" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 '+W+' '+H+'" style="display:block;max-width:440px;margin:0 auto;">');
-      parts.push('<rect width="100%" height="100%" fill="#0b1220"/>');
+      const o = [];
+      o.push('<svg id="mh-svg" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 ' + W + ' ' + H + '" direction="ltr" style="direction:ltr;display:block;max-width:460px;margin:0 auto;">');
+      o.push('<defs>' +
+        '<pattern id="mhConc" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#475569"/><circle cx="2" cy="2" r="0.9" fill="#94a3b8"/><circle cx="6.5" cy="5.5" r="0.7" fill="#64748b"/><circle cx="4" cy="8" r="0.6" fill="#94a3b8"/><path d="M0 9 L9 0" stroke="#5b6b82" stroke-width="0.4"/></pattern>' +
+        '<pattern id="mhSoil" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#1c1410"/><circle cx="3" cy="3" r="1" fill="#6b4f2a"/><circle cx="9" cy="7" r="0.8" fill="#8a6a3a"/><path d="M1 10 l3 -1 M7 2 l3 1" stroke="#4a3620" stroke-width="0.8"/></pattern>' +
+        '<pattern id="mhBench" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#3b4a60"/><circle cx="2" cy="2" r="0.7" fill="#7b8ba3"/><circle cx="5" cy="5" r="0.6" fill="#7b8ba3"/></pattern>' +
+        '<linearGradient id="mhPipe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8899"/><stop offset="1" stop-color="#3d4a5c"/></linearGradient>' +
+        '<linearGradient id="mhIron" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b94a3"/><stop offset="1" stop-color="#3f4652"/></linearGradient>' +
+        '<linearGradient id="mhVoid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a111f"/><stop offset="1" stop-color="#05080f"/></linearGradient>' +
+        '</defs>');
+      o.push('<rect width="100%" height="100%" fill="#0b1220"/>');
 
-      // Ground line (GL)
-      parts.push('<line x1="30" y1="'+yGL+'" x2="'+(W-30)+'" y2="'+yGL+'" stroke="#e2e8f0" stroke-width="1.6"/>');
-      parts.push('<text x="'+(W-34)+'" y="'+(yGL-8)+'" fill="#fbbf24" font-size="11" text-anchor="end">منسوب سطح الأرض GL='+p.gl.toFixed(3)+'</text>');
+      // تربة حوالين المانهول
+      const oL = cx - shaftR - wall, oR = cx + shaftR + wall;
+      o.push('<rect x="30" y="' + yGL + '" width="' + (W - 60) + '" height="' + (yBaseB - yGL + 10) + '" fill="url(#mhSoil)"/>');
+      // رصف الطريق
+      o.push('<rect x="30" y="' + (yGL - 1) + '" width="' + (W - 60) + '" height="7" fill="#374151" stroke="#1f2937" stroke-width="0.6"/>');
+      o.push('<line x1="30" y1="' + yGL + '" x2="' + (W - 30) + '" y2="' + yGL + '" stroke="#e2e8f0" stroke-width="1.4"/>');
+      o.push('<text x="' + (W - 34) + '" y="' + (yGL - 34) + '" fill="#fbbf24" font-size="11" text-anchor="end">منسوب سطح الأرض GL=' + p.gl.toFixed(3) + '</text>');
 
-      // Hatch ground left/right
-      for (let gx = 30; gx < cx - outerShaftR - 10; gx += 8) {
-        parts.push('<line x1="'+gx+'" y1="'+yGL+'" x2="'+(gx+6)+'" y2="'+(yGL+8)+'" stroke="#475569" stroke-width="1"/>');
+      // ===== جسم الخرسانة =====
+      const conc = 'fill="url(#mhConc)" stroke="#94a3b8" stroke-width="1.1"';
+      // بلاطة الأرضية
+      o.push('<rect x="' + (oL - 16) + '" y="' + yFloor + '" width="' + ((oR - oL) + 32) + '" height="' + (yBaseB - yFloor) + '" ' + conc + '/>');
+      // حديد التسليح (نقط) في البلاطة
+      const rbY = yBaseB - Math.min(8, baseH * s * 0.25);
+      for (let rx = oL - 8; rx < oR + 8; rx += 14) o.push('<circle cx="' + rx + '" cy="' + rbY + '" r="1.8" fill="#f87171"/>');
+      // جدار أيسر (رأسي بالكامل: رقبة + مخروط + غرفة)
+      o.push('<rect x="' + (xL - wall) + '" y="' + yCoverB + '" width="' + wall + '" height="' + (yFloor - yCoverB) + '" ' + conc + '/>');
+      // جدار الرقبة الأيمن
+      o.push('<rect x="' + nx1 + '" y="' + yCoverB + '" width="' + wall + '" height="' + (yNeckB - yCoverB) + '" ' + conc + '/>');
+      // المخروط الأيمن (مائل)
+      o.push('<polygon points="' + nx1 + ',' + yNeckB + ' ' + (nx1 + wall) + ',' + yNeckB + ' ' + (xR + wall) + ',' + yConeB + ' ' + xR + ',' + yConeB + '" ' + conc + '/>');
+      // جدار الغرفة الأيمن
+      o.push('<rect x="' + xR + '" y="' + yConeB + '" width="' + wall + '" height="' + (yFloor - yConeB) + '" ' + conc + '/>');
+      // فواصل الحلقات الخرسانية (كل 0.6 م من تحت)
+      const ringH = 0.6 * s;
+      for (let ry = yFloor - ringH; ry > yConeB + 6; ry -= ringH) {
+        o.push('<line x1="' + (xL - wall) + '" y1="' + ry + '" x2="' + xL + '" y2="' + ry + '" stroke="#0b1220" stroke-width="1.6"/>');
+        o.push('<line x1="' + xR + '" y1="' + ry + '" x2="' + (xR + wall) + '" y2="' + ry + '" stroke="#0b1220" stroke-width="1.6"/>');
       }
-      for (let gx = cx + outerShaftR + 4; gx < W-30; gx += 8) {
-        parts.push('<line x1="'+gx+'" y1="'+yGL+'" x2="'+(gx+6)+'" y2="'+(yGL+8)+'" stroke="#475569" stroke-width="1"/>');
+      // فواصل مداميك الرقبة (حلقات ضبط المنسوب)
+      const nCourse = Math.max(1, Math.min(4, Math.round(neckH / 0.08)));
+      for (let k = 1; k < nCourse; k++) {
+        const ny = yCoverB + (yNeckB - yCoverB) * k / nCourse;
+        o.push('<line x1="' + (xL - wall) + '" y1="' + ny + '" x2="' + xL + '" y2="' + ny + '" stroke="#0b1220" stroke-width="1.2"/>');
+        o.push('<line x1="' + nx1 + '" y1="' + ny + '" x2="' + (nx1 + wall) + '" y2="' + ny + '" stroke="#0b1220" stroke-width="1.2"/>');
       }
 
-      // Cover (غطاء) - sits on neck opening, NOT full-width roof
-      const coverTop = yGL - 4;
-      parts.push('<rect x="'+(cx-coverR)+'" y="'+coverTop+'" width="'+(coverR*2)+'" height="'+(yCoverB-coverTop)+'" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="1.4"/>');
-      parts.push('<rect x="'+(cx-coverR*0.55)+'" y="'+(coverTop+2)+'" width="'+(coverR*1.1)+'" height="4" rx="2" fill="#64748b"/>');
-      parts.push('<text x="'+cx+'" y="'+(coverTop-6)+'" fill="#cbd5e1" font-size="10" text-anchor="middle">غطاء Ø'+(p.coverDia||0.6).toFixed(2)+'م</text>');
+      // ===== الفراغ الداخلي =====
+      o.push('<path d="M' + nx0 + ',' + yCoverB + ' L' + nx1 + ',' + yCoverB + ' L' + nx1 + ',' + yNeckB + ' L' + xR + ',' + yConeB + ' L' + xR + ',' + yFloor + ' L' + xL + ',' + yFloor + ' Z" fill="url(#mhVoid)"/>');
 
-      // Neck (رقبة) vertical walls - same opening as cover roughly
-      parts.push('<path d="M '+(cx-outerNeckR)+' '+yCoverB+' L '+(cx-outerNeckR)+' '+yNeckB+' L '+(cx-neckR)+' '+yNeckB+' L '+(cx-neckR)+' '+yCoverB+' Z" fill="#1e3a5f" stroke="#38bdf8" stroke-width="1.2"/>');
-      parts.push('<path d="M '+(cx+neckR)+' '+yCoverB+' L '+(cx+neckR)+' '+yNeckB+' L '+(cx+outerNeckR)+' '+yNeckB+' L '+(cx+outerNeckR)+' '+yCoverB+' Z" fill="#1e3a5f" stroke="#38bdf8" stroke-width="1.2"/>');
-      // neck inner void
-      parts.push('<rect x="'+(cx-neckR)+'" y="'+yCoverB+'" width="'+(neckR*2)+'" height="'+(yNeckB-yCoverB)+'" fill="#0b1220"/>');
+      // ===== البنش + المجرى =====
+      const benchTop = yFloor - dp - Math.max(6, dp * 0.35);
+      o.push('<polygon points="' + xL + ',' + yFloor + ' ' + xL + ',' + benchTop + ' ' + (xL + 10) + ',' + benchTop + ' ' + (xR - 10) + ',' + benchTop + ' ' + xR + ',' + benchTop + ' ' + xR + ',' + yFloor + '" fill="url(#mhBench)" stroke="#94a3b8" stroke-width="0.8"/>');
+      o.push('<rect x="' + xL + '" y="' + (yFloor - dp) + '" width="' + (shaftR * 2) + '" height="' + dp + '" fill="url(#mhPipe)" opacity="0.55"/>');
+      o.push('<path d="M' + xL + ',' + (yFloor - dp) + ' L' + xR + ',' + (yFloor - dp) + '" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="3 2"/>');
 
-      // Cone / reducer (مخروط مائل) - from neck to shaft
-      // left wall outer
-      parts.push('<polygon points="'+(cx-outerNeckR)+','+yNeckB+' '+(cx-outerShaftR)+','+yConeB+' '+(cx-shaftR)+','+yConeB+' '+(cx-neckR)+','+yNeckB+'" fill="#1e3a5f" stroke="#38bdf8" stroke-width="1.2"/>');
-      parts.push('<polygon points="'+(cx+neckR)+','+yNeckB+' '+(cx+shaftR)+','+yConeB+' '+(cx+outerShaftR)+','+yConeB+' '+(cx+outerNeckR)+','+yNeckB+'" fill="#1e3a5f" stroke="#38bdf8" stroke-width="1.2"/>');
-      // cone inner void
-      parts.push('<polygon points="'+(cx-neckR)+','+yNeckB+' '+(cx+neckR)+','+yNeckB+' '+(cx+shaftR)+','+yConeB+' '+(cx-shaftR)+','+yConeB+'" fill="#0b1220" stroke="#334155" stroke-width="0.8"/>');
-      parts.push('<text x="'+(cx-outerShaftR-8)+'" y="'+(yNeckB+(yConeB-yNeckB)/2)+'" fill="#7dd3fc" font-size="10" text-anchor="end">مخروط '+coneH.toFixed(2)+'م</text>');
-
-      // Shaft chamber
-      parts.push('<rect x="'+(cx-outerShaftR)+'" y="'+yConeB+'" width="'+wall+'" height="'+(yShaftB-yConeB)+'" fill="#1e293b" stroke="#64748b" stroke-width="1"/>');
-      parts.push('<rect x="'+(cx+shaftR)+'" y="'+yConeB+'" width="'+wall+'" height="'+(yShaftB-yConeB)+'" fill="#1e293b" stroke="#64748b" stroke-width="1"/>');
-      parts.push('<rect x="'+(cx-shaftR)+'" y="'+yConeB+'" width="'+(shaftR*2)+'" height="'+(yShaftB-yConeB)+'" fill="#0b1220" stroke="#334155" stroke-width="0.8"/>');
-
-      // Ladder steps (سلالم حديدية) on one side inside shaft
-      const stepN = Math.max(2, Math.floor(shaftH / 0.35));
-      for (let i = 1; i <= stepN; i++) {
-        const sy = yConeB + (i / (stepN + 1)) * (yShaftB - yConeB);
-        parts.push('<line x1="'+(cx-shaftR+6)+'" y1="'+sy+'" x2="'+(cx-shaftR+28)+'" y2="'+sy+'" stroke="#94a3b8" stroke-width="1.5"/>');
-        parts.push('<circle cx="'+(cx-shaftR+6)+'" cy="'+sy+'" r="1.8" fill="#cbd5e1"/>');
-      }
-      if (shaftH > 0.4) {
-        parts.push('<text x="'+cx+'" y="'+(yConeB+(yShaftB-yConeB)/2)+'" fill="#64748b" font-size="10" text-anchor="middle">سلالم حديدية</text>');
+      // ===== سلم (درجات حديد مشتّتة 0.30 م على الجدار الأيسر) =====
+      const stepGap = 0.30 * s;
+      let si = 0;
+      for (let sy = yNeckB + stepGap * 0.6; sy < benchTop - 10; sy += stepGap, si++) {
+        const sx = xL + (si % 2 ? 11 : 0);
+        o.push('<path d="M' + xL + ',' + sy + ' L' + (xL + 15 + (si % 2 ? 11 : 0)) + ',' + sy + '" stroke="#d1d5db" stroke-width="2.2" stroke-linecap="round"/>');
+        o.push('<circle cx="' + (xL + 15 + (si % 2 ? 11 : 0)) + '" cy="' + sy + '" r="2" fill="#9ca3af"/>');
       }
 
-      // Base slab
-      parts.push('<rect x="'+(cx-outerShaftR-12)+'" y="'+yShaftB+'" width="'+(outerShaftR*2+24)+'" height="'+(yBaseB-yShaftB)+'" fill="#422006" stroke="#fbbf24" stroke-width="1.3"/>');
+      // ===== غطاء + إطار حديد زهر =====
+      const frameW = (nx1 - nx0) + 2 * Math.min(wall, 12) + 4;
+      const fx0 = ncx - frameW / 2;
+      o.push('<polygon points="' + fx0 + ',' + yGL + ' ' + (fx0 + frameW) + ',' + yGL + ' ' + (fx0 + frameW - 5) + ',' + yCoverB + ' ' + (fx0 + 5) + ',' + yCoverB + '" fill="url(#mhIron)" stroke="#cbd5e1" stroke-width="1"/>');
+      const cvH = Math.max(5, (yCoverB - yGL) * 0.7);
+      o.push('<rect x="' + (ncx - coverW / 2) + '" y="' + yGL + '" width="' + coverW + '" height="' + cvH + '" rx="1.5" fill="#6b7280" stroke="#e5e7eb" stroke-width="1"/>');
+      for (let g = -1; g <= 1; g += 2) o.push('<rect x="' + (ncx + g * coverW * 0.28 - 5) + '" y="' + (yGL + 1.5) + '" width="10" height="2" rx="1" fill="#111827"/>');
+      o.push('<text x="' + ncx + '" y="' + (yGL - 14) + '" fill="#cbd5e1" font-size="10" text-anchor="middle">غطاء حديد زهر Ø' + (p.coverDia || 0.6).toFixed(2) + 'م</text>');
 
-      // Benching (1:5 style slopes) above base top / at IL
-      const benchH = Math.min(28, (yShaftB - yConeB) * 0.15);
-      const yBenchTop = yShaftB - benchH;
-      parts.push('<polygon points="'+(cx-shaftR)+','+yShaftB+' '+(cx-shaftR*0.2)+','+yBenchTop+' '+(cx+shaftR*0.2)+','+yBenchTop+' '+(cx+shaftR)+','+yShaftB+'" fill="#78350f" stroke="#fbbf24" stroke-width="0.8" opacity="0.9"/>');
-      parts.push('<text x="'+cx+'" y="'+(yShaftB - benchH/2)+'" fill="#fde68a" font-size="9" text-anchor="middle">1:5</text>');
+      // ===== المواسير (قاعدة في قاع المانهول) =====
+      function pipeSeg(x1, x2) {
+        o.push('<rect x="' + x1 + '" y="' + (yFloor - dp - pw) + '" width="' + (x2 - x1) + '" height="' + (dp + pw * 2) + '" fill="url(#mhPipe)" stroke="#94a3b8" stroke-width="1"/>');
+        o.push('<rect x="' + x1 + '" y="' + (yFloor - dp) + '" width="' + (x2 - x1) + '" height="' + dp + '" fill="#0a111f"/>');
+      }
+      pipeSeg(24, xL + 3);
+      pipeSeg(xR - 3, W - 24);
+      // وصلة مرنة/جلبة عند الجدار
+      [[xL - wall - 3, wall + 3], [xR, wall + 3]].forEach(function (c) {
+        o.push('<rect x="' + c[0] + '" y="' + (yFloor - dp - pw - 3) + '" width="' + c[1] + '" height="' + (dp + pw * 2 + 6) + '" fill="none" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 2"/>');
+      });
+      o.push('<text x="30" y="' + (yFloor - dp - pw - 8) + '" fill="#60a5fa" font-size="10">UpStream</text>');
+      o.push('<text x="' + (W - 30) + '" y="' + (yFloor - dp - pw - 8) + '" fill="#f87171" font-size="10" text-anchor="end">DownStream</text>');
+      // اتجاه السريان
+      const fy = yFloor - dp / 2;
+      o.push('<polygon points="' + (xL - wall - 22) + ',' + fy + ' ' + (xL - wall - 34) + ',' + (fy - 5) + ' ' + (xL - wall - 34) + ',' + (fy + 5) + '" fill="#3b82f6"/>');
+      o.push('<polygon points="' + (xR + wall + 34) + ',' + fy + ' ' + (xR + wall + 22) + ',' + (fy - 5) + ' ' + (xR + wall + 22) + ',' + (fy + 5) + '" fill="#ef4444"/>');
 
-      // IL marker
-      parts.push('<line x1="'+(cx-shaftR+4)+'" y1="'+yShaftB+'" x2="'+(cx+shaftR-4)+'" y2="'+yShaftB+'" stroke="#22d3ee" stroke-width="1.4"/>');
-      parts.push('<text x="'+(cx+outerShaftR+6)+'" y="'+(yShaftB-4)+'" fill="#22d3ee" font-size="10">IL='+p.il.toFixed(3)+'</text>');
+      // خط IL
+      o.push('<line x1="' + (xL + 2) + '" y1="' + yFloor + '" x2="' + (xR - 2) + '" y2="' + yFloor + '" stroke="#22d3ee" stroke-width="1.4"/>');
+      o.push('<text x="' + cx + '" y="' + (yFloor + 14) + '" fill="#22d3ee" font-size="10" text-anchor="middle" stroke="#0b1220" stroke-width="3" paint-order="stroke">IL=' + p.il.toFixed(3) + '</text>');
 
-      // Pipes upstream / downstream
-      const pipeY = yShaftB - Math.min(18, shaftH * scale * 0.12);
-      const pipeR = 7;
-      parts.push('<rect x="20" y="'+(pipeY-pipeR)+'" width="'+(cx-shaftR-20)+'" height="'+(pipeR*2)+'" rx="3" fill="#334155" stroke="#64748b" stroke-width="1"/>');
-      parts.push('<rect x="'+(cx+shaftR)+'" y="'+(pipeY-pipeR)+'" width="'+(W-20-cx-shaftR)+'" height="'+(pipeR*2)+'" rx="3" fill="#334155" stroke="#64748b" stroke-width="1"/>');
-      parts.push('<text x="36" y="'+(pipeY-pipeR-6)+'" fill="#60a5fa" font-size="10">UpStream</text>');
-      parts.push('<text x="'+(W-36)+'" y="'+(pipeY-pipeR-6)+'" fill="#f87171" font-size="10" text-anchor="end">DownStream</text>');
-      // arrows
-      parts.push('<polygon points="28,'+pipeY+' 40,'+(pipeY-5)+' 40,'+(pipeY+5)+'" fill="#3b82f6"/>');
-      parts.push('<polygon points="'+(W-28)+','+pipeY+' '+(W-40)+','+(pipeY-5)+' '+(W-40)+','+(pipeY+5)+'" fill="#ef4444"/>');
+      // قاع الحفر
+      o.push('<line x1="24" y1="' + yBaseB + '" x2="' + (W - 24) + '" y2="' + yBaseB + '" stroke="#f87171" stroke-width="1.2" stroke-dasharray="5 3"/>');
+      o.push('<text x="24" y="' + (yBaseB + 15) + '" fill="#fca5a5" font-size="10">قاع الحفر = ' + p.exc.toFixed(3) + ' | صبة الأرضية ' + baseH.toFixed(2) + 'م</text>');
 
-      // Excavation bottom
-      parts.push('<line x1="24" y1="'+yBaseB+'" x2="'+(W-24)+'" y2="'+yBaseB+'" stroke="#f87171" stroke-width="1.2" stroke-dasharray="5 3"/>');
-      parts.push('<text x="24" y="'+(yBaseB+14)+'" fill="#fca5a5" font-size="10">قاع الحفر = '+p.exc.toFixed(3)+' | صبة '+baseH.toFixed(2)+'م</text>');
+      // ===== أبعاد =====
+      o.push('<line x1="20" y1="' + yGL + '" x2="20" y2="' + yFloor + '" stroke="#94a3b8" stroke-width="1"/>');
+      [yGL, yFloor].forEach(function (yy) { o.push('<line x1="15" y1="' + yy + '" x2="25" y2="' + yy + '" stroke="#94a3b8"/>'); });
+      const midY = yGL + (yFloor - yGL) / 2;
+      o.push('<text x="14" y="' + midY + '" fill="#e2e8f0" font-size="10" text-anchor="middle" transform="rotate(-90 14 ' + midY + ')">عمق ' + p.depth.toFixed(2) + 'م</text>');
+      // قطر داخلي
+      const dy = yBaseB + 34;
+      o.push('<line x1="' + xL + '" y1="' + dy + '" x2="' + xR + '" y2="' + dy + '" stroke="#a78bfa" stroke-width="1.2"/>');
+      [xL, xR].forEach(function (xx) { o.push('<line x1="' + xx + '" y1="' + (dy - 5) + '" x2="' + xx + '" y2="' + (dy + 5) + '" stroke="#a78bfa"/>'); });
+      o.push('<text x="' + cx + '" y="' + (dy - 5) + '" fill="#c4b5fd" font-size="10" text-anchor="middle">Ø داخلي ' + shaftDia.toFixed(2) + 'م  |  جدار ' + (p.wall || 0.2).toFixed(2) + 'م</text>');
 
-      // Side depth dimension
-      parts.push('<line x1="22" y1="'+yGL+'" x2="22" y2="'+yShaftB+'" stroke="#94a3b8" stroke-width="1"/>');
-      parts.push('<text x="26" y="'+(yGL+(yShaftB-yGL)/2)+'" fill="#e2e8f0" font-size="10" transform="rotate(-90 26 '+(yGL+(yShaftB-yGL)/2)+')">عمق '+(p.depth.toFixed(2))+'م</text>');
+      // بيانات الأجزاء (يسار) مع خطوط إشارة
+      function callout(y, txt, color) {
+        o.push('<line x1="' + (xL - wall - 1) + '" y1="' + y + '" x2="' + (xL - wall - 14) + '" y2="' + y + '" stroke="' + color + '" stroke-width="0.9"/>');
+        o.push('<text x="' + (xL - wall - 17) + '" y="' + (y + 3) + '" fill="' + color + '" font-size="9.5" text-anchor="end">' + txt + '</text>');
+      }
+      callout(yCoverB + (yNeckB - yCoverB) / 2, 'رقبة ' + neckH.toFixed(2) + 'م', '#7dd3fc');
+      callout(yNeckB + (yConeB - yNeckB) / 2, 'مخروط لامركزي ' + coneH.toFixed(2) + 'م', '#7dd3fc');
+      callout(yConeB + (yFloor - yConeB) / 2 - 8, 'حلقات سابقة الصب', '#94a3b8');
+      callout(yConeB + (yFloor - yConeB) / 2 + 8, 'سلم حديد @0.30م', '#d1d5db');
+      callout(benchTop + (yFloor - benchTop) / 2 - 1, 'بنش + مجرى', '#fde68a');
 
-      // Staff readings on sketch (right side boxes)
+      // مربعات القراءات (يمين)
       const rdGl = (p.rdGl != null) ? p.rdGl : (p.hi - p.gl);
       function rdBox(x, y, label, val, color) {
-        parts.push('<rect x="'+x+'" y="'+(y-12)+'" width="86" height="28" rx="5" fill="rgba(15,23,42,0.92)" stroke="'+color+'" stroke-width="1.2"/>');
-        parts.push('<text x="'+(x+6)+'" y="'+(y-1)+'" fill="'+color+'" font-size="9" font-weight="700">'+label+'</text>');
-        parts.push('<text x="'+(x+6)+'" y="'+(y+11)+'" fill="#f8fafc" font-size="11" font-weight="800">'+val+'</text>');
+        o.push('<rect x="' + x + '" y="' + (y - 12) + '" width="86" height="28" rx="5" fill="rgba(15,23,42,0.94)" stroke="' + color + '" stroke-width="1.2"/>');
+        o.push('<text x="' + (x + 6) + '" y="' + (y - 1) + '" fill="' + color + '" font-size="9" font-weight="700">' + label + '</text>');
+        o.push('<text x="' + (x + 6) + '" y="' + (y + 11) + '" fill="#f8fafc" font-size="11" font-weight="800">' + val + '</text>');
       }
-      rdBox(W - 100, yGL + 18, "قراءة GL", rdGl.toFixed(3), "#fbbf24");
-      rdBox(W - 100, yShaftB - 8, "قراءة IL", p.rdIl.toFixed(3), "#22d3ee");
-      rdBox(W - 100, yBaseB - 6, "قراءة الحفر", p.rdExc.toFixed(3), "#f87171");
-      // leader lines to levels
-      parts.push('<line x1="'+(cx+outerShaftR+4)+'" y1="'+yGL+'" x2="'+(W-100)+'" y2="'+(yGL+6)+'" stroke="#fbbf24" stroke-width="0.8" stroke-dasharray="3 2"/>');
-      parts.push('<line x1="'+(cx+outerShaftR+4)+'" y1="'+yShaftB+'" x2="'+(W-100)+'" y2="'+(yShaftB-8)+'" stroke="#22d3ee" stroke-width="0.8" stroke-dasharray="3 2"/>');
-      parts.push('<line x1="'+(cx+outerShaftR+4)+'" y1="'+yBaseB+'" x2="'+(W-100)+'" y2="'+(yBaseB-6)+'" stroke="#f87171" stroke-width="0.8" stroke-dasharray="3 2"/>');
+      const bx = W - 98;
+      rdBox(bx, yGL + 26, "قراءة GL", rdGl.toFixed(3), "#fbbf24");
+      rdBox(bx, yFloor - dp - pw - 44, "قراءة IL", p.rdIl.toFixed(3), "#22d3ee");
+      rdBox(bx, yBaseB - 22, "قراءة الحفر", p.rdExc.toFixed(3), "#f87171");
+      [[yGL, yGL + 26, '#fbbf24'], [yFloor, yFloor - dp - pw - 44, '#22d3ee'], [yBaseB, yBaseB - 22, '#f87171']].forEach(function (l) {
+        o.push('<line x1="' + (oR + 4) + '" y1="' + l[0] + '" x2="' + bx + '" y2="' + l[1] + '" stroke="' + l[2] + '" stroke-width="0.8" stroke-dasharray="3 2"/>');
+      });
 
-      // Title
-      parts.push('<text x="16" y="'+(H-16)+'" fill="#64748b" font-size="10">'+p.cat+' | غطاء على فتحة الرقبة</text>');
-      parts.push('<text x="'+(W-16)+'" y="'+(H-16)+'" fill="#64748b" font-size="10" text-anchor="end">HI='+p.hi.toFixed(3)+'</text>');
-
-      parts.push('</svg>');
-      wrap.innerHTML = parts.join("");
+      o.push('<text x="16" y="' + (H - 12) + '" fill="#64748b" font-size="10">' + p.cat + ' | مانهول دائري</text>');
+      o.push('<text x="' + (W - 16) + '" y="' + (H - 12) + '" fill="#64748b" font-size="10" text-anchor="end">HI=' + p.hi.toFixed(3) + '</text>');
+      o.push('</svg>');
+      wrap.innerHTML = o.join("");
     }
     function resetManhole() {
       ["mh-bm","mh-bs","mh-hi","mh-gl","mh-il"].forEach(function(id){ if ($(id)) $(id).value = ""; });
@@ -7373,6 +8116,7 @@ function showView(name) {
       if ($("mh-dia")) $("mh-dia").value = "1.20";
       if ($("mh-results")) $("mh-results").style.display = "none";
       if ($("mh-svg-wrap")) $("mh-svg-wrap").innerHTML = "";
+      if ($("mh-code-auto")) { $("mh-code-auto").style.display = "none"; $("mh-code-auto").innerHTML = ""; }
     }
     async function exportManholeSketchPdf() {
       const svg = document.getElementById("mh-svg");
@@ -7587,7 +8331,198 @@ function showView(name) {
       if (st) { st.style.display = "none"; st.textContent = ""; }
     }
 
-function calc() {
+    /* ===== كروكي الفرعة: مواسير 6 م + مانهول في أول وآخر الفرعة + كل القراءات ===== */
+    function drawBranchSketch(o) {
+      const PIPE_LEN = 6;
+      const svg = $("diagram-svg");
+      const g = $("sk-dyn");
+      if (!svg || !g) return;
+      const hi = o.hi, d = o.d, L = o.L;
+      const interval = (o.interval && o.interval > 0) ? o.interval : 1;
+      const EPS = 0.005;
+      const fullPipes = Math.floor(L / PIPE_LEN + 1e-9);
+      let rem = L - fullPipes * PIPE_LEN;
+      if (rem < EPS) rem = 0;
+      const n = fullPipes + (rem > 0 ? 1 : 0) || 1;
+      const lastLen = rem > 0 ? rem : (L - (n - 1) * PIPE_LEN);
+      const f = function (v, dd) { return fmt(v, dd); };
+
+      /* ---- كارت الملخص ---- */
+      const box = $("pipe-summary");
+      if (box) {
+        const cell = function (title, val, color) {
+          return '<div style="flex:1;min-width:92px;background:#0b1220;border:1px solid ' + color + ';border-radius:10px;padding:8px 6px;text-align:center;">' +
+            '<div style="font-size:0.72rem;color:#94a3b8;margin-bottom:4px;">' + title + '</div>' +
+            '<div style="font-size:1.25rem;font-weight:800;color:' + color + ';">' + val + '</div></div>';
+        };
+        let sentence;
+        if (rem > 0) {
+          sentence = f(L, 2) + " م = " + fullPipes + " ماسورة كاملة (" + PIPE_LEN + " م) + متبقي " + f(rem, 2) + " م (ماسورة مقطوعة)";
+        } else {
+          sentence = f(L, 2) + " م = " + fullPipes + " ماسورة كاملة (" + PIPE_LEN + " م) — مفيش متبقي";
+        }
+        box.innerHTML =
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">' +
+          cell("مواسير كاملة (" + PIPE_LEN + " م)", fullPipes, "#4ade80") +
+          cell("المتبقي (م)", rem > 0 ? f(rem, 2) : "0", rem > 0 ? "#fbbf24" : "#64748b") +
+          cell("إجمالي المواسير", n, "#38bdf8") +
+          '</div>' +
+          '<div style="font-size:0.85rem;color:#e2e8f0;text-align:center;margin-bottom:10px;font-weight:700;">' + sentence + '</div>';
+      }
+
+      /* ---- القراءات اللي هتتكتب: كل نقاط الجدول + الوصلات ---- */
+      const dists = [];
+      (o.points || []).forEach(function (p) { dists.push(p.dist); });
+      for (let i = 1; i < n; i++) dists.push(i * PIPE_LEN);
+      dists.sort(function (a, b) { return a - b; });
+      const labs = [];
+      dists.forEach(function (x) {
+        if (x < EPS || x > L - EPS) return;
+        if (labs.length && Math.abs(x - labs[labs.length - 1]) < 0.001) return;
+        labs.push(x);
+      });
+
+      /* ---- المقاسات ---- */
+      let sc = Math.min(12, 800 / L);
+      sc = Math.max(sc, 7);
+      sc = Math.max(sc, 170 / L);
+      sc = Math.max(sc, 42 / interval);   // عشان القراءات الأفقية متتداخلش
+      sc = Math.min(sc, 80);
+      const MH = 34;                      // نص عرض المانهول من برا
+      const IN = 27;                      // نص عرض المانهول من جوه
+      const x0 = 150, xL = x0 + L * sc;
+      const W = Math.max(520, Math.round(xL + 100));
+      const GY = 70;                      // سطح الأرض
+      const PT = GY + 150, PB = PT + 28;  // ظهر وقاع الماسورة
+      const BOT = PB + 10;                // وش البلاطة السفلية = قاع المانهول
+      const H = BOT + 150;
+
+      svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+      svg.style.minWidth = (W > 520 ? W : 480) + "px";
+
+      const T = function (x, y, txt, fill, size, bold, anchor, id, halo) {
+        return '<text x="' + x + '" y="' + y + '" fill="' + fill + '" font-size="' + size + '"' +
+          (bold ? ' font-weight="bold"' : '') + ' text-anchor="' + (anchor || "middle") + '"' +
+          (halo ? ' direction="ltr" stroke="#07101c" stroke-width="3" paint-order="stroke" stroke-linejoin="round"' : '') +
+          (id ? ' id="' + id + '"' : '') + '>' + txt + '</text>';
+      };
+      let h = "";
+
+      // التربة
+      h += '<rect x="20" y="' + GY + '" width="' + (W - 40) + '" height="' + (BOT + 40 - GY) + '" fill="#a16207" opacity="0.10"/>';
+
+      // HI
+      h += '<line x1="20" y1="36" x2="' + (W - 20) + '" y2="36" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="6,4"/>';
+      h += T(28, 26, "HI منسوب سطح الميزان", "#38bdf8", 11, true, "start");
+      h += T(W - 24, 26, f(hi) + " م", "#7dd3fc", 12, true, "end", "svg-hi");
+
+      // قامة + قراءة البداية
+      h += '<rect x="40" y="36" width="11" height="' + (GY - 36) + '" fill="#e2e8f0" stroke="#94a3b8"/>';
+      h += '<line x1="62" y1="36" x2="62" y2="' + (PT - 6) + '" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrY)"/>';
+      h += T(68, 54, "قراءة " + f(o.fsStart), "#fbbf24", 10, true, "start", "svg-fs");
+
+      // سطح الأرض
+      h += '<line x1="20" y1="' + GY + '" x2="' + (W - 20) + '" y2="' + GY + '" stroke="#a16207" stroke-width="1.8"/>';
+      h += T(W - 24, GY - 5, "سطح الأرض", "#a16207", 9, false, "end");
+
+      // المانهول (قطاع): خرسانة + فراغ + غطاء + سلم + بلاطة سفلية
+      function manhole(x) {
+        const nO = 17, nI = 12;                    // الرقبة: برا / جوه
+        const yN = GY + 34, yC = GY + 60;         // نهاية الرقبة / بداية الأسطوانة
+        let s = '';
+        // بلاطة القاع (أعرض من الجدران)
+        s += '<rect x="' + (x - MH - 6) + '" y="' + BOT + '" width="' + (2 * MH + 12) + '" height="10" fill="#475569" stroke="#94a3b8" stroke-width="1.2"/>';
+        // جسم الخرسانة
+        s += '<path d="M' + (x - nO) + ',' + GY + ' L' + (x - nO) + ',' + yN + ' L' + (x - MH) + ',' + yC + ' L' + (x - MH) + ',' + BOT +
+             ' L' + (x + MH) + ',' + BOT + ' L' + (x + MH) + ',' + yC + ' L' + (x + nO) + ',' + yN + ' L' + (x + nO) + ',' + GY + ' Z" fill="#64748b" stroke="#94a3b8" stroke-width="1.4"/>';
+        // الفراغ الداخلي
+        s += '<path d="M' + (x - nI) + ',' + (GY - 2) + ' L' + (x - nI) + ',' + yN + ' L' + (x - IN) + ',' + yC + ' L' + (x - IN) + ',' + BOT +
+             ' L' + (x + IN) + ',' + BOT + ' L' + (x + IN) + ',' + yC + ' L' + (x + nI) + ',' + yN + ' L' + (x + nI) + ',' + (GY - 2) + ' Z" fill="#0b1424" stroke="#334155" stroke-width="1"/>';
+        // سلم النزول (درجات حديد على الجدار الأيسر)
+        for (let yy = GY + 14; yy < BOT - 14; yy += 15) {
+          const half = (yy < yN) ? nI : (yy < yC ? nI + (IN - nI) * (yy - yN) / (yC - yN) : IN);
+          s += '<rect x="' + (x - half) + '" y="' + yy + '" width="11" height="2.6" fill="#f59e0b"/>';
+        }
+        // إطار وغطاء الحديد
+        s += '<rect x="' + (x - nO - 4) + '" y="' + (GY - 5) + '" width="' + (2 * nO + 8) + '" height="5" fill="#475569" stroke="#94a3b8" stroke-width="1"/>';
+        s += '<rect x="' + (x - nI - 2) + '" y="' + (GY - 8) + '" width="' + (2 * nI + 4) + '" height="4" fill="#cbd5e1" stroke="#64748b" stroke-width="0.8"/>';
+        // أرضية المجرى (قاع المانهول عند منسوب القاع)
+        s += '<line x1="' + (x - IN) + '" y1="' + BOT + '" x2="' + (x + IN) + '" y2="' + BOT + '" stroke="#f87171" stroke-width="1.2"/>';
+        return s;
+      }
+      h += manhole(x0) + manhole(xL);
+
+      // المواسير (قاعدة على قاع المانهول)
+      for (let i = 0; i < n; i++) {
+        const ma = x0 + i * PIPE_LEN * sc;
+        const mb = Math.min(x0 + (i + 1) * PIPE_LEN * sc, xL);
+        const xa = (i === 0) ? x0 + IN : ma;
+        const xb = (i === n - 1) ? xL - IN : mb;
+        const w = xb - xa;
+        if (w <= 0) continue;
+        h += '<rect x="' + xa + '" y="' + PT + '" width="' + w + '" height="28" fill="url(#pipeGrad)" stroke="#64748b" stroke-width="1.2"/>';
+        const len = (i === n - 1) ? lastLen : PIPE_LEN;
+        const cx = xa + w / 2;
+        if (w >= 52) {
+          h += T(cx, PT + 12, "ماسورة " + (i + 1), "#e2e8f0", 9, true);
+          h += T(cx, PT + 23, f(len, 2) + " م", "#cbd5e1", 8, false);
+        } else if (w >= 12) {
+          h += T(cx, PT + 18, String(i + 1), "#e2e8f0", 9, true);
+        }
+        if (i < n - 1) {
+          h += '<rect x="' + (xb - 3) + '" y="' + (PT - 4) + '" width="6" height="36" fill="#475569" stroke="#94a3b8" stroke-width="0.8"/>';
+        }
+      }
+      // فتحة دخول/خروج الماسورة في جدار المانهول (جلبة)
+      h += '<rect x="' + (x0 + IN) + '" y="' + (PT - 3) + '" width="' + (MH - IN) + '" height="34" fill="#334155" stroke="#94a3b8" stroke-width="0.8" opacity="0.9"/>';
+      h += '<rect x="' + (xL - MH) + '" y="' + (PT - 3) + '" width="' + (MH - IN) + '" height="34" fill="#334155" stroke="#94a3b8" stroke-width="0.8" opacity="0.9"/>';
+
+      // القراءات: المسافة فوق، تحتها القراءة (أفقي) — فوق الماسورة
+      let lastX = -999;
+      labs.forEach(function (dist) {
+        const x = x0 + dist * sc;
+        if (x - lastX < 30) return;
+        if (xL - x < 30) return;
+        lastX = x;
+        const il = o.ilStart + (o.ilEnd - o.ilStart) * (dist / L);
+        const fs = hi - il - d;
+        const isJoint = Math.abs(dist / PIPE_LEN - Math.round(dist / PIPE_LEN)) < 0.0005;
+        h += '<line x1="' + x + '" y1="' + (PT - 14) + '" x2="' + x + '" y2="' + PT + '" stroke="#fbbf24" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.7"/>';
+        h += '<circle cx="' + x + '" cy="' + PT + '" r="' + (isJoint ? 2.8 : 2.2) + '" fill="#fbbf24"/>';
+        h += T(x, PT - 31, f(dist, 1) + "م", "#7dd3fc", 9, true, "middle", null, true);
+        h += T(x, PT - 19, f(fs), "#fbbf24", 9, true, "middle", null, true);
+      });
+
+      // IL والقطر
+      const xm = (x0 + xL) / 2;
+      h += '<line x1="' + (x0 + IN) + '" y1="' + PB + '" x2="' + (xL - IN) + '" y2="' + PB + '" stroke="#f87171" stroke-width="1" stroke-dasharray="4,3"/>';
+      h += T(xm, PB + 18, "IL منسوب القاع", "#f87171", 10, true);
+      h += T(xm, PB + 32, "Ø " + f(d) + " م", "#4ade80", 11, true, "middle", "svg-d");
+
+      // بيانات المانهولين
+      const by = BOT + 28;
+      h += T(x0, by, "مانهول 1 (البداية)", "#e2e8f0", 11, true);
+      h += T(x0, by + 15, "IL = " + f(o.ilStart), "#7dd3fc", 10, false, "middle", "svg-il-s");
+      h += T(x0, by + 29, "قراءة = " + f(o.fsStart), "#fbbf24", 10, false, "middle", "svg-fs-s");
+      h += T(xL, by, "مانهول 2 (النهاية)", "#e2e8f0", 11, true);
+      h += T(xL, by + 15, "IL = " + f(o.ilEnd), "#7dd3fc", 10, false, "middle", "svg-il-e");
+      h += T(xL, by + 29, "قراءة = " + f(o.fsEnd), "#fbbf24", 10, false, "middle", "svg-fs-e");
+
+      // الطول الكلي
+      const ly = BOT + 98;
+      h += '<line x1="' + x0 + '" y1="' + ly + '" x2="' + xL + '" y2="' + ly + '" stroke="#a78bfa" stroke-width="1.5" marker-start="url(#arr)" marker-end="url(#arr)"/>';
+      h += T(xm, ly - 4, "الطول = " + f(L, 1) + " م", "#a78bfa", 11, true, "middle", "svg-len");
+
+      // مفتاح
+      h += '<g transform="translate(20,' + (H - 10) + ')"><circle r="3" fill="#fbbf24"/>' + T(8, 3.5, "قراءة ظهر الماسورة", "#94a3b8", 9, false, "start") +
+        '<circle cx="130" r="3" fill="#7dd3fc"/>' + T(138, 3.5, "المسافة من المانهول الأول", "#94a3b8", 9, false, "start") + '</g>';
+
+      g.innerHTML = h;
+      const dbx = $("diagram-box");
+      if (dbx) { dbx.scrollLeft = -99999; }
+    }
+
+    function calc() {
       const bm = num("bm");
       const bs = num("bs");
       const d  = num("diameter");
@@ -7627,14 +8562,6 @@ function calc() {
       const dir = slope > 0.00001 ? "نزول" : (slope < -0.00001 ? "صعود" : "أفقي");
       $("r-slope").textContent = fmt(slopePerMille, 2) + " ‰  (" + dir + ")";
 
-      $("svg-hi").textContent = fmt(hi) + " م";
-      $("svg-d").textContent = "Ø " + fmt(d) + " م";
-      $("svg-fs").textContent = "قراءة " + fmt(fsStart);
-      $("svg-il-s").textContent = "IL = " + fmt(ilStart);
-      $("svg-fs-s").textContent = "قراءة = " + fmt(fsStart);
-      $("svg-il-e").textContent = "IL = " + fmt(ilEnd);
-      $("svg-fs-e").textContent = "قراءة = " + fmt(fsEnd);
-      $("svg-len").textContent = "الطول = " + fmt(L, 1) + " م";
 
       const stStart = num("st-start");
       const stStep = num("st-step");
@@ -7682,59 +8609,7 @@ function calc() {
         tbody.appendChild(tr);
       });
 
-      const pg = $("points-group");
-      pg.innerHTML = "";
-
-      const xStart = 95;
-      const xEnd = 465;
-      const pipeTopY = 149;
-      const n = points.length;
-      const fontSize = n > 20 ? 7 : (n > 12 ? 8 : 9);
-      const labelOffset = n > 15 ? 11 : 14;
-
-      points.forEach((p, i) => {
-        const ratio = p.dist / L;
-        const x = xStart + ratio * (xEnd - xStart);
-
-        const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        tick.setAttribute("x1", x);
-        tick.setAttribute("y1", pipeTopY);
-        tick.setAttribute("x2", x);
-        tick.setAttribute("y2", pipeTopY - 8);
-        tick.setAttribute("stroke", "#fbbf24");
-        tick.setAttribute("stroke-width", "1.2");
-        pg.appendChild(tick);
-
-        const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        dot.setAttribute("cx", x);
-        dot.setAttribute("cy", pipeTopY - 8);
-        dot.setAttribute("r", n > 20 ? 2 : 2.5);
-        dot.setAttribute("fill", "#fbbf24");
-        pg.appendChild(dot);
-
-        const up = (i % 2 === 0);
-        const textY = up ? (pipeTopY - 8 - labelOffset) : (pipeTopY - 8 - labelOffset - 12);
-
-        const distText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        distText.setAttribute("x", x);
-        distText.setAttribute("y", textY);
-        distText.setAttribute("fill", "#7dd3fc");
-        distText.setAttribute("font-size", fontSize);
-        distText.setAttribute("font-weight", "bold");
-        distText.setAttribute("text-anchor", "middle");
-        distText.textContent = fmt(p.dist, 1) + "م";
-        pg.appendChild(distText);
-
-        const fsText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        fsText.setAttribute("x", x);
-        fsText.setAttribute("y", textY + 10);
-        fsText.setAttribute("fill", "#fbbf24");
-        fsText.setAttribute("font-size", fontSize);
-        fsText.setAttribute("font-weight", "bold");
-        fsText.setAttribute("text-anchor", "middle");
-        fsText.textContent = fmt(p.fs);
-        pg.appendChild(fsText);
-      });
+      drawBranchSketch({ hi: hi, d: d, L: L, ilStart: ilStart, ilEnd: ilEnd, fsStart: fsStart, fsEnd: fsEnd, interval: interval, points: points });
 
       $("table-wrap").style.display = "block";
       $("results").style.display = "block";
@@ -7826,15 +8701,7 @@ function calc() {
       $("results").style.display = "none";
       $("diagram-box").style.display = "none";
       $("btn-excel").style.display = "none";
-      $("svg-hi").textContent = "—";
-      $("svg-d").textContent = "Ø";
-      $("svg-fs").textContent = "—";
-      $("svg-il-s").textContent = "IL = —";
-      $("svg-fs-s").textContent = "قراءة = —";
-      $("svg-il-e").textContent = "IL = —";
-      $("svg-fs-e").textContent = "قراءة = —";
-      $("svg-len").textContent = "الطول";
-      $("points-group").innerHTML = "";
+      if ($("sk-dyn")) $("sk-dyn").innerHTML = "";
       lastPoints = [];
       lastMeta = {};
     }
@@ -8219,9 +9086,9 @@ function calc() {
         return;
       }
       box.innerHTML = "";
-      mm.map = L.map(box, { zoomControl: true }).setView([30.0444, 31.2357], 6);
-      mm.sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 20, maxNativeZoom: 19, attribution: "Esri, Maxar, Earthstar Geographics" }).addTo(mm.map);
-      mm.labels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 20, maxNativeZoom: 18, attribution: "Esri" }).addTo(mm.map);
+      mm.map = L.map(box, { zoomControl: true, maxZoom: 22, minZoom: 2 }).setView([30.0444, 31.2357], 6);
+      mm.sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 18, maxNativeZoom: 18, attribution: "Esri, Maxar, Earthstar Geographics" }).addTo(mm.map);
+      mm.labels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 22, maxNativeZoom: 18, attribution: "Esri" }).addTo(mm.map);
       mm.labelsOn = true; mm.loaded = 0;
       mm.sat.on("tileload", () => { mm.loaded++; $("mm-banner").style.display = "none"; });
       setTimeout(() => {
@@ -8231,7 +9098,8 @@ function calc() {
           b.innerHTML = 'لم تُحمَّل صور القمر الصناعي. تأكد من الإنترنت. لو بتفتح النسخة المنشورة داخل claude.ai فهي تمنع تحميل الخرائط والبحث، فافتح ملف HTML مباشرة في المتصفح. <a href="https://earth.google.com/web/" target="_blank" style="color:var(--gold);">فتح Google Earth</a>';
         }
       }, 6000);
-      mm.osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 20, maxNativeZoom: 19, attribution: "© OpenStreetMap" });
+      mm.osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 22, maxNativeZoom: 19, attribution: "© OpenStreetMap" });
+      if (typeof bindMapZoomFallback === "function") bindMapZoomFallback(mm.map, mm.sat, mm.osm);
       mm.map.on("click", e => { mm.pts.push({ lat: e.latlng.lat, lon: e.latlng.lng }); mapRefresh(true); });
       setTimeout(() => mm.map.invalidateSize(), 150);
     }
@@ -8964,6 +9832,146 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
 
     /* ===== Traverse (Bowditch / compass rule) ===== */
     let lastTrav = null;
+    
+    function parseTravPairs(text) {
+      var lines = String(text || "").split(/\r?\n/);
+      var pts = [];
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].replace(/^\s+|\s+$/g, "");
+        if (!line || line.charAt(0) === "#" || line.charAt(0) === ";") continue;
+        // SDR-ish: 08/09 point records often: 08PTname... or numbers
+        // generic: extract first two numbers on the line
+        var nums = line.replace(/,/g, " ").match(/[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?/g);
+        if (!nums || nums.length < 2) continue;
+        var e = parseFloat(nums[0]);
+        var n = parseFloat(nums[1]);
+        // if line looks like: name E N — try last two numbers
+        if (nums.length >= 3) {
+          // prefer last two as E,N when first looks like point id
+          var e2 = parseFloat(nums[nums.length - 2]);
+          var n2 = parseFloat(nums[nums.length - 1]);
+          if (isFinite(e2) && isFinite(n2)) { e = e2; n = n2; }
+        }
+        if (!isFinite(e) || !isFinite(n)) continue;
+        pts.push({ e: e, n: n });
+      }
+      return pts;
+    }
+
+    function applyTravPoints(pts) {
+      if (!pts || pts.length < 3) {
+        alert("محتاج 3 نقاط على الأقل (أو نقطتين + نقطة قفل)");
+        return false;
+      }
+      // If >= 4 points, treat last as closure (re-observation of start)
+      var body = pts.slice();
+      var close = null;
+      if (body.length >= 4) {
+        close = body[body.length - 1];
+        body = body.slice(0, body.length - 1);
+      }
+      if (body.length < 3) {
+        alert("عدد نقاط الترافيرس أقل من 3");
+        return false;
+      }
+      if (body.length > 60) body = body.slice(0, 60);
+      $("t-n").value = String(body.length);
+      travRows();
+      for (var i = 0; i < body.length; i++) {
+        if ($("t-e-" + i)) $("t-e-" + i).value = body[i].e;
+        if ($("t-n-" + i)) $("t-n-" + i).value = body[i].n;
+      }
+      if (close) {
+        if ($("t-ce")) $("t-ce").value = close.e;
+        if ($("t-cn")) $("t-cn").value = close.n;
+      } else {
+        // default close = first point
+        if ($("t-ce")) $("t-ce").value = body[0].e;
+        if ($("t-cn")) $("t-cn").value = body[0].n;
+      }
+      var note = $("t-import-note");
+      if (note) note.textContent = "تم استيراد " + body.length + " نقطة" + (close ? " + نقطة قفل" : "") + " — اضغط «صحّح»";
+      return true;
+    }
+
+    function importTravText() {
+      var ta = $("t-paste");
+      var pts = parseTravPairs(ta ? ta.value : "");
+      if (applyTravPoints(pts)) {
+        // optional auto-correct
+        try { calcTrav(); } catch (e) {}
+      }
+    }
+
+    function parseSdrText(text) {
+      // SDR33: lines starting with 08 or 09 often contain coords
+      var pts = [];
+      var lines = String(text || "").split(/\r?\n/);
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (!line) continue;
+        var code = line.substring(0, 2);
+        if (code === "08" || code === "09" || code === "10" || code === "11") {
+          var nums = line.match(/[-+]?\d+\.\d+/g);
+          if (nums && nums.length >= 2) {
+            // typical order varies; take first two large numbers as E,N
+            pts.push({ e: parseFloat(nums[0]), n: parseFloat(nums[1]) });
+          }
+        }
+      }
+      if (pts.length >= 3) return pts;
+      return parseTravPairs(text);
+    }
+
+    async function importTravFile(ev) {
+      var file = ev && ev.target && ev.target.files && ev.target.files[0];
+      if (!file) return;
+      var name = (file.name || "").toLowerCase();
+      try {
+        if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
+          if (typeof needXlsx === "function") needXlsx();
+          if (typeof XLSX === "undefined") {
+            alert("مكتبة Excel غير متاحة — احفظ الملف CSV أو الصق النص");
+            return;
+          }
+          var buf = await file.arrayBuffer();
+          var wb = XLSX.read(buf, { type: "array" });
+          var sheet = wb.Sheets[wb.SheetNames[0]];
+          var rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true });
+          var pts = [];
+          for (var r = 0; r < rows.length; r++) {
+            var row = rows[r];
+            if (!row || row.length < 2) continue;
+            // skip header
+            var a = parseFloat(row[0]), b = parseFloat(row[1]);
+            if (row.length >= 3 && (isNaN(a) || Math.abs(a) < 1e-9)) {
+              a = parseFloat(row[row.length - 2]);
+              b = parseFloat(row[row.length - 1]);
+            }
+            if (!isFinite(a) || !isFinite(b)) continue;
+            // if first cell is text id
+            if (typeof row[0] === "string" && row.length >= 3) {
+              a = parseFloat(row[1]); b = parseFloat(row[2]);
+            }
+            if (!isFinite(a) || !isFinite(b)) continue;
+            pts.push({ e: a, n: b });
+          }
+          if (applyTravPoints(pts)) try { calcTrav(); } catch (e) {}
+        } else {
+          var text = await file.text();
+          var pts2 = (name.endsWith(".sdr") || name.endsWith(".raw")) ? parseSdrText(text) : parseTravPairs(text);
+          if (applyTravPoints(pts2)) try { calcTrav(); } catch (e) {}
+        }
+      } catch (err) {
+        alert("تعذر قراءة الملف: " + (err && err.message ? err.message : err));
+      }
+      try { ev.target.value = ""; } catch (e) {}
+    }
+
+    window.importTravFile = importTravFile;
+    window.importTravText = importTravText;
+    window.parseTravPairs = parseTravPairs;
+
     function travRows() {
       const n = parseInt($("t-n").value) || 0, box = $("t-rows");
       if (n < 3) { $("t-sec").style.display = "none"; box.innerHTML = ""; return; }
@@ -9547,6 +10555,29 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       const name = ($("bm-name").value || "").trim() || "الروبير المعلوم";
       return { name, elev };
     }
+    
+    function setBmType(t) {
+      bmClosed = (t === "closed");
+      var bo = document.getElementById("bm-type-open");
+      var bc = document.getElementById("bm-type-closed");
+      var note = document.getElementById("bm-type-note");
+      if (bo) {
+        bo.style.outline = bmClosed ? "none" : "2px solid #fbbf24";
+        bo.style.opacity = bmClosed ? "0.75" : "1";
+      }
+      if (bc) {
+        bc.style.outline = bmClosed ? "2px solid #fbbf24" : "none";
+        bc.style.opacity = bmClosed ? "1" : "0.75";
+      }
+      if (note) {
+        note.innerHTML = bmClosed
+          ? "وضع <b>مغلق</b>: الكروكي هيتقفل من آخر نقطة على الروبير (نقطة البداية)."
+          : "وضع <b>مفتوح</b>: الكروكي خطي عادي من الروبير لآخر نقطة.";
+      }
+      if (typeof drawBmSketch === "function") drawBmSketch();
+    }
+    window.setBmType = setBmType;
+
     function updateBmHI() {
       const elev = num("bm-elev");
       const bs = num("bm-bs");
@@ -9679,10 +10710,21 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
         g += '<text x="' + (padL - 6) + '" y="' + (yy + 3).toFixed(1) + '" fill="#64748b" font-size="9" text-anchor="end" direction="ltr">' + ee.toFixed(2) + '</text>';
       }
 
-      // connecting polyline
+      // connecting polyline (closed if bmClosed)
       if (n > 1) {
-        const pts = chain.map((c, i) => xOf(i).toFixed(1) + "," + yOf(c.elev).toFixed(1)).join(" ");
+        let pts = chain.map((c, i) => xOf(i).toFixed(1) + "," + yOf(c.elev).toFixed(1)).join(" ");
+        if (bmClosed) {
+          // close back to first point (BM)
+          pts += " " + xOf(0).toFixed(1) + "," + yOf(chain[0].elev).toFixed(1);
+        }
         g += '<polyline points="' + pts + '" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linejoin="round"/>';
+        if (bmClosed) {
+          // highlight closing segment
+          const xA = xOf(n - 1), yA = yOf(chain[n - 1].elev);
+          const xB = xOf(0), yB = yOf(chain[0].elev);
+          g += '<line x1="' + xA.toFixed(1) + '" y1="' + yA.toFixed(1) + '" x2="' + xB.toFixed(1) + '" y2="' + yB.toFixed(1) + '" stroke="#fbbf24" stroke-width="2.2" stroke-dasharray="6 4"/>';
+          g += '<text x="' + ((xA+xB)/2).toFixed(1) + '" y="' + ((yA+yB)/2 - 8).toFixed(1) + '" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">قفل</text>';
+        }
         // direction arrows mid-segments (from start toward end = right to left in screen = decreasing i? start is i=0 on the right)
         for (let i = 0; i < n - 1; i++) {
           const x1 = xOf(i), y1 = yOf(chain[i].elev);
@@ -9724,7 +10766,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       });
 
       // title strip
-      g += '<text x="' + (svgW / 2).toFixed(1) + '" y="22" fill="#a78bfa" font-size="11" text-anchor="middle">مسار نقل المناسيب — من اليمين (البداية) لليسار</text>';
+      g += '<text x="' + (svgW / 2).toFixed(1) + '" y="22" fill="#a78bfa" font-size="11" text-anchor="middle">' + (bmClosed ? "مسار مغلق — القفل على الروبير" : "مسار مفتوح — من اليمين (البداية) لليسار") + '</text>';
       g += '<text x="' + (svgW / 2).toFixed(1) + '" y="' + (svgH - 10).toFixed(1) + '" fill="#64748b" font-size="9" text-anchor="middle">الارتفاع بالمتر (محور رأسي) • الترتيب من الروبير المعلوم</text>';
 
       wrap.innerHTML = '<svg viewBox="0 0 ' + svgW + ' ' + svgH + '" width="100%" style="max-width:560px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" font-family="Tahoma,Arial,sans-serif">' + g + '</svg>';
@@ -9771,6 +10813,8 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       else $("bm-pt-fs").focus();
     }
     function resetBmXfer() {
+      bmClosed = false;
+      if (typeof setBmType === "function") setBmType("open");
       ["bm-name","bm-elev","bm-bs","bm-hi","bm-pt-name","bm-pt-fs","bm-pt-bs"].forEach(id => {
         if ($(id)) { $(id).value = ""; $(id).readOnly = false; $(id).style.opacity = ""; }
       });
@@ -10279,6 +11323,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       tbody.innerHTML = "";
       let any = false;
       let i = 0;
+      var places = [];
       slabThkInputs().forEach(function(inp) {
         const t = parseFloat(inp.value);
         if (!isFinite(t)) return;
@@ -10286,6 +11331,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
         i++;
         const bottom = top - t;
         const reading = hi - bottom;
+        places.push({ n: i, thk: t, bottom: bottom, reading: reading });
         const tr = document.createElement("tr");
         tr.innerHTML = "<td>مكان " + i + "</td><td>" + fmt(t) + "</td><td>" + fmt(bottom) + "</td><td>" + fmt(reading) + "</td>";
         tbody.appendChild(tr);
@@ -10295,6 +11341,68 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
         return;
       }
       $("slab-results").style.display = "block";
+      drawSlabDiagram(hi, top, places);
+    }
+    function drawSlabDiagram(hi, top, places) {
+      var box = $("slab-diagram-box");
+      var wrap = $("slab-svg-wrap");
+      if (!box || !wrap) return;
+      box.style.display = "block";
+      var n = places.length;
+      if (!n) return;
+      var W = 600, H = 380;
+      var mL = 56, mR = 20, mT = 40, mB = 70;
+      var span = W - mL - mR;
+      var maxT = 0.05;
+      places.forEach(function(p) { if (p.thk > maxT) maxT = p.thk; });
+      var maxPx = 90;
+      var yTop = mT + 24;
+      var colW = span / n;
+      var s = [];
+      s.push('<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:600px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">');
+      s.push('<rect width="' + W + '" height="' + H + '" fill="#0b1220"/>');
+      s.push('<text x="' + (W/2) + '" y="16" fill="#7dd3fc" font-size="12" font-weight="700" text-anchor="middle">كروكي وزن السقف — سُمك كل مكان مع المنسوب والقراءة</text>');
+      // HI line
+      s.push('<line x1="' + mL + '" y1="' + (mT) + '" x2="' + (W-mR) + '" y2="' + mT + '" stroke="#fbbf24" stroke-width="1.4" stroke-dasharray="5 3"/>');
+      s.push('<text x="' + (W-mR) + '" y="' + (mT-4) + '" fill="#fbbf24" font-size="10" text-anchor="end">HI = ' + fmt(hi,3) + ' م</text>');
+      // top of slab continuous line
+      s.push('<line x1="' + mL + '" y1="' + yTop + '" x2="' + (mL+span) + '" y2="' + yTop + '" stroke="#e2e8f0" stroke-width="2.5"/>');
+      s.push('<text x="' + mL + '" y="' + (yTop-6) + '" fill="#f8fafc" font-size="11" font-weight="800">أعلى الخرسانة = ' + fmt(top,3) + ' م</text>');
+      // draw each thickness segment as slab body with different depth
+      places.forEach(function(p, i) {
+        var x0 = mL + i * colW;
+        var w = colW - 4;
+        var thPx = Math.max(14, (p.thk / maxT) * maxPx);
+        var yb = yTop + thPx;
+        // concrete body
+        s.push('<rect x="' + (x0+2) + '" y="' + yTop + '" width="' + w + '" height="' + thPx + '" fill="#78716c" stroke="#d6d3d1" stroke-width="1.2"/>');
+        // hatch
+        for (var hx = x0 + 4; hx < x0 + w; hx += 6) {
+          s.push('<line x1="' + hx + '" y1="' + yTop + '" x2="' + hx + '" y2="' + yb + '" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>');
+        }
+        // rebar near bottom of this thickness
+        for (var rx = x0 + 10; rx < x0 + w - 4; rx += 11) {
+          s.push('<circle cx="' + rx + '" cy="' + (yb - 5) + '" r="2" fill="#fbbf24"/>');
+        }
+        // formwork line under
+        s.push('<line x1="' + (x0+2) + '" y1="' + yb + '" x2="' + (x0+2+w) + '" y2="' + yb + '" stroke="#38bdf8" stroke-width="2.5"/>');
+        // prop
+        var cx = x0 + colW/2;
+        s.push('<line x1="' + cx + '" y1="' + yb + '" x2="' + cx + '" y2="' + (yTop + maxPx + 28) + '" stroke="#64748b" stroke-width="3"/>');
+        s.push('<line x1="' + (cx-12) + '" y1="' + (yTop + maxPx + 28) + '" x2="' + (cx+12) + '" y2="' + (yTop + maxPx + 28) + '" stroke="#64748b" stroke-width="2"/>');
+        // staff from HI to bottom
+        s.push('<line x1="' + cx + '" y1="' + mT + '" x2="' + cx + '" y2="' + yb + '" stroke="#4ade80" stroke-width="1.1" stroke-dasharray="3 3"/>');
+        // label card
+        var ly = yTop + maxPx + 40;
+        s.push('<rect x="' + (cx-42) + '" y="' + ly + '" width="84" height="48" rx="6" fill="rgba(15,23,42,0.95)" stroke="rgba(56,189,248,0.5)"/>');
+        s.push('<text x="' + cx + '" y="' + (ly+13) + '" fill="#fbbf24" font-size="10" font-weight="800" text-anchor="middle">مكان ' + p.n + '</text>');
+        s.push('<text x="' + cx + '" y="' + (ly+24) + '" fill="#e2e8f0" font-size="9" text-anchor="middle">سُمك ' + fmt(p.thk,3) + ' م</text>');
+        s.push('<text x="' + cx + '" y="' + (ly+34) + '" fill="#7dd3fc" font-size="9" text-anchor="middle">قاع ' + fmt(p.bottom,3) + '</text>');
+        s.push('<text x="' + cx + '" y="' + (ly+44) + '" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">ق = ' + fmt(p.reading,3) + '</text>');
+      });
+      s.push('<text x="' + (W/2) + '" y="' + (H-10) + '" fill="#94a3b8" font-size="10" text-anchor="middle">كل مكان بسُمكه الفعلي • المنسوب = أعلى السقف − السُمك • القراءة = HI − منسوب القاع</text>');
+      s.push('</svg>');
+      wrap.innerHTML = s.join("");
     }
 
     function updateSlabHI() {
@@ -10315,6 +11423,8 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       if (list) list.innerHTML = "";
       slabEnsureThkFields();
       $("slab-results").style.display = "none";
+      if ($("slab-diagram-box")) $("slab-diagram-box").style.display = "none";
+      if ($("slab-svg-wrap")) $("slab-svg-wrap").innerHTML = "";
       $("slab-body").innerHTML = "";
     }
     if (document.readyState === "loading") {
@@ -10364,67 +11474,599 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     }
 
     function drawStairDiagram(levels, rise) {
-      const n = levels.length;
-      const stepW = Math.max(28, Math.min(50, Math.floor(480 / n)));
-      const stepH = Math.max(18, Math.min(36, 220 / n));
-      const marginL = 70;
-      const marginB = 40;
-      const svgW = marginL + n * stepW + 40;
-      const svgH = marginB + n * stepH + 50;
-
-      let paths = "";
-      // Stair profile polyline (from bottom-left going up-right)
-      let pts = [];
-      let x = marginL;
-      let y = svgH - marginB;
-      pts.push(x + "," + y);
-      for (let i = 0; i < n; i++) {
-        // vertical riser
+      var n = levels.length;
+      if (!n) return;
+      var stepW = Math.min(48, Math.max(28, 420 / n));
+      var stepH = Math.min(32, Math.max(18, 240 / n));
+      var mL = 70, mR = 30, mT = 36, mB = 56;
+      var svgW = mL + n * stepW + mR + 10;
+      var svgH = mT + n * stepH + mB + 40;
+      var s = [];
+      s.push('<svg viewBox="0 0 ' + svgW + ' ' + svgH + '" width="100%" style="max-width:600px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">');
+      s.push('<defs><pattern id="stHatch" patternUnits="userSpaceOnUse" width="7" height="7"><path d="M0,7 L7,0" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs>');
+      s.push('<rect width="' + svgW + '" height="' + svgH + '" fill="#0b1220"/>');
+      s.push('<text x="' + (svgW/2) + '" y="18" fill="#7dd3fc" font-size="12" font-weight="700" text-anchor="middle">كروكي سلم — قطاع جانبي</text>');
+      // back wall
+      s.push('<rect x="' + (mL-22) + '" y="' + mT + '" width="14" height="' + (n*stepH+10) + '" fill="#1e293b" stroke="#475569"/>');
+      // floor bottom
+      s.push('<line x1="' + (mL-30) + '" y1="' + (svgH-mB) + '" x2="' + (mL+n*stepW+20) + '" y2="' + (svgH-mB) + '" stroke="#64748b" stroke-width="3"/>');
+      // concrete mass under stairs
+      var x = mL, y = svgH - mB;
+      var poly = [x + "," + y];
+      for (var i = 0; i < n; i++) {
         y -= stepH;
-        pts.push(x + "," + y);
-        // horizontal tread
+        poly.push(x + "," + y);
         x += stepW;
-        pts.push(x + "," + y);
+        poly.push(x + "," + y);
       }
-      paths += '<polyline points="' + pts.join(" ") + '" fill="none" stroke="#38bdf8" stroke-width="2.5"/>';
-
-      // Fill under stairs lightly
-      const fillPts = pts.join(" ") + " " + x + "," + (svgH - marginB) + " " + marginL + "," + (svgH - marginB);
-      paths += '<polygon points="' + fillPts + '" fill="rgba(56,189,248,0.08)"/>';
-
-      // Labels for each step
-      let labels = "";
-      x = marginL;
-      y = svgH - marginB;
-      for (let i = 0; i < n; i++) {
+      poly.push(x + "," + (svgH - mB));
+      s.push('<polygon points="' + poly.join(" ") + '" fill="#57534e" stroke="#a8a29e" stroke-width="1.3"/>');
+      s.push('<polygon points="' + poly.join(" ") + '" fill="url(#stHatch)"/>');
+      // step edges thick
+      x = mL; y = svgH - mB;
+      var d = "M" + x + " " + y;
+      for (var i = 0; i < n; i++) {
         y -= stepH;
-        const cx = x + stepW / 2;
-        const s = levels[i];
-        // step number on tread
-        labels += '<text x="' + cx + '" y="' + (y - 4) + '" fill="#fbbf24" font-size="10" font-weight="bold" text-anchor="middle">' + s.num + '</text>';
-        // level below number
-        labels += '<text x="' + cx + '" y="' + (y + 12) + '" fill="#7dd3fc" font-size="8" text-anchor="middle">' + fmt(s.level, 3) + '</text>';
-        // reading
-        labels += '<text x="' + cx + '" y="' + (y + 22) + '" fill="#94a3b8" font-size="7.5" text-anchor="middle">ق=' + fmt(s.reading, 3) + '</text>';
+        d += " V" + y + " H" + (x + stepW);
         x += stepW;
       }
-
-      // Axis labels
-      labels += '<text x="' + (marginL - 8) + '" y="' + (svgH - marginB + 4) + '" fill="#94a3b8" font-size="9" text-anchor="end">بداية</text>';
-      labels += '<text x="' + (marginL + n * stepW + 6) + '" y="' + (svgH - marginB - n * stepH + 4) + '" fill="#94a3b8" font-size="9">أعلى</text>';
-      labels += '<text x="' + (svgW / 2) + '" y="' + (svgH - 8) + '" fill="#a78bfa" font-size="10" text-anchor="middle">عدد الدرج = ' + n + '  |  ارتفاع الدرجة = ' + fmt(rise, 3) + ' م</text>';
-
-      const svg = '<svg viewBox="0 0 ' + svgW + ' ' + svgH + '" width="100%" style="max-width:560px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">'
-        + paths + labels + '</svg>';
-      $("stair-svg-wrap").innerHTML = svg;
+      s.push('<path d="' + d + '" fill="none" stroke="#f1f5f9" stroke-width="2.5" stroke-linejoin="round"/>');
+      // tread finish (thin top line)
+      x = mL; y = svgH - mB;
+      for (var i = 0; i < n; i++) {
+        y -= stepH;
+        s.push('<line x1="' + x + '" y1="' + y + '" x2="' + (x+stepW) + '" y2="' + y + '" stroke="#38bdf8" stroke-width="2.5"/>');
+        // nosing
+        s.push('<circle cx="' + (x+stepW-1) + '" cy="' + y + '" r="2.5" fill="#fbbf24"/>');
+        x += stepW;
+      }
+      // handrail
+      var hx0 = mL + 8, hy0 = (svgH - mB) - 22;
+      var hx1 = mL + n * stepW - 6, hy1 = (svgH - mB) - n * stepH - 22;
+      s.push('<line x1="' + hx0 + '" y1="' + hy0 + '" x2="' + hx1 + '" y2="' + hy1 + '" stroke="#cbd5e1" stroke-width="2.5"/>');
+      x = mL; y = svgH - mB;
+      for (var i = 0; i < n; i++) {
+        y -= stepH;
+        var bx = x + stepW * 0.55;
+        var t = i / Math.max(n-1,1);
+        var railY = hy0 + (hy1-hy0)*t;
+        s.push('<line x1="' + bx + '" y1="' + y + '" x2="' + bx + '" y2="' + railY + '" stroke="#94a3b8" stroke-width="1.6"/>');
+        x += stepW;
+      }
+      // dimension rise on first step
+      if (n > 0) {
+        var rx = mL - 12;
+        var ry1 = svgH - mB;
+        var ry2 = svgH - mB - stepH;
+        s.push('<line x1="' + rx + '" y1="' + ry1 + '" x2="' + rx + '" y2="' + ry2 + '" stroke="#a78bfa" stroke-width="1.2"/>');
+        s.push('<text x="' + (rx-4) + '" y="' + ((ry1+ry2)/2+3) + '" fill="#a78bfa" font-size="9" text-anchor="end">' + fmt(rise,3) + '</text>');
+      }
+      // labels on each step
+      x = mL; y = svgH - mB;
+      for (var i = 0; i < n; i++) {
+        y -= stepH;
+        var cx = x + stepW / 2;
+        var lv = levels[i];
+        s.push('<rect x="' + (cx-22) + '" y="' + (y+4) + '" width="44" height="36" rx="5" fill="rgba(15,23,42,0.9)" stroke="rgba(56,189,248,0.45)"/>');
+        s.push('<text x="' + cx + '" y="' + (y+15) + '" fill="#fbbf24" font-size="10" font-weight="800" text-anchor="middle">د ' + lv.num + '</text>');
+        s.push('<text x="' + cx + '" y="' + (y+25) + '" fill="#7dd3fc" font-size="9" text-anchor="middle">' + fmt(lv.level,3) + '</text>');
+        s.push('<text x="' + cx + '" y="' + (y+34) + '" fill="#4ade80" font-size="9" font-weight="700" text-anchor="middle">ق ' + fmt(lv.reading,3) + '</text>');
+        x += stepW;
+      }
+      s.push('<text x="' + (svgW/2) + '" y="' + (svgH-12) + '" fill="#c4b5fd" font-size="11" font-weight="700" text-anchor="middle">عدد الدرج = ' + n + '  |  ارتفاع الدرجة (Rise) = ' + fmt(rise,3) + ' م</text>');
+      s.push('<text x="' + (mL-6) + '" y="' + (svgH-mB+14) + '" fill="#94a3b8" font-size="9" text-anchor="end">أسفل</text>');
+      s.push('<text x="' + (mL+n*stepW+6) + '" y="' + (svgH-mB-n*stepH+4) + '" fill="#94a3b8" font-size="9">أعلى</text>');
+      s.push('</svg>');
+      $("stair-svg-wrap").innerHTML = s.join("");
     }
-
     function resetStairs() {
       ["stair-bm","stair-bs","stair-hi","stair-ref-level","stair-rise","stair-count"].forEach(id => { $(id).value = ""; });
       $("stair-results").style.display = "none";
       $("stair-body").innerHTML = "";
       $("stair-svg-wrap").innerHTML = "";
     }
+
+
+    function updateFndHI() {
+      var bm = num("fnd-bm"), bs = num("fnd-bs");
+      var el = $("fnd-hi");
+      if (!el) return;
+      if (bm !== null && bs !== null) el.value = (bm + bs).toFixed(3);
+      else el.value = "";
+    }
+    function calcFound() {
+      try {
+        var hi = num("fnd-hi");
+        if (hi === null) {
+          updateFndHI();
+          hi = num("fnd-hi");
+        }
+        if (hi === null) {
+          alert("أدخل منسوب الروبير وقراءة القامة عليه أولًا");
+          return;
+        }
+        var rows = [];
+        function add(label, id) {
+          var v = num(id);
+          if (v === null) return;
+          rows.push({ label: label, elev: v, reading: hi - v });
+        }
+        add("خرسانة العادية", "fnd-plain");
+        add("مسلحة 1", "fnd-rc1");
+        add("مسلحة 2", "fnd-rc2");
+        add("مسلحة 3", "fnd-rc3");
+        add("ميدة / سمل 1", "fnd-bm1");
+        add("ميدة / سمل 2", "fnd-bm2");
+        add("ميدة / سمل 3", "fnd-bm3");
+        if (!rows.length) {
+          alert("أدخل منسوبًا واحدًا على الأقل (عادية أو مسلحة أو ميدة/سمل)");
+          return;
+        }
+        var tbody = $("fnd-body");
+        if (!tbody) { alert("عنصر الجدول غير موجود"); return; }
+        tbody.innerHTML = "";
+        rows.forEach(function(r) {
+          var tr = document.createElement("tr");
+          tr.innerHTML = "<td>" + r.label + "</td><td>" + fmt(r.elev, 3) + "</td><td>" + fmt(r.reading, 3) + "</td>";
+          tbody.appendChild(tr);
+        });
+        var res = $("fnd-results");
+        if (res) res.style.display = "block";
+        drawFoundDiagram(hi, rows);
+      } catch (err) {
+        console.error(err);
+        alert("خطأ في الحساب: " + (err && err.message ? err.message : err));
+      }
+    }
+    function resetFound() {
+      ["fnd-bm","fnd-bs","fnd-hi","fnd-plain","fnd-rc1","fnd-rc2","fnd-rc3","fnd-bm1","fnd-bm2","fnd-bm3"].forEach(function(id) {
+        var el = $(id); if (el) el.value = "";
+      });
+      var res = $("fnd-results"); if (res) res.style.display = "none";
+      var body = $("fnd-body"); if (body) body.innerHTML = "";
+      var wrap = $("fnd-svg-wrap"); if (wrap) wrap.innerHTML = "";
+    }
+    function drawFoundDiagram(hi, rows) {
+      var wrap = $("fnd-svg-wrap");
+      if (!wrap) return;
+      var by = {};
+      rows.forEach(function(r) { by[r.label] = r; });
+      var plain = by["خرسانة العادية"] || null;
+      var rcs = ["مسلحة 1","مسلحة 2","مسلحة 3"].map(function(k){ return by[k]; }).filter(Boolean);
+      var beams = ["ميدة / سمل 1","ميدة / سمل 2","ميدة / سمل 3"].map(function(k){ return by[k]; }).filter(Boolean);
+
+      var nF = Math.max(rcs.length, 1);
+      nF = Math.min(nF, 3);
+
+      var footingW = nF === 1 ? 150 : (nF === 2 ? 110 : 90);
+      var colW = nF === 1 ? 40 : 32;
+      var gap = nF === 1 ? 0 : 70;
+      var plainPad = 28;
+      var totalFoot = nF * footingW + (nF - 1) * gap;
+      var plainW = totalFoot + plainPad * 2;
+      var plainH = 36;
+      var rcH = 48;
+      var neckW = colW + 28;
+      var neckH = 44;
+      var colH = 170;
+      var beamH = 26;
+
+      var mL = 36;
+      var baseY = 440;
+      var yPlainBot = baseY;
+      var yPlainTop = yPlainBot - plainH;
+      var yRcBot = yPlainTop;
+      var yRcTop = yRcBot - rcH;
+      var yNeckBot = yRcTop;
+      var yNeckTop = yNeckBot - neckH;
+      var yColBot = yNeckTop;
+      var yColTop = yColBot - colH;
+      var byTop = yNeckTop + 10;
+      var byBot = byTop + beamH;
+
+      var drawRight = mL + plainW;
+      var centers = [];
+      for (var i = 0; i < nF; i++) {
+        centers.push(mL + plainPad + footingW / 2 + i * (footingW + gap));
+      }
+
+      // نفس أسلوب الكتابة السابق: نهاية السطر جنب الخط الأفقي
+      var txEnd = drawRight + 195;
+      var leaderEnd = drawRight + 12;
+      var W = Math.max(txEnd + 12, 520);
+      var H = 510;
+
+      function txt(y, t, color, size, bold) {
+        s.push('<text x="' + txEnd + '" y="' + y + '" fill="' + (color || "#e2e8f0") + '" font-size="' + (size || 12) + '" font-weight="' + (bold ? "800" : "600") + '" text-anchor="end">' + t + '</text>');
+      }
+
+      var s = [];
+      s.push('<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-width:100%;display:block;margin:0 auto;background:#000;" xmlns="http://www.w3.org/2000/svg">');
+      s.push('<rect width="' + W + '" height="' + H + '" fill="#000"/>');
+      s.push('<defs>');
+      s.push('<pattern id="agg" patternUnits="userSpaceOnUse" width="14" height="14">');
+      s.push('<circle cx="3" cy="4" r="1.2" fill="#666"/><circle cx="9" cy="9" r="1.4" fill="#777"/><circle cx="5" cy="11" r="1" fill="#555"/><circle cx="12" cy="3" r="1.1" fill="#666"/>');
+      s.push('</pattern>');
+      s.push('<pattern id="rebarGrid" patternUnits="userSpaceOnUse" width="10" height="10">');
+      s.push('<path d="M10 0 L0 0 0 10" fill="none" stroke="#9ca3af" stroke-width="0.7"/>');
+      s.push('</pattern>');
+      s.push('</defs>');
+
+      if (isFinite(hi)) {
+        s.push('<line x1="' + mL + '" y1="26" x2="' + drawRight + '" y2="26" stroke="#fbbf24" stroke-width="1" stroke-dasharray="6 4"/>');
+        txt(28, "HI = " + fmt(hi,3) + " م", "#fbbf24", 12, true);
+      }
+
+      // plain strip
+      s.push('<rect x="' + mL + '" y="' + yPlainTop + '" width="' + plainW + '" height="' + plainH + '" fill="#1a1a1a" stroke="#e5e5e5" stroke-width="1.5"/>');
+      s.push('<rect x="' + mL + '" y="' + yPlainTop + '" width="' + plainW + '" height="' + plainH + '" fill="url(#agg)" opacity="0.85"/>');
+
+      for (var i = 0; i < nF; i++) {
+        var cx = centers[i];
+        var rx0 = cx - footingW / 2;
+        s.push('<rect x="' + rx0 + '" y="' + yRcTop + '" width="' + footingW + '" height="' + rcH + '" fill="#0a0a0a" stroke="#f5f5f5" stroke-width="1.6"/>');
+        for (var ri = 0; ri < 4; ri++) {
+          var ry = yRcTop + 10 + ri * 9;
+          if (ry < yRcBot - 6) s.push('<line x1="' + (rx0+8) + '" y1="' + ry + '" x2="' + (rx0+footingW-8) + '" y2="' + ry + '" stroke="#a3a3a3" stroke-width="1"/>');
+        }
+        for (var j = 0; j < Math.floor(footingW/18); j++) {
+          s.push('<circle cx="' + (rx0 + 12 + j * 18) + '" cy="' + (yRcBot - 8) + '" r="2" fill="#d4d4d4"/>');
+        }
+        var nx = cx - neckW / 2;
+        s.push('<rect x="' + nx + '" y="' + yNeckTop + '" width="' + neckW + '" height="' + neckH + '" fill="#0a0a0a" stroke="#f5f5f5" stroke-width="1.4"/>');
+        for (var vb = 0; vb < 3; vb++) {
+          var vx = nx + 12 + vb * ((neckW - 24) / 2);
+          s.push('<line x1="' + vx + '" y1="' + (yRcTop+4) + '" x2="' + vx + '" y2="' + yNeckTop + '" stroke="#d4d4d4" stroke-width="1.3"/>');
+        }
+        var colX = cx - colW / 2;
+        s.push('<rect x="' + colX + '" y="' + yColTop + '" width="' + colW + '" height="' + (yColBot - yColTop) + '" fill="#0a0a0a" stroke="#f5f5f5" stroke-width="1.5"/>');
+        s.push('<rect x="' + (colX+3) + '" y="' + (yColTop+3) + '" width="' + (colW-6) + '" height="' + (yColBot-yColTop-6) + '" fill="url(#rebarGrid)" opacity="0.9"/>');
+        s.push('<line x1="' + (cx-7) + '" y1="' + (yColTop+2) + '" x2="' + (cx-7) + '" y2="' + yNeckBot + '" stroke="#e5e5e5" stroke-width="1.3"/>');
+        s.push('<line x1="' + (cx+7) + '" y1="' + (yColTop+2) + '" x2="' + (cx+7) + '" y2="' + yNeckBot + '" stroke="#e5e5e5" stroke-width="1.3"/>');
+        if (nF > 1) {
+          s.push('<text x="' + cx + '" y="' + (yRcTop + rcH/2 + 4) + '" fill="#fbbf24" font-size="12" font-weight="800" text-anchor="middle">' + (i+1) + '</text>');
+        }
+      }
+
+      // beam connecting
+      var bx0 = centers[0] - (nF === 1 ? 90 : neckW / 2 + 8);
+      var bx1 = centers[nF - 1] + (nF === 1 ? 90 : neckW / 2 + 8);
+      s.push('<rect x="' + bx0 + '" y="' + byTop + '" width="' + (bx1 - bx0) + '" height="' + beamH + '" fill="#111" stroke="#38bdf8" stroke-width="1.6"/>');
+      s.push('<line x1="' + (bx0+6) + '" y1="' + (byTop+7) + '" x2="' + (bx1-6) + '" y2="' + (byTop+7) + '" stroke="#fbbf24" stroke-width="1.4"/>');
+      s.push('<line x1="' + (bx0+6) + '" y1="' + (byBot-7) + '" x2="' + (bx1-6) + '" y2="' + (byBot-7) + '" stroke="#fbbf24" stroke-width="1.4"/>');
+      s.push('<line x1="' + (bx0-18) + '" y1="' + (byTop+5) + '" x2="' + bx0 + '" y2="' + (byTop+5) + '" stroke="#737373" stroke-width="1" stroke-dasharray="5 3"/>');
+      s.push('<line x1="' + (bx0-18) + '" y1="' + (byBot-5) + '" x2="' + bx0 + '" y2="' + (byBot-5) + '" stroke="#737373" stroke-width="1" stroke-dasharray="5 3"/>');
+      s.push('<line x1="' + bx1 + '" y1="' + (byTop+5) + '" x2="' + (bx1+18) + '" y2="' + (byTop+5) + '" stroke="#737373" stroke-width="1" stroke-dasharray="5 3"/>');
+      s.push('<line x1="' + bx1 + '" y1="' + (byBot-5) + '" x2="' + (bx1+18) + '" y2="' + (byBot-5) + '" stroke="#737373" stroke-width="1" stroke-dasharray="5 3"/>');
+
+      // ===== Labels — same style as previous file =====
+      // Plain
+      var midP = (yPlainTop + yPlainBot) / 2;
+      s.push('<line x1="' + drawRight + '" y1="' + midP + '" x2="' + leaderEnd + '" y2="' + midP + '" stroke="#52525b" stroke-width="1"/>');
+      txt(midP - 10, "العادية PC", "#f8fafc", 13, true);
+      if (plain) {
+        txt(midP + 6, "قراءة القامة = " + fmt(plain.reading,3) + " م", "#4ade80", 12, true);
+        txt(midP + 20, "المنسوب = " + fmt(plain.elev,3) + " م", "#7dd3fc", 12, true);
+      }
+
+      // RC — first / main style like before; extras listed under same block
+      var midR = (yRcTop + yRcBot) / 2;
+      s.push('<line x1="' + drawRight + '" y1="' + midR + '" x2="' + leaderEnd + '" y2="' + midR + '" stroke="#52525b" stroke-width="1"/>');
+      if (rcs.length === 0) {
+        txt(midR + 4, "المسلحة RC", "#fbbf24", 13, true);
+      } else if (rcs.length === 1) {
+        txt(midR - 10, "المسلحة RC", "#fbbf24", 13, true);
+        txt(midR + 6, "قراءة القامة = " + fmt(rcs[0].reading,3) + " م", "#4ade80", 12, true);
+        txt(midR + 20, "المنسوب = " + fmt(rcs[0].elev,3) + " م", "#7dd3fc", 12, true);
+      } else {
+        // keep same wording style, numbered
+        var yR = midR - 6;
+        rcs.forEach(function(r, i) {
+          txt(yR, "المسلحة RC" + (i+1), "#fbbf24", 12, true);
+          txt(yR + 14, "قراءة القامة = " + fmt(r.reading,3) + " م", "#4ade80", 11, true);
+          txt(yR + 28, "المنسوب = " + fmt(r.elev,3) + " م", "#7dd3fc", 11, true);
+          yR += 46;
+        });
+      }
+
+      // Beam
+      var midB = (byTop + byBot) / 2;
+      s.push('<line x1="' + drawRight + '" y1="' + midB + '" x2="' + leaderEnd + '" y2="' + midB + '" stroke="#52525b" stroke-width="1"/>');
+      if (beams.length <= 1) {
+        txt(midB - 10, "السمل / الميدة", "#38bdf8", 13, true);
+        if (beams[0]) {
+          txt(midB + 6, "قراءة القامة = " + fmt(beams[0].reading,3) + " م", "#4ade80", 12, true);
+          txt(midB + 20, "المنسوب = " + fmt(beams[0].elev,3) + " م", "#7dd3fc", 12, true);
+        }
+      } else {
+        var yB = midB - 6;
+        beams.forEach(function(b, i) {
+          txt(yB, "السمل / الميدة " + (i+1), "#38bdf8", 12, true);
+          txt(yB + 14, "قراءة القامة = " + fmt(b.reading,3) + " م", "#4ade80", 11, true);
+          txt(yB + 28, "المنسوب = " + fmt(b.elev,3) + " م", "#7dd3fc", 11, true);
+          yB += 46;
+        });
+      }
+
+      // Column
+      var midC = (yColTop + yColBot) / 2;
+      s.push('<line x1="' + drawRight + '" y1="' + midC + '" x2="' + leaderEnd + '" y2="' + midC + '" stroke="#52525b" stroke-width="1"/>');
+      txt(midC + 4, nF > 1 ? ("عمود × " + nF) : "عمود", "#e5e5e5", 13, true);
+
+      s.push('</svg>');
+      wrap.innerHTML = s.join("");
+    }
+
+    window.updateFndHI = updateFndHI;
+    window.calcFound = calcFound;
+    window.resetFound = resetFound;
+    window.drawFoundDiagram = drawFoundDiagram;
+
+
+    /* ===== Fullscreen croquis for all diagrams ===== */
+    
+    /* Keep basemap visible at high zoom (Esri gray-tile workaround) */
+    function bindMapZoomFallback(map, satLayer, osmLayer) {
+      if (!map || map._zoomFallbackBound) return;
+      map._zoomFallbackBound = true;
+      map.options.maxZoom = 22;
+      if (typeof map.setMaxZoom === "function") map.setMaxZoom(22);
+      if (satLayer) {
+        satLayer.options.maxZoom = 18;
+        satLayer.options.maxNativeZoom = 18;
+        if (satLayer.options) {
+          try { if (map.hasLayer(satLayer)) { /* refresh options */ } } catch (e) {}
+        }
+      }
+      function ensureOsm() {
+        if (osmLayer) return osmLayer;
+        if (map._fallbackOsm) return map._fallbackOsm;
+        try {
+          map._fallbackOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 22, maxNativeZoom: 19, attribution: "© OpenStreetMap"
+          });
+          osmLayer = map._fallbackOsm;
+        } catch (e) {}
+        return osmLayer;
+      }
+      function apply() {
+        var z = map.getZoom();
+        if (z >= 18) {
+          var osm = ensureOsm();
+          if (osm && !map.hasLayer(osm)) {
+            try { osm.addTo(map); osm.bringToBack(); } catch (e) {}
+          }
+          // hide broken sat detail by keeping OSM on top when very close
+          if (z >= 19 && osm && map.hasLayer(osm)) {
+            try { osm.bringToFront(); } catch (e) {}
+          }
+        }
+      }
+      map.on("zoomend", apply);
+      map.on("zoom", apply);
+      apply();
+    }
+    window.bindMapZoomFallback = bindMapZoomFallback;
+
+    /* Auto-bind zoom fallback for any Leaflet map with sat tiles */
+    (function(){
+      function tryBind(){
+        if (typeof L === "undefined" || typeof bindMapZoomFallback !== "function") return;
+        document.querySelectorAll(".leaflet-container").forEach(function(el){
+          var map = el._leaflet_map || (el._leaflet && el._leaflet.map);
+          // Leaflet stores map in el._leaflet_id internal; use map instances we know
+        });
+        // known globals
+        try {
+          if (typeof mm !== "undefined" && mm.map) bindMapZoomFallback(mm.map, mm.sat, mm.osm);
+        } catch(e){}
+      }
+      setInterval(tryBind, 2000);
+    })();
+
+
+function openCroquisFS(fromEl, title) {
+      var ov = $("croquis-fs-overlay");
+      var body = $("croquis-fs-body");
+      var ttl = $("croquis-fs-title");
+      if (!ov || !body) return;
+      var src = fromEl;
+      if (typeof fromEl === "string") src = $(fromEl);
+      if (!src) return;
+      var svg = src.querySelector ? src.querySelector("svg") : null;
+      if (!svg && src.tagName && src.tagName.toLowerCase() === "svg") svg = src;
+      if (!svg) {
+        // try parent diagram-box
+        var box = src.closest ? src.closest(".diagram-box") : null;
+        if (box) svg = box.querySelector("svg");
+      }
+      if (!svg) { alert("لا يوجد كروكي للعرض"); return; }
+      if (ttl) ttl.textContent = title || "كروكي";
+      body.innerHTML = "";
+      body.appendChild(svg.cloneNode(true));
+      ov.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function closeCroquisFS() {
+      var ov = $("croquis-fs-overlay");
+      if (ov) ov.classList.remove("open");
+      document.body.style.overflow = "";
+      var body = $("croquis-fs-body");
+      if (body) body.innerHTML = "";
+    }
+    window.openCroquisFS = openCroquisFS;
+    window.closeCroquisFS = closeCroquisFS;
+
+    function enhanceDiagramBoxes() {
+      document.querySelectorAll(".diagram-box").forEach(function(box) {
+        if (box.getAttribute("data-fs") === "1") return;
+        box.setAttribute("data-fs", "1");
+        var title = box.querySelector(".diagram-title");
+        var wrap = box.querySelector("[id$='svg-wrap'], [id*='svg'], svg") || box;
+        if (!title) {
+          title = document.createElement("div");
+          title.className = "diagram-title";
+          title.textContent = "كروكي";
+          box.insertBefore(title, box.firstChild);
+        }
+        // avoid duplicating button
+        if (title.querySelector(".croquis-fs-btn")) return;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "croquis-fs-btn";
+        btn.textContent = "ملء الشاشة";
+        btn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          var t = (title.childNodes[0] && title.childNodes[0].nodeType === 3)
+            ? title.childNodes[0].textContent.trim()
+            : (title.textContent || "كروكي").replace("ملء الشاشة", "").trim();
+          openCroquisFS(box, t || "كروكي");
+        });
+        title.appendChild(btn);
+      });
+    }
+    // observe DOM for dynamically shown diagrams
+    if (typeof MutationObserver !== "undefined") {
+      var _fsObs = new MutationObserver(function() { enhanceDiagramBoxes(); });
+      _fsObs.observe(document.documentElement, { childList: true, subtree: true });
+    }
+    document.addEventListener("DOMContentLoaded", enhanceDiagramBoxes);
+    setTimeout(enhanceDiagramBoxes, 800);
+    setInterval(enhanceDiagramBoxes, 3000);
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") closeCroquisFS();
+    });
+
+    /* ===== Satellite low alert: after 1 min, then periodic ===== */
+
+    function satBeep() {
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!window._satAudioCtx) window._satAudioCtx = new Ctx();
+        var ctx = window._satAudioCtx;
+        if (ctx.state === "suspended") ctx.resume();
+        var now = ctx.currentTime;
+        [0, 0.17, 0.34, 0.51, 0.68].forEach(function(dt, i) {
+          var o = ctx.createOscillator();
+          var g = ctx.createGain();
+          o.type = "square";
+          o.frequency.value = i % 2 === 0 ? 980 : 740;
+          g.gain.setValueAtTime(0.0001, now + dt);
+          g.gain.exponentialRampToValueAtTime(0.3, now + dt + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + dt + 0.13);
+          o.connect(g); g.connect(ctx.destination);
+          o.start(now + dt);
+          o.stop(now + dt + 0.14);
+        });
+      } catch (e) { try { console.warn("satBeep", e); } catch (x) {} }
+    }
+
+    function ensureSatAlertUI() {
+      var el = document.getElementById("cp-sat-alert");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "cp-sat-alert";
+        el.setAttribute("role", "alert");
+        el.textContent = "عدد الأقمار أقل من 15 — القراءة غير دقيقة";
+        document.body.appendChild(el);
+      }
+      return el;
+    }
+
+    function showSatLowAlert() {
+      var el = ensureSatAlertUI();
+      el.textContent = "عدد الأقمار أقل من 15 — القراءة غير دقيقة";
+      el.classList.add("show");
+      // paint the satellite bar itself in red with the message
+      var hud = document.getElementById("cp-hud");
+      var bar = hud ? hud.querySelector(".cp-bar") : null;
+      if (bar) {
+        if (!bar.getAttribute("data-old-html")) bar.setAttribute("data-old-html", bar.innerHTML);
+        bar.style.background = "#7f1d1d";
+        bar.style.borderColor = "#f87171";
+        bar.style.color = "#fef2f2";
+        bar.innerHTML = '<span style="color:#fecaca;font-weight:800;font-size:0.82rem;direction:rtl;display:block;text-align:center;width:100%;">عدد الأقمار أقل من 15 — القراءة غير دقيقة</span>';
+      }
+      if (hud) hud.classList.add("sat-low");
+      var se = document.getElementById("cp-sat");
+      if (se) { se.style.color = "#fca5a5"; }
+      satBeep();
+      clearTimeout(showSatLowAlert._t);
+      showSatLowAlert._t = setTimeout(function() {
+        el.classList.remove("show");
+        if (hud) hud.classList.remove("sat-low");
+        if (bar && bar.getAttribute("data-old-html")) {
+          bar.innerHTML = bar.getAttribute("data-old-html");
+          bar.removeAttribute("data-old-html");
+          bar.style.background = "";
+          bar.style.borderColor = "";
+          bar.style.color = "";
+        }
+      }, 3000);
+    }
+
+    function satLowCycle() {
+      try {
+        // ensure HUD numbers exist
+        if (typeof HUD === "undefined") return;
+        // force low count
+        HUD.sat = 12 + Math.floor(Math.random() * 2);
+        if (typeof hudSet === "function") hudSet();
+        else {
+          var se = document.getElementById("cp-sat");
+          if (se) se.textContent = String(Math.round(HUD.sat));
+        }
+        showSatLowAlert();
+        // after 3s raise to 16–24
+        setTimeout(function() {
+          try {
+            var up = 16 + Math.floor(Math.random() * 9);
+            HUD.sat = up;
+            if (typeof tween === "function" && typeof hudSet === "function") {
+              tween("satUp", 12, up, 700, function(v) {
+                HUD.sat = v;
+                hudSet();
+              });
+            } else if (typeof hudSet === "function") {
+              hudSet();
+            } else {
+              var se2 = document.getElementById("cp-sat");
+              if (se2) se2.textContent = String(up);
+            }
+          } catch (e2) {}
+        }, 3000);
+      } catch (e) { try { console.warn("satLowCycle", e); } catch (x) {} }
+    }
+
+    // unlock audio on first user tap (iOS)
+    (function() {
+      function unlock() {
+        try {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          if (!Ctx) return;
+          if (!window._satAudioCtx) window._satAudioCtx = new Ctx();
+          window._satAudioCtx.resume();
+        } catch (e) {}
+        document.removeEventListener("touchstart", unlock);
+        document.removeEventListener("click", unlock);
+      }
+      document.addEventListener("touchstart", unlock, { once: true, passive: true });
+      document.addEventListener("click", unlock, { once: true });
+    })();
+
+    // first after 20s, then every 2 minutes
+    setTimeout(function() {
+      satLowCycle();
+      setInterval(satLowCycle, 120000);
+    }, 20000);
+
+    window.checkSatLow = function() { satLowCycle(); };
+    window.showSatLowAlert = showSatLowAlert;
+    window.satLowCycle = satLowCycle;
+    window.satBeep = satBeep;
+
+
 
     /* Theme toggle */
     /* ===== Theme + Sound controls ===== */
@@ -10570,7 +12212,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
           level = cl - Math.abs(dist) * slope;
         } else {
           // one-way: left high, right low (or based on slope from left)
-          level = cl - (dist + half) * slope;
+          level = cl - dist * slope; // المحور هو منسوب CL عند المنتصف، اليسار أعلى
         }
         const reading = hi - level;
         let label;
@@ -10583,7 +12225,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       // ensure right edge
       if (Math.abs(points[points.length - 1].dist - half) > 0.001) {
         const dist = half;
-        let level = crossType === "crown" ? cl - half * slope : cl - width * slope;
+        let level = crossType === "crown" ? cl - half * slope : cl - half * slope;
         points.push({ dist, level, reading: hi - level, label: "يمين " + fmt(half, 2) });
       }
 
@@ -10603,6 +12245,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       const clStart = num("road-cl-start");
       const clEnd = num("road-cl-end");
       const longInt = num("road-long-int") || 5;
+      const sta0 = num("road-sta0") || 0;
       if (len !== null && len > 0 && clStart !== null && clEnd !== null) {
         const longPts = [];
         for (let s = 0; s <= len + 0.0001; s += longInt) {
@@ -10619,10 +12262,12 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
         lb.innerHTML = "";
         longPts.forEach(p => {
           const tr = document.createElement("tr");
-          tr.innerHTML = "<td>" + fmt(p.dist, 2) + "</td><td>" + fmt(p.level) + "</td><td>" + fmt(p.reading) + "</td>";
+          tr.innerHTML = "<td dir=\"ltr\">" + fmtSta(sta0 + p.dist) + "</td><td>" + fmt(p.dist, 2) + "</td><td>" + fmt(p.level) + "</td><td>" + fmt(p.reading) + "</td>";
           lb.appendChild(tr);
         });
         drawRoadLong(longPts, len);
+        roadSuper({hi, len, clStart, clEnd, width, pct, longInt, sta0});
+        roadQty({hi, len, clStart, clEnd, width, longInt, sta0});
         $("road-long-wrap").style.display = "block";
       } else {
         $("road-long-wrap").style.display = "none";
@@ -10700,12 +12345,84 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       $("road-long-svg").innerHTML = html;
     }
 
+
+    /* ===== ROADS: Stations / Superelevation / Quantities ===== */
+    function fmtSta(m) {
+      const neg = m < 0; m = Math.abs(m);
+      const km = Math.floor(m / 1000), r = m - km * 1000;
+      return (neg ? "-" : "") + km + "+" + r.toFixed(3).padStart(7, "0");
+    }
+    function roadTbl(heads, rows) {
+      return '<div class="table-wrap"><table><thead><tr>' + heads.map(h => "<th>" + h + "</th>").join("") +
+        "</tr></thead><tbody>" + rows.map(r => "<tr>" + r.map(c => "<td>" + c + "</td>").join("") + "</tr>").join("") + "</tbody></table></div>";
+    }
+    function roadStations(len, step, extra) {
+      const set = new Set();
+      for (let x = 0; x < len - 0.0001; x += step) set.add(+x.toFixed(4));
+      set.add(+len.toFixed(4));
+      (extra || []).forEach(x => { if (x > 0 && x < len) set.add(+x.toFixed(4)); });
+      return [...set].sort((a, b) => a - b);
+    }
+    function roadSuper(o) {
+      const out = $("road-se-out");
+      const mode = $("road-se-mode").value, e = num("road-se-e"), Lt = num("road-se-lt") || 0, Lr = num("road-se-lr") || 0;
+      if (mode === "none" || e === null || o.pct === null || Lr <= 0) { out.style.display = "none"; return; }
+      const sc = o.pct / 100, ee = e / 100, half = o.width / 2;
+      const so = s => s <= Lt ? (Lt > 0 ? -sc * (1 - s / Lt) : 0) : (s < Lt + Lr ? ee * (s - Lt) / Lr : ee);
+      const cl = s => o.clStart + (o.clEnd - o.clStart) * s / o.len;
+      const rows = roadStations(o.len, o.longInt, [Lt, Lt + Lr]).map(s => {
+        const sOut = so(s), sIn = -Math.max(sc, sOut), c = cl(s);
+        const out_ = c + sOut * half, in_ = c + sIn * half;
+        const L = mode === "right" ? out_ : in_, R = mode === "right" ? in_ : out_;
+        return ['<span dir="ltr">' + fmtSta(o.sta0 + s) + "</span>", fmt(s, 2), fmt(L), fmt(o.hi - L), fmt(c), fmt(R), fmt(o.hi - R),
+          fmt(sOut * 100, 2) + "%", fmt(sIn * 100, 2) + "%"];
+      });
+      let html = '<div class="section"><div class="section-title">Superelevation — مناسيب الحواف</div>' +
+        roadTbl(["المحطة", "م", "حافة يسار", "ق", "المحور", "حافة يمين", "ق", "ميل خارجي", "ميل داخلي"], rows) +
+        (Lt + Lr > o.len ? '<p class="note">⚠ طول الانتقال (Lt+Lr) أكبر من طول القطاع، فلن يصل الميل لـ e الكامل.</p>' : "") +
+        '<p class="note">الميل موجب = يعلو ناحية الحافة. ق = قراءة القامة. الدوران حول المحور.</p></div>';
+      out.innerHTML = html; out.style.display = "block";
+    }
+    function roadQty(o) {
+      const out = $("road-qty-out");
+      const ta = (num("road-t-asp") || 0) / 100, tb = (num("road-t-base") || 0) / 100, ts = (num("road-t-sub") || 0) / 100;
+      const n0 = num("road-ngl-s"), n1 = num("road-ngl-e");
+      const hasNGL = n0 !== null && n1 !== null, T = ta + tb + ts;
+      if (T <= 0 && !hasNGL) { out.style.display = "none"; return; }
+      const sts = roadStations(o.len, o.longInt), cl = s => o.clStart + (o.clEnd - o.clStart) * s / o.len;
+      let cut = 0, fill = 0, prev = null;
+      const rows = sts.map(s => {
+        const c = cl(s), topB = c - ta, topS = topB - tb, fg = topS - ts;
+        let ngl = "—", d = "—";
+        if (hasNGL) {
+          const g = n0 + (n1 - n0) * s / o.len, dd = g - fg;
+          ngl = fmt(g); d = (dd >= 0 ? "حفر " : "ردم ") + fmt(Math.abs(dd));
+          const a = { s, cut: Math.max(dd, 0) * o.width, fill: Math.max(-dd, 0) * o.width };
+          if (prev) { const L = s - prev.s; cut += (a.cut + prev.cut) / 2 * L; fill += (a.fill + prev.fill) / 2 * L; }
+          prev = a;
+        }
+        return ['<span dir="ltr">' + fmtSta(o.sta0 + s) + "</span>", fmt(c), fmt(topB), fmt(topS), fmt(fg), ngl, d];
+      });
+      let html = '<div class="section"><div class="section-title">طبقات الرصف والكميات</div>' +
+        roadTbl(["المحطة", "سطح الأسفلت", "سطح Base", "سطح Subbase", "Subgrade", "NGL", "حفر/ردم (م)"], rows);
+      const A = o.width * o.len, vr = [];
+      if (ta > 0) vr.push(["أسفلت", fmt(A * ta, 2)]);
+      if (tb > 0) vr.push(["Base", fmt(A * tb, 2)]);
+      if (ts > 0) vr.push(["Subbase", fmt(A * ts, 2)]);
+      if (hasNGL) vr.push(["حفر (تقريبي)", fmt(cut, 2)], ["ردم (تقريبي)", fmt(fill, 2)], ["الصافي (حفر − ردم)", fmt(cut - fill, 2)]);
+      html += '<div class="section-title" style="margin-top:12px;">الكميات (م³)</div>' + roadTbl(["البند", "الحجم م³"], vr) +
+        '<p class="note">مساحة الرصف = ' + fmt(A, 2) + " م². الحفر/الردم بطريقة Average End Area لمقطع مستطيل.</p></div>";
+      out.innerHTML = html; out.style.display = "block";
+    }
+
     function resetRoad() {
-      ["road-bm","road-bs","road-hi","road-cl","road-width","road-cross-pct","road-cross-int","road-len","road-cl-start","road-cl-end","road-long-int"].forEach(id => {
+      ["road-sta0","road-se-e","road-se-lt","road-se-lr","road-t-asp","road-t-base","road-t-sub","road-ngl-s","road-ngl-e","road-bm","road-bs","road-hi","road-cl","road-width","road-cross-pct","road-cross-int","road-len","road-cl-start","road-cl-end","road-long-int"].forEach(id => {
         if ($(id)) $(id).value = "";
       });
       if ($("road-cross-int")) $("road-cross-int").value = "1";
       if ($("road-long-int")) $("road-long-int").value = "5";
+      if ($("road-se-mode")) $("road-se-mode").value = "none";
+      $("road-se-out").style.display = "none"; $("road-qty-out").style.display = "none";
       $("road-results").style.display = "none";
       $("road-cross-body").innerHTML = "";
       $("road-long-body").innerHTML = "";
@@ -11401,7 +13118,7 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
   function fitAll(){
     if(!LM||!CUR) return;
     LM.invalidateSize();
-    LM.fitBounds(L.latLngBounds(CUR.map(function(r){ return [r.lat,r.lon]; })),{padding:[30,30],maxZoom:19});
+    LM.fitBounds(L.latLngBounds(CUR.map(function(r){ return [r.lat,r.lon]; })),{padding:[30,30],maxZoom: 22});
   }
   function drawPts(fit){
     if(!LM||!CUR) return;
@@ -11439,18 +13156,18 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
     var ov=ensureOV(); ov.style.display='flex';
     $g('sdr-ov-title').textContent=ll.length+' نقطة • صور قمر صناعي Esri';
     if(!LM){
-      LM=L.map($g('sdr-map'),{zoomControl:true});
+      LM=L.map($g('sdr-map'),{zoomControl:true,maxZoom:22,minZoom:2});
       var errs=0, ok=0, swapped=false;
       var U1='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
       var U2='https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-      var sat=L.tileLayer(U1,{maxZoom:20,maxNativeZoom:19,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(LM);
+      var sat=L.tileLayer(U1,{maxZoom: 18,maxNativeZoom:18,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(LM);
       sat.on('tileload',function(){ ok++; $g('sdr-ov-warn').style.display='none'; });
       sat.on('tileerror',function(){
         errs++;
         if(errs===3 && !ok && !swapped){ swapped=true; sat.setUrl(U2); }
         if(errs>=8 && !ok) showMapWarn();
       });
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:18}).addTo(LM);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom: 22,maxNativeZoom:18}).addTo(LM);
       setTimeout(function(){ if(!ok) showMapWarn(); },6000);
     }
     LM.invalidateSize();
@@ -12787,10 +14504,10 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     }
     var lk = document.querySelector('link[href*="leaflet"]'); if(lk) lk.media = 'all';
     if(M){ setTimeout(function(){ M.invalidateSize(); }, 80); return; }
-    M = L.map(box, {zoomControl: true}).setView([27.0, 30.0], 5);
-    var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom: 20, maxNativeZoom: 19, attribution: 'Esri, Maxar'});
-    var lab = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom: 20, maxNativeZoom: 18});
-    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap'});
+    M = L.map(box, {zoomControl: true, maxZoom: 22, minZoom: 2}).setView([27.0, 30.0], 5);
+    var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom: 22, maxNativeZoom: 19, attribution: 'Esri, Maxar'});
+    var lab = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom: 22, maxNativeZoom: 18});
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 22, attribution: '© OpenStreetMap'});
     var satG = L.layerGroup([sat, lab]).addTo(M);
     L.control.layers({'قمر صناعي (Esri)': satG, 'خريطة شوارع': osm}, null, {collapsed: true}).addTo(M);
     sat.on('tileload', function(){ tileOk++; });
@@ -12849,7 +14566,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
       m.bindPopup('<div style="direction:rtl;font-size:13px;line-height:1.7"><b>' + esc(p.name || ('P' + (i + 1))) + '</b><br>E: ' + Number(p.e).toFixed(3) + '<br>N: ' + Number(p.n).toFixed(3) + '<br>Zone: ' + p.zone + '<br>' + p.lat.toFixed(6) + ' , ' + p.lon.toFixed(6) + '<br><button type="button" onclick="cmDel(' + i + ')" style="margin-top:6px;padding:4px 10px;">حذف النقطة</button></div>');
       m.addTo(grp);
     });
-    if(fit && ll.length){ M.fitBounds(L.latLngBounds(ll), {padding: [30, 30], maxZoom: 18}); }
+    if(fit && ll.length){ M.fitBounds(L.latLngBounds(ll), {padding: [30, 30], maxZoom: 22}); }
     else if(!quiet && arr && arr.length){
       var q = arr[arr.length - 1];
       if(isFinite(q.lat) && isFinite(q.lon)) M.setView([q.lat, q.lon], Math.max(M.getZoom(), 16));
@@ -12882,7 +14599,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     if(!M){ window.cmInit(); return; }
     var ll = pts().filter(function(p){ return isFinite(p.lat) && isFinite(p.lon); }).map(function(p){ return [p.lat, p.lon]; });
     if(!ll.length){ status('مفيش نقاط لسه.', true); return; }
-    M.fitBounds(L.latLngBounds(ll), {padding: [30, 30], maxZoom: 18});
+    M.fitBounds(L.latLngBounds(ll), {padding: [30, 30], maxZoom: 22});
   };
   window.cmLocate = function(){
     if(!M){ window.cmInit(); return; }
@@ -13396,7 +15113,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     if(!AM||!CURLL) return;
     AM.invalidateSize();
     var b=[]; CURLL.forEach(function(x){ x.ll.forEach(function(r){ b.push([r.lat,r.lon]); }); });
-    if(b.length) AM.fitBounds(L.latLngBounds(b),{padding:[40,40],maxZoom:20});
+    if(b.length) AM.fitBounds(L.latLngBounds(b),{padding:[40,40],maxZoom: 22});
   }
   function drawAreas(fit){
     if(!AM||!CURLL) return;
@@ -13442,18 +15159,18 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     var ov=ensureOV(); ov.style.display='flex';
     $a('ar-ov-title').textContent=list.length+' Area • صور قمر صناعي Esri';
     if(!AM){
-      AM=L.map($a('ar-map'),{zoomControl:true});
+      AM=L.map($a('ar-map'),{zoomControl:true,maxZoom:22,minZoom:2});
       var errs=0, ok=0, swapped=false;
       var U1='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
       var U2='https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-      var sat=L.tileLayer(U1,{maxZoom:21,maxNativeZoom:19,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(AM);
+      var sat=L.tileLayer(U1,{maxZoom: 18,maxNativeZoom:18,attribution:'Esri, Maxar, Earthstar Geographics'}).addTo(AM);
       sat.on('tileload',function(){ ok++; $a('ar-ov-warn').style.display='none'; });
       sat.on('tileerror',function(){
         errs++;
         if(errs===3 && !ok && !swapped){ swapped=true; sat.setUrl(U2); }
         if(errs>=8 && !ok) showMapWarn();
       });
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:21,maxNativeZoom:18}).addTo(AM);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom: 22,maxNativeZoom:18}).addTo(AM);
       setTimeout(function(){ if(!ok) showMapWarn(); },6000);
     }
     AM.invalidateSize();
@@ -15105,7 +16822,7 @@ window.gisShowMap = function(){
     if(!LM || !CUR.length) return;
     try {
       LM.invalidateSize();
-      LM.fitBounds(L.latLngBounds(CUR.map(function(r){ return [r.lat, r.lon]; })), {padding: [30, 30], maxZoom: 19});
+      LM.fitBounds(L.latLngBounds(CUR.map(function(r){ return [r.lat, r.lon]; })), {padding: [30, 30], maxZoom: 22});
     } catch(e){}
   }
   function drawPts(){
@@ -15161,12 +16878,12 @@ window.gisShowMap = function(){
     (CUR.length || 0) + ' نقطة • Esri • ' + sysLabel + (d.sys === 'utm' ? ' Z'+(d.zone||'') : '');
 
   if(!LM){
-    LM = L.map(document.getElementById('gis-ov-map'), {zoomControl: true});
+    LM = L.map(document.getElementById('gis-ov-map'), {zoomControl: true, maxZoom: 22, minZoom: 2});
     G._ovMap = LM;
     var errs = 0, ok = 0, swapped = false;
     var U1 = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
     var U2 = 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-    var sat = L.tileLayer(U1, {maxZoom: 20, maxNativeZoom: 19, attribution: 'Esri'}).addTo(LM);
+    var sat = L.tileLayer(U1, {maxZoom: 18, maxNativeZoom: 18, attribution: 'Esri'}).addTo(LM);
     sat.on('tileload', function(){ ok++; var w = document.getElementById('gis-ov-warn'); if(w) w.style.display = 'none'; });
     sat.on('tileerror', function(){
       errs++;
@@ -15180,7 +16897,7 @@ window.gisShowMap = function(){
         }
       }
     });
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom: 20, maxNativeZoom: 18}).addTo(LM);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom: 22, maxNativeZoom: 18}).addTo(LM);
   }
 
   setTimeout(function(){ LM.invalidateSize(); drawPts(); fitAll(); }, 100);
@@ -15530,8 +17247,8 @@ window.attrShowMap = function(){
   if(typeof L==='undefined'){ alert('مكتبة الخريطة غير محمّلة'); return; }
   mapEl.style.display='block';
   if(!AD.map){
-    AD.map=L.map(mapEl,{zoomControl:true});
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:21,maxNativeZoom:19,attribution:'Esri'}).addTo(AD.map);
+    AD.map=L.map(mapEl,{zoomControl:true,maxZoom:22,minZoom:2});
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom: 22,maxNativeZoom:19,attribution:'Esri'}).addTo(AD.map);
   }
   if(AD.layer) AD.map.removeLayer(AD.layer);
   var g=L.layerGroup(), bounds=[];
@@ -15542,7 +17259,7 @@ window.attrShowMap = function(){
   });
   g.addTo(AD.map); AD.layer=g;
   AD.map.invalidateSize();
-  if(bounds.length) AD.map.fitBounds(bounds,{padding:[30,30],maxZoom:19});
+  if(bounds.length) AD.map.fitBounds(bounds,{padding:[30,30],maxZoom: 22});
   if(info) info.textContent='تم عرض '+ll.length+' نقطة'+(AD._fail?' • فشل '+AD._fail:'');
   setTimeout(function(){ if(AD.map) AD.map.invalidateSize(); }, 250);
 };
@@ -15590,7 +17307,7 @@ if(typeof _sv==='function'){
   window.showView=function(name){
     var r=_sv.apply(this, arguments);
     if(name==='gis'){ setTimeout(function(){ if(typeof gisShowPanel==='function') gisShowPanel('menu'); if(G.map) G.map.invalidateSize(); }, 200); }
-    if(name==='const'){ setTimeout(function(){ if(typeof slabEnsureThkFields==='function') slabEnsureThkFields(); }, 50); }
+    if(name==='const'||name==='const-slab'){ setTimeout(function(){ if(typeof slabEnsureThkFields==='function') slabEnsureThkFields(); }, 50); }
     return r;
   };
 }
@@ -15790,9 +17507,9 @@ window.ssShowMap = function(){
 
   var mapEl = document.getElementById('ss-ov-map');
   if(!SS.map){
-    SS.map = L.map(mapEl, {zoomControl: true});
+    SS.map = L.map(mapEl, {zoomControl: true, maxZoom: 22, minZoom: 2});
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 21, maxNativeZoom: 19, attribution: 'Esri'
+      maxZoom: 22, maxNativeZoom: 19, attribution: 'Esri'
     }).addTo(SS.map);
   }
   if(SS.layer) try { SS.map.removeLayer(SS.layer); } catch(e){}
@@ -15824,10 +17541,10 @@ window.ssShowMap = function(){
   g.addTo(SS.map);
   SS.layer = g;
   SS.map.invalidateSize();
-  if(bounds.length) SS.map.fitBounds(bounds, {padding: [40,40], maxZoom: 19});
+  if(bounds.length) SS.map.fitBounds(bounds, {padding: [40,40], maxZoom: 22});
   document.getElementById('ss-ov-fit').onclick = function(){
     SS.map.invalidateSize();
-    if(bounds.length) SS.map.fitBounds(bounds, {padding: [40,40], maxZoom: 19});
+    if(bounds.length) SS.map.fitBounds(bounds, {padding: [40,40], maxZoom: 22});
   };
   setTimeout(function(){ SS.map.invalidateSize(); }, 250);
   var info = $('ss-map-info');
@@ -16737,7 +18454,7 @@ function cvHTML(d){
    });
   });
  }
- var css='@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,"Segoe UI",Tahoma,sans-serif;color:#0f172a;font-size:10.5pt;line-height:1.5;margin:0;padding:14mm;background:#fff}h1{font-size:22pt;font-weight:800;margin:0 0 3px;letter-spacing:0.8px;color:#0f172a;text-transform:uppercase;text-align:center}.t{font-size:12.5pt;font-weight:600;margin:0 0 8px;color:#334155;text-align:center}.c{font-size:9.5pt;margin:0 0 3px;color:#475569;line-height:1.55;text-align:center}h2{font-size:11pt;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#1e5a8a;border-bottom:2px solid #1e5a8a;margin:16px 0 9px;padding-bottom:3px}p{margin:0 0 6px;text-align:justify}p.sk{line-height:1.7}ul{margin:4px 0 6px;padding-'+pad+':18px}li{margin-bottom:3px;line-height:1.45}.j{margin-bottom:4px;page-break-inside:avoid;padding-bottom:10px}.j-sep{border-bottom:2px solid #64748b;margin-bottom:18px;padding-bottom:16px}.role{font-weight:700;font-size:11pt;color:#0f172a;margin-bottom:2px}.co{font-size:10pt;font-weight:600;color:#1e293b;margin-bottom:3px}.proj{font-size:11.2pt;font-weight:800;color:#1e5a8a;margin:12px 0 6px;letter-spacing:0.3px;padding-top:8px;border-top:1.5px solid #94a3b8}.meta{font-size:9.3pt;color:#64748b;margin-bottom:3px}.cert-page{page-break-before:always;break-before:page;margin:0;padding:0;text-align:center}.cert-page .cert-label{font-size:9pt;color:#64748b;margin-bottom:8px;font-weight:600}.cert-page img{max-width:100%;max-height:250mm;object-fit:contain;display:block;margin:0 auto}@media print{body{padding:0}.cert-page{page-break-before:always;break-before:page}}';
+ var css='@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,"Segoe UI",Tahoma,sans-serif;color:#0f172a;font-size:10.5pt;line-height:1.5;margin:0;padding:14mm;background:#fff}h1{font-size:22pt;font-weight:800;margin:0 0 3px;letter-spacing:0.8px;color:#0f172a;text-transform:uppercase;text-align:center}.t{font-size:12.5pt;font-weight:600;margin:0 0 8px;color:#334155;text-align:center}.c{font-size:9.5pt;margin:0 0 3px;color:#475569;line-height:1.55;text-align:center}h2{font-size:11pt;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#1e5a8a;border-bottom:2px solid #1e5a8a;margin:16px 0 9px;padding-bottom:3px}p{margin:0 0 6px;text-align:justify}p.sk{line-height:1.7}ul{margin:4px 0 6px;padding-'+pad+':18px}li{margin-bottom:3px;line-height:1.45}.j{margin-bottom:4px;padding-bottom:10px}.proj,.role,.co,.meta{break-after:avoid;page-break-after:avoid}li{break-inside:avoid;page-break-inside:avoid}.j-sep{border-bottom:2px solid #64748b;margin-bottom:18px;padding-bottom:16px}.role{font-weight:700;font-size:11pt;color:#0f172a;margin-bottom:2px}.co{font-size:10pt;font-weight:600;color:#1e293b;margin-bottom:3px}.proj{font-size:11.2pt;font-weight:800;color:#1e5a8a;margin:12px 0 6px;letter-spacing:0.3px;padding-top:8px;border-top:1.5px solid #94a3b8}.meta{font-size:9.3pt;color:#64748b;margin-bottom:3px}.cert-page{page-break-before:always;break-before:page;margin:0;padding:0;text-align:center}.cert-page .cert-label{font-size:9pt;color:#64748b;margin-bottom:8px;font-weight:600}.cert-page img{max-width:100%;max-height:250mm;object-fit:contain;display:block;margin:0 auto}@media print{body{padding:0}.cert-page{page-break-before:always;break-before:page}}';
  return '<!DOCTYPE html><html lang="'+(rtl?'ar':'en')+'" dir="'+(rtl?'rtl':'ltr')+'"><head><meta charset="utf-8"><title>'+esc(d.name||'CV')+'</title><style>'+css+'</style></head><body>'+h+certHtml+'</body></html>';
 }
 function preview(backFn){
@@ -16913,30 +18630,32 @@ function cvBuildPages(fr,html){
      var nh=node.offsetHeight+20;
      cur.removeChild(node);
      var kids=splitKids(node);
-     /* لو العنصر أطول من صفحة كاملة: يتقسّم في مكانه بدل ما يسيب عنوانه لوحده */
-     if(!(kids&&kids.length>1&&nh>INNER)){
-      if(cur.children.length){newPage();cur.appendChild(node);if(!over())return;cur.removeChild(node)}
-     }
      if(kids&&kids.length>1){
+      /* قسّم العنصر في نفس الصفحة بدل ما ينط كله للصفحة اللي بعدها ويسيب فراغ أبيض:
+         ينتقل لصفحة جديدة فقط لو أول جزء (العنوان + أول بند) مش داخل في المساحة المتبقية */
+      var k0=kids[0];cur.appendChild(k0);var fits=!over();cur.removeChild(k0);
+      if(!fits&&cur.children.length)newPage();
       kids.forEach(placeOne);
       if(node.classList&&node.classList.contains('j')){
        var sep=doc.createElement('div');sep.style.cssText='border-bottom:2px solid #64748b;margin:6px 0 14px';placeOne(sep);
       }
-     }else{cur.appendChild(node)}
+      return;
+     }
+     if(cur.children.length){newPage();cur.appendChild(node);if(!over())return;cur.removeChild(node)}
+     cur.appendChild(node);
     }
     newPage();
     for(var i=0;i<flow.length;i++){
      var nd=flow[i];
      if(nd.tagName==='H2'&&flow[i+1]){
-      var nx=flow[i+1];
-      cur.appendChild(nd);cur.appendChild(nx);
-      if(!over()){i++;continue}
-      cur.removeChild(nx);cur.removeChild(nd);
-      if(cur.children.length)newPage();
-      cur.appendChild(nd);cur.appendChild(nx);
-      if(!over()){i++;continue}
-      cur.removeChild(nx);
-      placeOne(nx);i++;
+      /* العنوان يفضل مع أول جزء من اللي بعده فقط (مش العنصر كله) عشان ما يتسبش فراغ */
+      var nx=flow[i+1],probe=splitKids(nx.cloneNode(true));
+      var first=(probe&&probe.length>1)?probe[0]:nx.cloneNode(true);
+      cur.appendChild(nd);cur.appendChild(first);
+      var ok=!over();
+      cur.removeChild(first);cur.removeChild(nd);
+      if(!ok&&cur.children.length)newPage();
+      placeOne(nd);placeOne(nx);i++;
       continue;
      }
      placeOne(nd);
@@ -17139,6 +18858,208 @@ function resetNow(){D=emptyD();LAST={text:'',pages:1,name:'',res:null};try{local
 function close_(){ov.classList.remove('on');document.body.classList.remove('cv-open');window.scrollTo(0,Y)}
 window.CV={addPhone:addPhone,delPhone:delPhone,clearAll:clearAll,resetNow:resetNow,resetAsk:resetAsk,open:open_,close:close_,menu:menu,evalScreen:evalScreen,build:build,add:add,del:del,preview:preview,print:printCV,savePdf:savePdf,downloadWord:downloadWord,autoFix:autoFix,fixToEditor:fixToEditor,evalBack:evalBack,addCerts:addCerts,delCert:delCert,translateCV:translateCV,translateFromEval:translateFromEval,submitCvGate:submitCvGate,cvGate:cvGate};
 
+})();
+</script>
+
+
+
+
+<div id="croquis-fs-overlay" dir="rtl">
+  <div class="fs-head">
+    <span id="croquis-fs-title">كروكي</span>
+    <button type="button" class="fs-close" onclick="closeCroquisFS()">إغلاق</button>
+  </div>
+  <div class="fs-body" id="croquis-fs-body"></div>
+</div>
+
+<script>
+/* Independent satellite low-alert — does not rely on other app modules */
+(function () {
+  var MSG = "عدد الأقمار أقل من 15 — القراءة غير دقيقة";
+  var firstDelay = 20000;
+  var repeatEvery = 120000;
+  var upAfter = 2000;
+
+  function $(id) { return document.getElementById(id); }
+
+  function beep() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      var ctx = window.__satWarnCtx || (window.__satWarnCtx = new AC());
+      if (ctx.state === "suspended") ctx.resume();
+      var t0 = ctx.currentTime;
+      [0, 0.16, 0.32, 0.48, 0.64].forEach(function (dt, i) {
+        var o = ctx.createOscillator();
+        var g = ctx.createGain();
+        o.type = "square";
+        o.frequency.value = i % 2 === 0 ? 990 : 700;
+        g.gain.setValueAtTime(0.0001, t0 + dt);
+        g.gain.exponentialRampToValueAtTime(0.32, t0 + dt + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dt + 0.12);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(t0 + dt);
+        o.stop(t0 + dt + 0.13);
+      });
+    } catch (e) {}
+  }
+
+  function unlockAudio() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      var ctx = window.__satWarnCtx || (window.__satWarnCtx = new AC());
+      ctx.resume();
+    } catch (e) {}
+  }
+  document.addEventListener("touchstart", unlockAudio, { passive: true, once: true });
+  document.addEventListener("click", unlockAudio, { once: true });
+
+  function setSatNumber(n) {
+    var el = $("cp-sat");
+    if (el) {
+      el.textContent = String(Math.round(n));
+      el.style.color = n < 15 ? "#fca5a5" : "#4ade80";
+      el.style.fontWeight = "800";
+    }
+    try {
+      if (window.HUD) {
+        window.HUD.sat = n;
+        if (typeof window.hudSet === "function") window.hudSet();
+      }
+    } catch (e) {}
+  }
+
+  function paintBarWarning(on) {
+    var hud = $("cp-hud");
+    var bar = hud ? hud.querySelector(".cp-bar") : null;
+    if (!bar) return;
+    if (on) {
+      if (!bar.getAttribute("data-sat-old")) bar.setAttribute("data-sat-old", bar.innerHTML);
+      bar.style.background = "#7f1d1d";
+      bar.style.border = "1px solid #f87171";
+      bar.style.color = "#fef2f2";
+      bar.innerHTML = '<span style="color:#fecaca;font-weight:800;font-size:0.82rem;direction:rtl;display:block;text-align:center;width:100%;padding:2px 4px;">' + MSG + "</span>";
+      if (hud) hud.classList.add("sat-low");
+    } else {
+      var old = bar.getAttribute("data-sat-old");
+      if (old != null) {
+        bar.innerHTML = old;
+        bar.removeAttribute("data-sat-old");
+      }
+      bar.style.background = "";
+      bar.style.border = "";
+      bar.style.color = "";
+      if (hud) hud.classList.remove("sat-low");
+    }
+  }
+
+  function ensureToast() {
+    var el = $("cp-sat-alert");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "cp-sat-alert";
+      el.setAttribute("role", "alert");
+      el.style.cssText = "display:none;position:fixed;left:10px;right:10px;bottom:120px;z-index:2147483646;background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fef2f2;border:1px solid #fca5a5;border-radius:12px;padding:12px;font-size:0.9rem;font-weight:800;text-align:center;direction:rtl;box-shadow:0 8px 28px rgba(0,0,0,0.5);";
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  function cycle() {
+    stopLiveSatLock();
+    // 1) drop below 15
+    setSatNumber(12 + Math.floor(Math.random() * 2));
+    // 2) red message on bar + toast + beep
+    paintBarWarning(true);
+    var toast = ensureToast();
+    toast.textContent = MSG;
+    toast.style.display = "block";
+    toast.classList.add("show");
+    beep();
+    // 3) after 3s restore higher count
+    setTimeout(function () {
+      var up = 16 + Math.floor(Math.random() * 9); // 16-24
+      paintBarWarning(false);
+      setSatNumber(up);
+      var se = $("cp-sat");
+      if (se) {
+        se.textContent = String(up);
+        se.style.color = "#4ade80";
+        se.style.fontWeight = "800";
+      }
+      var t = $("cp-sat-alert");
+      if (t) {
+        t.style.display = "none";
+        t.classList.remove("show");
+      }
+      // start live satellite lock simulation (16–24, changes often)
+      startLiveSatLock();
+    }, upAfter);
+  }
+
+  var _liveSatTimer = null;
+  function startLiveSatLock() {
+    if (_liveSatTimer) clearInterval(_liveSatTimer);
+    // gentle live updates every 1.2–2.8s so it feels like real lock
+    function tick() {
+      var cur = 18;
+      try {
+        var se = $("cp-sat");
+        if (se) {
+          var v = parseInt(se.textContent, 10);
+          if (!isNaN(v)) cur = v;
+        }
+      } catch (e) {}
+      // step ±1 most of the time, occasional ±2, stay in 16–24
+      var step = Math.random() < 0.2 ? (Math.random() < 0.5 ? -2 : 2) : (Math.random() < 0.5 ? -1 : 1);
+      var next = cur + step;
+      if (next < 16) next = 16 + Math.floor(Math.random() * 2);
+      if (next > 24) next = 23 + Math.floor(Math.random() * 2);
+      setSatNumber(next);
+      var se2 = $("cp-sat");
+      if (se2) {
+        se2.style.color = "#4ade80";
+        se2.style.fontWeight = "800";
+        // tiny flash to feel "live"
+        se2.style.transition = "opacity 0.2s";
+        se2.style.opacity = "0.55";
+        setTimeout(function () { se2.style.opacity = "1"; }, 120);
+      }
+      // schedule next with slight randomness
+      if (_liveSatTimer) clearTimeout(_liveSatTimer);
+      var delay = 1200 + Math.floor(Math.random() * 1600);
+      _liveSatTimer = setTimeout(tick, delay);
+    }
+    // stop live lock while warning cycle runs
+    _liveSatTimer = setTimeout(tick, 800);
+  }
+  function stopLiveSatLock() {
+    if (_liveSatTimer) {
+      clearTimeout(_liveSatTimer);
+      _liveSatTimer = null;
+    }
+  }
+
+  function start() {
+    setTimeout(function () {
+      cycle();
+      setInterval(function () {
+        stopLiveSatLock();
+        cycle();
+      }, repeatEvery);
+    }, firstDelay);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+
+  // expose for manual test
+  window.__satWarnTest = cycle;
 })();
 </script>
 
