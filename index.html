@@ -4377,7 +4377,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <p class="note" style="margin-top:8px;">HI = منسوب الروبير + قراءة القامة على الروبير. بعد أول نقطة، كل نقطة جديدة تُحسب من النقطة السابقة.</p>
       </div>
 
-      <div class="section">
+      <div class="section" id="bm-add-sec">
         <div class="section-title"><span class="num">2</span> إضافة نقطة جديدة</div>
         <div id="bm-ref-box" class="note" style="margin-bottom:12px;border-color:var(--gold);display:none;"></div>
         <div class="form-group">
@@ -4508,6 +4508,17 @@ body.admin-edit #view-home .menu-card{clip-path:none}
             <p>ملف NGL × نقاط بمناسيب معلومة — قطع وردم</p>
           </div>
         </div>
+        <div class="menu-card menu-card-row" onclick="showView('qty-bnd'); if(window.qbInit) qbInit();">
+          <div class="menu-icon land">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round">
+              <path d="M4 7l8-3 8 4-2 10-9 3-5-6z" stroke-dasharray="3 2"/><path d="M9 10l6 5M15 10l-6 5"/>
+            </svg>
+          </div>
+          <div class="menu-text">
+            <h2><span class="en">Grid to Grid Boundary</span><span class="ar">شبكة إلى شبكة بالحدود</span></h2>
+            <p>NGL × نقاط بأكواد — حدود وقطع وردم لكل كود</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -4632,6 +4643,66 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <p class="note" style="display:block;">الفرق = المنسوب الجديد − منسوب NGL. الموجب ردم والسالب قطع. الملفين لازم يكونوا على نفس نظام الإحداثيات. ملفات DWG لازم تتحفظ DXF (Save As) قبل الرفع.</p>
       </div>
       <div id="qty-out"></div>
+    </div>
+
+    <!-- ===== QTY BOUNDARY: NGL vs coded points, per code ===== -->
+    <div id="view-qty-bnd" class="app-view">
+      <button class="back-btn" onclick="showView('qty-menu')">› الرجوع</button>
+      <div class="app-header">
+        <h2>شبكة إلى شبكة بالحدود — Grid to Grid Boundary</h2>
+        <p>كل مجموعة نقاط بكود واحد يتعمل لها حدود من نقاطها الخارجية، ويتحسب القطع والردم والصافي لكل كود على حدة</p>
+      </div>
+      <div class="section">
+        <div class="section-title">1) ملف NGL — الأرض الطبيعية قبل القطع</div>
+        <div class="form-group">
+          <label>الملف (SDR / GSI / Excel / TXT / CSV / DXF)</label>
+          <input type="file" id="qb-fa" accept="*/*" multiple>
+        </div>
+        <div class="form-group">
+          <label>Layers من DXF (اختياري، افصل بفاصلة)</label>
+          <input type="text" id="qb-lA" placeholder="مثال: GROUND, NGL">
+        </div>
+        <p id="qb-sA" class="note" style="display:block;margin-top:6px;">اختار ملف</p>
+      </div>
+      <div class="section">
+        <div class="section-title">2) ملف النقاط بالأكواد — بعد القطع / الردم</div>
+        <div class="form-group">
+          <label>الملف (SDR / GSI8 / GSI16 / PNT / TXT / CSV / Excel) — كل نقطة: رقم، N، E، Z، كود</label>
+          <input type="file" id="qb-fb" accept="*/*" multiple>
+        </div>
+        <p id="qb-sB" class="note" style="display:block;margin-top:6px;">اختار ملف</p>
+        <div id="qb-codes" style="margin-top:8px;"></div>
+      </div>
+      <div class="section">
+        <div class="section-title">3) الإعدادات</div>
+        <div class="form-group">
+          <label>ترتيب الإحداثيات (لملفات Text / CSV — SDR و GSI بيتعرفوا تلقائيًا)</label>
+          <select id="qb-order">
+            <option value="EN" selected>Easting ثم Northing (X, Y)</option>
+            <option value="NE">Northing ثم Easting</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>شكل الحدود</label>
+          <select id="qb-bmode">
+            <option value="hull" selected>توصيل النقاط الخارجية (محيط محدّب)</option>
+            <option value="auto">تتبّع شكل النقاط (يستبعد الفراغات)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="qb-usef" style="width:auto;"> تطبيق معاملات الانتفاخ والدمك (اختياري)</label>
+        </div>
+        <div id="qb-fbox" style="display:none;">
+          <div class="form-group"><label>معامل القطع (انتفاخ)</label><input type="number" id="qb-fcut" value="1" min="0.1" step="0.01"></div>
+          <div class="form-group"><label>معامل الردم (دمك)</label><input type="number" id="qb-ffill" value="1" min="0.1" step="0.01"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="qbCalc()">احسب الكميات لكل كود</button>
+          <button class="btn-reset" onclick="qbClear()">مسح</button>
+        </div>
+        <p class="note" style="display:block;">الفرق = المنسوب الجديد − منسوب NGL. الموجب ردم والسالب قطع. الصافي = قطع − ردم. الملفين لازم على نفس نظام الإحداثيات.</p>
+      </div>
+      <div id="qb-out"></div>
     </div>
 
     <!-- ===== LEVEL MENU (تسويات) ===== -->
@@ -4821,12 +4892,12 @@ body.admin-edit #view-home .menu-card{clip-path:none}
       <button class="back-btn" onclick="showView('home')">› الرجوع للقائمة</button>
       <div class="app-header">
         <h2>SDR &amp; Text Converter — محول SDR و Text</h2>
-        <p>حوّل ملف SDR من التوتل ستيشن إلى DXF (يفتح في AutoCAD) مع كروكي سريع للنقاط</p>
+        <p>حوّل ملف SDR / GSI8 / GSI16 / PNT / Text إلى DXF (نقاط بعلامة X — يفتح في AutoCAD) مع كروكي سريع</p>
       </div>
       <div class="section">
         <div class="section-title">ملف التوتل ستيشن</div>
         <div class="form-group">
-          <label>اختار ملف: SDR أو TXT أو CSV أو Excel (xlsx / xls) — اختار «كل الملفات» لو مظهرش</label>
+          <label>اختار ملف: SDR أو GSI16 / GSI8 (لايكا) أو PNT أو TXT أو CSV أو Excel — اختار «كل الملفات» لو مظهرش</label>
           <input type="file" id="sdr-file" accept="*/*" multiple>
         </div>
         <div class="form-group">
@@ -6937,6 +7008,7 @@ function exportTravExcel() {
         }
         if (data.sections) {
           Object.keys(data.sections).forEach(function(vid){
+            if (vid === "view-bm") return; /* ترتيب نقل الروبير ثابت: 0 ← 1 ← 2 */
             var view = document.getElementById(vid);
             if (!view) return;
             var order = data.sections[vid];
@@ -6957,6 +7029,7 @@ function exportTravExcel() {
 
     document.addEventListener("DOMContentLoaded", function(){
       try { ensureUI(); loadMenuLayout(); applyTrashHide(); } catch(e){}
+      try { if (typeof fixBmOrder === "function") fixBmOrder(); } catch(e){}
     });
 
 
@@ -7170,6 +7243,7 @@ function showView(name) {
         el.style.display = on ? "block" : "";
       });
       $("view-bm").classList.toggle("active", name === "bm");
+      if (name === "bm" && typeof fixBmOrder === "function") fixBmOrder();
       $("view-roads").classList.toggle("active", name === "roads");
       $("view-map").classList.toggle("active", name === "map");
       $("view-land").classList.toggle("active", name === "land");
@@ -7177,6 +7251,7 @@ function showView(name) {
       if ($("view-qty")) $("view-qty").classList.toggle("active", name === "qty");
       if ($("view-qty-menu")) $("view-qty-menu").classList.toggle("active", name === "qty-menu");
       if ($("view-qty-plane")) $("view-qty-plane").classList.toggle("active", name === "qty-plane");
+      if ($("view-qty-bnd")) $("view-qty-bnd").classList.toggle("active", name === "qty-bnd");
       if ($("view-level")) $("view-level").classList.toggle("active", name === "level");
       if ($("view-level-menu")) $("view-level-menu").classList.toggle("active", name === "level-menu");
       if ($("view-area")) $("view-area").classList.toggle("active", name === "area");
@@ -10585,6 +10660,14 @@ return skFrame('<svg viewBox="0 0 320 250" style="width:100%;max-width:440px;dis
       else $("bm-hi").value = "";
       syncBmForm();
     }
+    function fixBmOrder() {
+      const v = $("view-bm"), res = $("bm-results");
+      if (!v || !res) return;
+      ["bm-type-sec", "bm-setup-sec", "bm-add-sec"].forEach(id => {
+        const el = $(id);
+        if (el && el.parentNode === v) v.insertBefore(el, res);
+      });
+    }
     function syncBmForm() {
       const ref = bmRef();
       const hasPts = bmPoints.length > 0;
@@ -12055,11 +12138,11 @@ function openCroquisFS(fromEl, title) {
       document.addEventListener("click", unlock, { once: true });
     })();
 
-    // first after 20s, then every 2 minutes
+    // first after 3 minutes, then every 2 minutes
     setTimeout(function() {
       satLowCycle();
       setInterval(satLowCycle, 120000);
-    }, 20000);
+    }, 180000);
 
     window.checkSatLow = function() { satLowCycle(); };
     window.showSatLowAlert = showSatLowAlert;
@@ -12663,11 +12746,34 @@ function openCroquisFS(fromEl, title) {
   function isNum(s){ return s !== '' && s != null && isFinite(Number(s)); }
 
   function normKeySdr(k){ return String(k||'').trim().toLowerCase().replace(/[\s\-]+/g,'_'); }
+  /* Leica GSI8 / GSI16 : 81=E 82=N 83=H 11=رقم النقطة 71=الكود */
+  function parseGsiLine(raw){
+    var s=raw.trim().replace(/^\*/,''), w;
+    if(/\s/.test(s)) w=s.split(/\s+/);
+    else { var L=s.length, wl=(L%16===0)?16:(L%24===0?24:16); w=[]; for(var i=0;i<L;i+=wl) w.push(s.slice(i,i+wl)); }
+    var d={};
+    w.forEach(function(x){
+      if(x.length<8 || (x.charAt(6)!=='+' && x.charAt(6)!=='-')) return;
+      var wi=x.slice(0,2), u=x.charAt(5), data=x.slice(7), sg=x.charAt(6)==='-'?-1:1;
+      if(wi==='11'||wi==='71'||wi==='41'){ d[wi]=data.replace(/^0+/,''); if(wi==='11'&&!d[wi]) d[wi]='0'; }
+      else if((wi==='81'||wi==='82'||wi==='83') && /^\d+$/.test(data)){
+        var sc={'0':1e-3,'1':3.048e-4,'6':1e-4,'7':3.048e-5,'8':1e-5}[u]||1e-3;
+        d[wi]=Number((sg*Number(data)*sc).toFixed(5));
+      }
+    });
+    if(d['81']===undefined||d['82']===undefined) return null;
+    return {id:d['11']||'', n:d['82'], e:d['81'], z:d['83']!==undefined?d['83']:0, code:d['71']||d['41']||'', attrs:{}};
+  }
   function parseSDR(text, swap){
     var pts = [], ignored = 0, obs = 0;
     var lines = String(text).split(/\r\n|\r|\n/);
     lines.forEach(function(raw){
       if(!raw || !raw.trim()) return;
+      if(/^\*?\d\d[.\d]{4}[+-]\d{6,}/.test(raw.trim())){
+        var gp=parseGsiLine(raw);
+        if(gp){ if(!gp.id) gp.id=String(pts.length+1); pts.push(gp); } else ignored++;
+        return;
+      }
       var line = raw.replace(/\t/g,' ');
       var id, a, b, z, code;
       var rec = /^\d\d[A-Za-z][A-Za-z0-9]/.test(line) ? line.slice(0,4).toUpperCase() : null;
@@ -12688,7 +12794,7 @@ function openCroquisFS(fromEl, title) {
           ignored++; return;
         }
       } else {
-        var tk = line.trim().split(/[,;\s]+/);
+        var tk = line.trim().split(/[,;\s]+/).map(function(x){ return x.replace(/^["']+|["']+$/g,''); });
         if(tk.length>=3 && isNum(tk[1]) && isNum(tk[2])){
           id=tk[0]; a=Number(tk[1]); b=Number(tk[2]); z=isNum(tk[3])?Number(tk[3]):0; code=tk.slice(4).join(' ');
         } else { ignored++; return; }
@@ -12762,14 +12868,15 @@ function openCroquisFS(fromEl, title) {
         g(11,B.e.toFixed(4)); g(21,B.n.toFixed(4)); g(31,(B.z||0).toFixed(4));
       }
     }
+    function xmark(layer,e,n,z,r){
+      var zz=(z||0).toFixed(4);
+      g(0,'LINE'); g(8,layer); g(10,(e-r).toFixed(4)); g(20,(n-r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n+r).toFixed(4)); g(31,zz);
+      g(0,'LINE'); g(8,layer); g(10,(e-r).toFixed(4)); g(20,(n+r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n-r).toFixed(4)); g(31,zz);
+    }
     pts.forEach(function(p){
-      /* CIRCLE على الطبقة المسماة + الطبقة 0 (DWG FastView) */
-      g(0,'CIRCLE'); g(8,'SDR_POINTS');
-      g(10,p.e.toFixed(4)); g(20,p.n.toFixed(4)); g(30,(p.z||0).toFixed(4));
-      g(40, rad.toFixed(4));
-      g(0,'CIRCLE'); g(8,'0');
-      g(10,p.e.toFixed(4)); g(20,p.n.toFixed(4)); g(30,(p.z||0).toFixed(4));
-      g(40, rad.toFixed(4));
+      /* علامة X (خطين متقاطعين) على الطبقة المسماة + الطبقة 0 */
+      xmark('SDR_POINTS',p.e,p.n,p.z,rad);
+      xmark('0',p.e,p.n,p.z,rad);
       var dx = h*0.6, y = p.n;
       if(o.no)  text('SDR_NO',  p.e+dx, y+h*0.35, 0, h, String(p.id));
       if(o.elev) text('SDR_ELEV', p.e+dx, y-h*1.0, 0, h*0.8, Number(p.z).toFixed(3));
@@ -13365,7 +13472,7 @@ window.sdrKML = function(){
     var r = parseSDR(S.raw, $g('sdr-order').value==='EN');
     S.pts = r.pts; S.ignored = r.ignored; S.obs = r.obs;
     if(!r.pts.length){
-      status(r.obs ? 'الملف فيه قراءات خام ('+r.obs+' قراءة) بدون إحداثيات. صدّر من التوتل كـ Coordinates ثم ارفعه.' : 'مفيش نقاط اتقرت من الملف. اتأكد إنه SDR فيه سجلات 08KI.', true);
+      status(r.obs ? 'الملف فيه قراءات خام ('+r.obs+' قراءة) بدون إحداثيات. صدّر من التوتل كـ Coordinates ثم ارفعه.' : 'مفيش نقاط اتقرت من الملف. اتأكد إنه SDR (سجلات 08KI) أو GSI8 / GSI16 أو PNT / Text / CSV (رقم، N، E، Z، كود).', true);
     } else {
       status('تم قراءة '+r.pts.length+' نقطة'+(r.ignored?' • تم تجاهل '+r.ignored+' سجل (إعدادات/قراءات خام)':''));
     }
@@ -13763,7 +13870,9 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     opt = opt || {};
     var rawA = delaunay(A.X,A.Y), rawB = delaunay(B.X,B.Y);
     var me = (opt.maxEdge>0) ? opt.maxEdge : autoMaxEdge([[A,rawA],[B,rawB]]);
-    var tA = buildTIN(A, me, rawA), tB = buildTIN(B, me, rawB);
+    var meA = me, meB = me;
+    if(opt.bnd){ meA = autoMaxEdge([[A,rawA]]); meB = (opt.bnd==='hull') ? 0 : autoMaxEdge([[B,rawB]]); me = 0; }
+    var tA = buildTIN(A, meA, rawA), tB = buildTIN(B, meB, rawB);
     if(!tA.tris.length || !tB.tris.length) return {error:'مفيش مثلثات كفاية لتكوين السطح. تأكد من عدد النقاط وإن أقصى طول ضلع مش صغير زيادة.'};
     var m={}, UX=[], UY=[];
     function addAll(S){ for(var i=0;i<S.X.length;i++){ var k=Math.round(S.X[i]*1000)+'_'+Math.round(S.Y[i]*1000); if(m[k]===undefined){ m[k]=UX.length; UX.push(S.X[i]); UY.push(S.Y[i]); } } }
@@ -13813,7 +13922,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
     if(!R.tris) return {error:'مفيش منطقة مشتركة بين السطحين. تأكد إن الملفين على نفس نظام الإحداثيات ونفس الموقع.'};
     R.meanA=R.IA/R.area;
     R.meanB=R.meanA+(R.fillV-R.cutV)/R.area;
-    R.net=R.cutV-R.fillV;
+    R.net=R.cutV-R.fillV; R.tB=tB;
     R.ptA=A.Z.reduce(function(p,q){return p+q;},0)/A.Z.length;
     R.ptB=B.Z.reduce(function(p,q){return p+q;},0)/B.Z.length;
     return R;
@@ -14219,6 +14328,201 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
       $q(id).addEventListener('change',function(){ loadSurface('A',$q('qty-fa').files); loadSurface('B',$q('qty-fb').files); });
     });
   };
+  /* ===== Grid to Grid Boundary — حصر قطع وردم لكل كود ===== */
+  var QB = { A:null, pts:[], codes:[], res:null };
+  var QB_COL = ['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#06b6d4','#ec4899','#84cc16','#f97316','#14b8a6'];
+  var QB_ACI = [1,5,3,2,6,4,30,40,150,170];
+  function qbGsi(t){ return /^\s*\*?\d\d[.\d]{4}[+-]\d{8,}\s+\d\d[.\d]{4}[+-]\d{8,}/m.test(t); }
+  function qbSdr(t){ return /^\s*08[A-Za-z][A-Za-z0-9]/m.test(t); }
+  function qbIsBin(head,ext){ return head.slice(0,2)==='PK' || ['xlsx','xlsm','xls','ods'].indexOf(ext)>=0; }
+  async function qbReadNgl(file,en,layers){
+    var ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(['xlsx','xlsm','xls','ods','dxf','dwg'].indexOf(ext)<0){
+      var buf=await readBuf(file), head=String.fromCharCode.apply(null,new Uint8Array(buf).slice(0,6));
+      if(!qbIsBin(head,ext) && !/^AC10/.test(head)){
+        var text=decode(buf), g=qbGsi(text);
+        if((g||qbSdr(text)) && window.__sdrTools){
+          var pr=window.__sdrTools.parseSDR(text,false).pts;
+          return {pts:pr.map(function(p){return {x:p.e,y:p.n,z:p.z};}), fmt:g?'GSI':'SDR'};
+        }
+      }
+    }
+    return readOne(file,en,layers);
+  }
+  async function qbReadCoded(file,order){
+    var P=window.__sdrTools; if(!P||!P.parseSDR) return {err:'محول SDR لم يُحمَّل'};
+    var buf=await readBuf(file), ext=(file.name.split('.').pop()||'').toLowerCase();
+    var head=String.fromCharCode.apply(null,new Uint8Array(buf).slice(0,6));
+    if(/^AC10/.test(head)||ext==='dwg'||ext==='dxf') return {err:'الملف لازم يكون SDR / GSI / PNT / Text / CSV / Excel'};
+    var text=qbIsBin(head,ext)?P.excelToText(buf):decode(buf);
+    var fmt=qbGsi(text)?'GSI':qbSdr(text)?'SDR':ext==='pnt'?'PNT':ext==='csv'?'CSV':qbIsBin(head,ext)?'Excel':'Text';
+    var swap=(fmt==='SDR'||fmt==='GSI')?false:(order==='EN');
+    return {pts:P.parseSDR(text,swap).pts, fmt:fmt};
+  }
+  async function qbLoadA(){
+    var files=$q('qb-fa').files, st=$q('qb-sA'); QB.res=null;
+    if(!files||!files.length){ QB.A=null; st.textContent='اختار ملف'; return; }
+    st.style.color='var(--muted)'; st.textContent='جاري القراءة...';
+    var en=$q('qb-order').value==='EN', all=[], fm=[], err=null;
+    for(var i=0;i<files.length;i++){
+      try{ var r=await qbReadNgl(files[i],en,$q('qb-lA').value); if(r.err){err=r.err;break;} all=all.concat(r.pts); if(fm.indexOf(r.fmt)<0) fm.push(r.fmt); }
+      catch(e){ err='تعذر قراءة '+files[i].name; break; }
+    }
+    if(err){ QB.A=null; st.style.color='var(--warning)'; st.textContent=err; return; }
+    var S=dedupe(all);
+    if(S.X.length<3){ QB.A=null; st.style.color='var(--warning)'; st.textContent='تم قراءة '+S.X.length+' نقطة فقط. محتاج 3 نقاط على الأقل'; return; }
+    QB.A={S:S,name:files[0].name}; st.style.color='var(--muted)';
+    st.textContent='✓ '+fm.join('+')+' • '+S.X.length+' نقطة • المنسوب '+Math.min.apply(null,S.Z).toFixed(3)+' → '+Math.max.apply(null,S.Z).toFixed(3);
+  }
+  async function qbLoadB(){
+    var files=$q('qb-fb').files, st=$q('qb-sB'), box=$q('qb-codes'); QB.res=null;
+    if(!files||!files.length){ QB.pts=[]; QB.codes=[]; st.textContent='اختار ملف'; box.innerHTML=''; return; }
+    st.style.color='var(--muted)'; st.textContent='جاري القراءة...';
+    var all=[], fm=[], err=null;
+    for(var i=0;i<files.length;i++){
+      try{ var r=await qbReadCoded(files[i],$q('qb-order').value); if(r.err){err=r.err;break;} all=all.concat(r.pts); if(fm.indexOf(r.fmt)<0) fm.push(r.fmt); }
+      catch(e){ err='تعذر قراءة '+files[i].name+(e&&e.message?' — '+e.message:''); break; }
+    }
+    if(err||!all.length){ QB.pts=[]; QB.codes=[]; box.innerHTML=''; st.style.color='var(--warning)'; st.textContent=err||'مفيش نقاط اتقرت من الملف. اتأكد إن كل سطر: رقم، N، E، Z، كود'; return; }
+    QB.pts=all; var m={}, list=[];
+    all.forEach(function(p){ var lb=String(p.code||'').trim(), k=lb.toUpperCase(); if(!m[k]){ m[k]={key:k,label:lb||'(بدون كود)',pts:[],on:true}; list.push(m[k]); } m[k].pts.push(p); });
+    list.sort(function(a,b){ return a.label.localeCompare(b.label,undefined,{numeric:true}); });
+    QB.codes=list; var p0=all[0];
+    st.textContent='✓ '+fm.join('+')+' • '+all.length+' نقطة • '+list.length+' كود • أول نقطة: '+p0.id+' | E='+p0.e+' N='+p0.n+' Z='+p0.z+(list.length===1&&!list[0].key?' ⚠ مفيش أكواد في الملف':'');
+    box.innerHTML='<div class="sdr-checks">'+list.map(function(c,i){ return '<label><input type="checkbox" data-qb="'+i+'" checked> '+esc(c.label)+' ('+c.pts.length+')</label>'; }).join('')+'</div>';
+    box.querySelectorAll('input[data-qb]').forEach(function(cb){ cb.addEventListener('change',function(){ QB.codes[+cb.getAttribute('data-qb')].on=cb.checked; }); });
+  }
+  function qbClip(A,S){
+    var x0=Math.min.apply(null,S.X),x1=Math.max.apply(null,S.X),y0=Math.min.apply(null,S.Y),y1=Math.max.apply(null,S.Y);
+    var m=Math.max(0.35*Math.max(x1-x0,y1-y0),25), X=[],Y=[],Z=[];
+    for(var i=0;i<A.X.length;i++) if(A.X[i]>=x0-m&&A.X[i]<=x1+m&&A.Y[i]>=y0-m&&A.Y[i]<=y1+m){ X.push(A.X[i]);Y.push(A.Y[i]);Z.push(A.Z[i]); }
+    return X.length>=3?{X:X,Y:Y,Z:Z}:A;
+  }
+  function qbSegs(T){
+    var S=T.S,tr=T.tris,n=S.X.length,m=new Map(),i,k,u,v,key,segs=[];
+    for(i=0;i<tr.length;i+=3) for(k=0;k<3;k++){ u=tr[i+k]; v=tr[i+(k+1)%3]; key=u<v?u*n+v:v*n+u; m.set(key,(m.get(key)||0)+1); }
+    m.forEach(function(c,kk){ if(c===1){ var a=Math.floor(kk/n), b=kk%n; segs.push([S.X[a],S.Y[a],S.X[b],S.Y[b]]); } });
+    return segs;
+  }
+  window.qbCalc=function(){
+    var out=$q('qb-out');
+    if(!QB.A||!QB.codes.length){ out.innerHTML='<p class="note" style="display:block;">ارفع ملف NGL وملف النقاط بالأكواد الأول.</p>'; return; }
+    var sel=QB.codes.filter(function(c){return c.on;});
+    if(!sel.length){ out.innerHTML='<p class="note" style="display:block;">اختار كود واحد على الأقل.</p>'; return; }
+    out.innerHTML='<p class="note" style="display:block;">جاري الحساب...</p>';
+    setTimeout(function(){
+      var uf=$q('qb-usef').checked, cf=uf?(parseFloat($q('qb-fcut').value)||1):1, ff=uf?(parseFloat($q('qb-ffill').value)||1):1;
+      var mode=$q('qb-bmode').value, items=[];
+      sel.forEach(function(c,ci){
+        var S=dedupe(c.pts.map(function(p){return {x:p.e,y:p.n,z:p.z};}));
+        var it={label:c.label,n:c.pts.length,S:S,col:QB_COL[ci%QB_COL.length],aci:QB_ACI[ci%QB_ACI.length]};
+        if(S.X.length<3){ it.error='أقل من 3 نقاط — مينفعش يتعمل ليها حدود'; items.push(it); return; }
+        var R; try{ R=computeVolumes(qbClip(QB.A.S,S),S,{bnd:mode}); }catch(e){ R={error:'خطأ في الحساب: '+e.message}; }
+        if(R.error) it.error=R.error; else { it.R=R; it.segs=qbSegs(R.tB); it.cut=R.cutV*cf; it.fill=R.fillV*ff; it.net=it.cut-it.fill; }
+        items.push(it);
+      });
+      QB.res={items:items,cf:cf,ff:ff}; qbRender();
+    },30);
+  };
+  function qbSgn(v){ return (v>=0?'+':'−')+f3(Math.abs(v)); }
+  function qbRender(){
+    var Rs=QB.res, items=Rs.items, ok=items.filter(function(i){return i.R;}), out=$q('qb-out');
+    var T={a:0,c:0,f:0}; ok.forEach(function(i){ T.a+=i.R.areaB; T.c+=i.cut; T.f+=i.fill; });
+    var h='<div class="qty-dash-title">نتائج الحصر لكل كود</div>';
+    if(ok.length>1) h+='<div class="qty-dash qty-row4"><div class="qty-card qty-area"><span>إجمالي المساحة</span><em>All codes</em><b>'+f2(T.a)+'</b><small>م²</small></div><div class="qty-card qty-cut"><span>القطع</span><em>Cut</em><b>'+f3(T.c)+'</b><small>م³</small></div><div class="qty-card qty-fill"><span>الردم</span><em>Fill</em><b>'+f3(T.f)+'</b><small>م³</small></div><div class="qty-card qty-net"><span>الصافي</span><em>Net</em><b>'+qbSgn(T.c-T.f)+'</b><small>م³</small></div></div>';
+    h+='<div class="section"><div class="section-title">ملخص الأكواد</div><div style="overflow-x:auto;"><table class="qty-table"><thead><tr><th>الكود</th><th>نقاط</th><th>م²</th><th>قطع م³</th><th>ردم م³</th><th>صافي م³</th></tr></thead><tbody>';
+    items.forEach(function(i){
+      h+= i.R ? '<tr><td style="color:'+i.col+';font-weight:700;">'+esc(i.label)+'</td><td>'+i.n+'</td><td>'+f2(i.R.areaB)+'</td><td>'+f3(i.cut)+'</td><td>'+f3(i.fill)+'</td><td>'+qbSgn(i.net)+'</td></tr>'
+                : '<tr><td>'+esc(i.label)+'</td><td>'+i.n+'</td><td colspan="4" style="color:var(--warning);">'+esc(i.error)+'</td></tr>';
+    });
+    if(ok.length>1) h+='<tr style="font-weight:700;"><td>الإجمالي</td><td></td><td>'+f2(T.a)+'</td><td>'+f3(T.c)+'</td><td>'+f3(T.f)+'</td><td>'+qbSgn(T.c-T.f)+'</td></tr>';
+    h+='</tbody></table></div></div>';
+    ok.forEach(function(i){
+      var R=i.R, cov=R.areaB>0?R.area/R.areaB:1, per=0; i.segs.forEach(function(s){ per+=Math.hypot(s[2]-s[0],s[3]-s[1]); });
+      h+='<div class="section"><div class="section-title" style="color:'+i.col+';">كود: '+esc(i.label)+' — '+i.n+' نقطة</div>'+
+        '<div class="qty-dash qty-row4"><div class="qty-card qty-area"><span>المساحة</span><em>Area</em><b>'+f2(R.areaB)+'</b><small>م²<br>'+(R.areaB/FEDDAN).toFixed(3)+' فدان</small></div>'+
+        '<div class="qty-card qty-cut"><span>القطع</span><em>Cut</em><b>'+f3(i.cut)+'</b><small>م³</small></div>'+
+        '<div class="qty-card qty-fill"><span>الردم</span><em>Fill</em><b>'+f3(i.fill)+'</b><small>م³</small></div>'+
+        '<div class="qty-card qty-net"><span>الصافي</span><em>Net</em><b>'+qbSgn(i.net)+'</b><small>م³<br>'+(i.net>=0?'فائض':'عجز')+'</small></div></div>'+
+        '<div style="overflow-x:auto;"><table class="qty-table"><tbody>'+
+        '<tr><td>محيط الحدود</td><td>'+f2(per)+'</td><td>م</td></tr>'+
+        '<tr><td>متوسط منسوب NGL</td><td>'+f3(R.meanA)+'</td><td>م</td></tr>'+
+        '<tr><td>متوسط منسوب الكود</td><td>'+f3(R.meanB)+'</td><td>م</td></tr>'+
+        '<tr><td>أقصى عمق قطع</td><td>'+f3(Math.abs(R.maxCut))+'</td><td>م</td></tr>'+
+        '<tr><td>أقصى ارتفاع ردم</td><td>'+f3(R.maxFill)+'</td><td>م</td></tr>'+
+        '<tr><td>تغطية NGL للحدود</td><td>'+(cov*100).toFixed(1)+'</td><td>%</td></tr></tbody></table></div>'+
+        (cov<0.98?'<p class="note" style="display:block;color:var(--warning);">⚠ جزء من حدود الكود خارج تغطية NGL — الحساب على الجزء المغطى فقط.</p>':'')+'</div>';
+    });
+    h+='<div class="section"><div class="section-title">خريطة الحدود</div><canvas id="qb-canvas" style="width:100%;border:1px solid var(--border);border-radius:12px;background:var(--input-bg);display:block;"></canvas></div>'+
+       '<div class="btn-row"><button class="btn-calc" onclick="qbExport()">تحميل Excel</button><button class="btn-reset" onclick="qbExportDxf()">تحميل الحدود DXF</button></div>';
+    out.innerHTML=h; qbDraw();
+  }
+  function qbDraw(){
+    var cv=$q('qb-canvas'); if(!cv) return; var ok=QB.res.items.filter(function(i){return i.R;}); if(!ok.length) return;
+    var W=cv.clientWidth||320, H=Math.round(W*0.8), dpr=window.devicePixelRatio||1; cv.width=W*dpr; cv.height=H*dpr; cv.style.height=H+'px';
+    var g=cv.getContext('2d'); g.scale(dpr,dpr);
+    var x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity; ok.forEach(function(i){ i.S.X.forEach(function(x){x0=Math.min(x0,x);x1=Math.max(x1,x);}); i.S.Y.forEach(function(y){y0=Math.min(y0,y);y1=Math.max(y1,y);}); });
+    var pad=18, sc=Math.min((W-2*pad)/((x1-x0)||1),(H-2*pad)/((y1-y0)||1)), ox=(W-(x1-x0)*sc)/2, oy=(H-(y1-y0)*sc)/2;
+    function X(x){return ox+(x-x0)*sc;} function Y(y){return H-(oy+(y-y0)*sc);}
+    var A=QB.A.S, st=Math.max(1,Math.floor(A.X.length/3000)); g.fillStyle='rgba(148,163,184,0.45)';
+    for(var k=0;k<A.X.length;k+=st){ var px=X(A.X[k]),py=Y(A.Y[k]); if(px>0&&px<W&&py>0&&py<H) g.fillRect(px-1,py-1,2,2); }
+    ok.forEach(function(i){
+      g.strokeStyle=i.col; g.lineWidth=2.2; g.beginPath(); i.segs.forEach(function(s){ g.moveTo(X(s[0]),Y(s[1])); g.lineTo(X(s[2]),Y(s[3])); }); g.stroke();
+      g.fillStyle=i.col; i.S.X.forEach(function(x,j){ g.fillRect(X(x)-2,Y(i.S.Y[j])-2,4,4); });
+      var cx=0,cy=0; i.S.X.forEach(function(x,j){cx+=x;cy+=i.S.Y[j];}); cx/=i.S.X.length; cy/=i.S.X.length;
+      g.font='bold 13px sans-serif'; g.lineWidth=3; g.strokeStyle='#0f172a'; g.strokeText(i.label,X(cx)-8,Y(cy)); g.fillStyle='#fff'; g.fillText(i.label,X(cx)-8,Y(cy));
+    });
+    g.fillStyle='#94a3b8'; g.font='bold 12px sans-serif'; g.fillText('N ↑',W-34,18);
+  }
+  window.qbExport=function(){
+    var Rs=QB.res; if(!Rs) return;
+    var aoa=[['حصر الكميات لكل كود - Grid to Grid Boundary'],['NGL',QB.A.name],[],['الكود','عدد النقاط','المساحة م²','المساحة فدان','قطع م³','ردم م³','الصافي م³','الحالة']];
+    var tc=0,tf=0,ta=0;
+    Rs.items.forEach(function(i){ if(i.R){ tc+=i.cut;tf+=i.fill;ta+=i.R.areaB; aoa.push([i.label,i.n,+i.R.areaB.toFixed(2),+(i.R.areaB/FEDDAN).toFixed(4),+i.cut.toFixed(3),+i.fill.toFixed(3),+i.net.toFixed(3),i.net>=0?'فائض قطع':'عجز']); } else aoa.push([i.label,i.n,i.error]); });
+    aoa.push(['الإجمالي','',+ta.toFixed(2),+(ta/FEDDAN).toFixed(4),+tc.toFixed(3),+tf.toFixed(3),+(tc-tf).toFixed(3),'']);
+    if(typeof XLSX!=='undefined'){
+      var wb=XLSX.utils.book_new(); wb.Workbook={Views:[{RTL:true}]}; var ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:18},{wch:10},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14}];
+      XLSX.utils.book_append_sheet(wb,ws,'Per code');
+      download('earthwork_by_code.xlsx', new Blob([XLSX.write(wb,{type:'array',bookType:'xlsx'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+    } else download('earthwork_by_code.csv', new Blob(['\uFEFF'+aoa.map(function(r){return r.join(',');}).join('\r\n')],{type:'text/csv'}));
+  };
+  window.qbExportDxf=function(){
+    var Rs=QB.res; if(!Rs) return; var ok=Rs.items.filter(function(i){return i.R;}); if(!ok.length) return;
+    var out=[]; function g(c,v){ out.push(String(c)); out.push(String(v)); }
+    function ln(n){ return 'BND_'+(String(n).replace(/[^A-Za-z0-9_$-]/g,'_')||'X'); }
+    var x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity; ok.forEach(function(i){ i.S.X.forEach(function(x){x0=Math.min(x0,x);x1=Math.max(x1,x);}); i.S.Y.forEach(function(y){y0=Math.min(y0,y);y1=Math.max(y1,y);}); });
+    var span=Math.max(x1-x0,y1-y0,1), r=Math.max(0.15,span*0.004), th=Math.max(0.3,span*0.012);
+    g(0,'SECTION');g(2,'HEADER');g(9,'$ACADVER');g(1,'AC1009');g(0,'ENDSEC');
+    g(0,'SECTION');g(2,'TABLES');g(0,'TABLE');g(2,'LTYPE');g(70,1);g(0,'LTYPE');g(2,'CONTINUOUS');g(70,0);g(3,'Solid line');g(72,65);g(73,0);g(40,0.0);g(0,'ENDTAB');
+    g(0,'TABLE');g(2,'LAYER');g(70,ok.length);
+    ok.forEach(function(i,k){ g(0,'LAYER');g(2,ln(i.label)+'_'+(k+1));g(70,0);g(62,i.aci);g(6,'CONTINUOUS'); });
+    g(0,'ENDTAB');g(0,'TABLE');g(2,'STYLE');g(70,1);g(0,'STYLE');g(2,'STANDARD');g(70,0);g(40,0.0);g(41,1.0);g(50,0.0);g(71,0);g(42,1.0);g(3,'txt');g(4,'');g(0,'ENDTAB');g(0,'ENDSEC');
+    g(0,'SECTION');g(2,'ENTITIES');
+    ok.forEach(function(i,k){
+      var L=ln(i.label)+'_'+(k+1), cx=0, cy=0;
+      i.segs.forEach(function(s){ g(0,'LINE');g(8,L);g(10,s[0].toFixed(4));g(20,s[1].toFixed(4));g(30,'0');g(11,s[2].toFixed(4));g(21,s[3].toFixed(4));g(31,'0'); });
+      i.S.X.forEach(function(x,j){ var y=i.S.Y[j], z=(i.S.Z[j]||0).toFixed(4); cx+=x; cy+=y;
+        g(0,'LINE');g(8,L);g(10,(x-r).toFixed(4));g(20,(y-r).toFixed(4));g(30,z);g(11,(x+r).toFixed(4));g(21,(y+r).toFixed(4));g(31,z);
+        g(0,'LINE');g(8,L);g(10,(x-r).toFixed(4));g(20,(y+r).toFixed(4));g(30,z);g(11,(x+r).toFixed(4));g(21,(y-r).toFixed(4));g(31,z); });
+      g(0,'TEXT');g(8,L);g(7,'STANDARD');g(10,(cx/i.S.X.length).toFixed(4));g(20,(cy/i.S.X.length).toFixed(4));g(30,'0');g(40,th.toFixed(4));
+      g(1,(i.label+' | Cut='+i.cut.toFixed(2)+' Fill='+i.fill.toFixed(2)+' Net='+i.net.toFixed(2)).replace(/[\r\n]/g,' '));g(50,0.0);
+    });
+    g(0,'ENDSEC');g(0,'EOF');
+    download('boundaries_by_code.dxf', new Blob([out.join('\r\n')+'\r\n'],{type:'application/dxf'}));
+  };
+  window.qbClear=function(){
+    QB={A:null,pts:[],codes:[],res:null};
+    ['qb-fa','qb-fb'].forEach(function(id){ var f=$q(id); if(f) f.value=''; });
+    $q('qb-sA').textContent='اختار ملف'; $q('qb-sB').textContent='اختار ملف'; $q('qb-codes').innerHTML=''; $q('qb-out').innerHTML='';
+  };
+  window.qbInit=function(){
+    var fa=$q('qb-fa'); if(!fa||fa._b) return; fa._b=1;
+    fa.addEventListener('change',qbLoadA); $q('qb-fb').addEventListener('change',qbLoadB);
+    $q('qb-usef').addEventListener('change',function(){ $q('qb-fbox').style.display=this.checked?'block':'none'; });
+    $q('qb-order').addEventListener('change',function(){ qbLoadA(); qbLoadB(); });
+    $q('qb-lA').addEventListener('change',qbLoadA);
+  };
+
   if(typeof module!=='undefined') module.exports={delaunay:delaunay,dedupe:dedupe,buildTIN:buildTIN,evalTIN:evalTIN,computeVolumes:computeVolumes,triVol:triVol,parseText:parseText,parseDXF:parseDXF,parseRows:parseRows};
   // expose for leveling board
   window.delaunay=delaunay; window.dedupe=dedupe; window.buildTIN=buildTIN; window.evalTIN=evalTIN;
@@ -14226,7 +14530,7 @@ window.__sdrTools={parseSDR:parseSDR,decodeText:decodeText,excelToText:excelToTe
   window.computeVolumes=computeVolumes;
   window.QTYX={triVol:triVol, rowsFor:rowsFor, renderTo:renderTo, saveSheet:saveSheet, f2:f2, f3:f3, esc:esc, FEDDAN:FEDDAN};
   if(typeof document!=='undefined' && document.getElementById){
-    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',window.qtyInit); else window.qtyInit();
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ window.qtyInit(); window.qbInit(); }); else { window.qtyInit(); window.qbInit(); }
   }
 })();
 
@@ -17176,7 +17480,10 @@ function attrBuildDxf(){
   g(0,'SECTION'); g(2,'ENTITIES');
   AD.pts.forEach(function(p){
     var layer=attrLayerName(p);
-    g(0,'CIRCLE'); g(8,layer); g(10,Number(p.e).toFixed(4)); g(20,Number(p.n).toFixed(4)); g(30,Number(p.z||0).toFixed(4)); g(40,'0.15');
+    (function(e,n,z,r){ var zz=z.toFixed(4);
+      g(0,'LINE'); g(8,layer); g(10,(e-r).toFixed(4)); g(20,(n-r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n+r).toFixed(4)); g(31,zz);
+      g(0,'LINE'); g(8,layer); g(10,(e-r).toFixed(4)); g(20,(n+r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n-r).toFixed(4)); g(31,zz);
+    })(Number(p.e),Number(p.n),Number(p.z||0),0.15);
     var label=String(p.id||'');
     var a=p.attrs||{};
     if(a.diameter||a['قطر']) label+=' D'+(a.diameter||a['قطر']);
@@ -17688,10 +17995,10 @@ function ssBuildDxf(kind){
 
   g(0,'SECTION'); g(2,'ENTITIES');
 
-  function circle(layer, e, n, z, r){
-    g(0,'CIRCLE'); g(8, layer);
-    g(10, Number(e).toFixed(4)); g(20, Number(n).toFixed(4)); g(30, Number(z||0).toFixed(4));
-    g(40, Number(r).toFixed(4));
+  function circle(layer, e, n, z, r){ /* العلامة الآن X */
+    e=Number(e); n=Number(n); r=Number(r); var zz=Number(z||0).toFixed(4);
+    g(0,'LINE'); g(8, layer); g(10,(e-r).toFixed(4)); g(20,(n-r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n+r).toFixed(4)); g(31,zz);
+    g(0,'LINE'); g(8, layer); g(10,(e-r).toFixed(4)); g(20,(n+r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n-r).toFixed(4)); g(31,zz);
   }
   function txt(layer, e, n, h, s){
     s = String(s == null ? '' : s).replace(/[\r\n\t]/g,' ').substring(0, 120);
@@ -18876,7 +19183,7 @@ window.CV={addPhone:addPhone,delPhone:delPhone,clearAll:clearAll,resetNow:resetN
 /* Independent satellite low-alert — does not rely on other app modules */
 (function () {
   var MSG = "عدد الأقمار أقل من 15 — القراءة غير دقيقة";
-  var firstDelay = 20000;
+  var firstDelay = 180000;
   var repeatEvery = 120000;
   var upAfter = 2000;
 
