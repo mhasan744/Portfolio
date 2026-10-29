@@ -811,6 +811,98 @@
       margin-top: 2px;
     }
 
+
+    /* ===== DXF POINT SHAPE PICKER ===== */
+    .shp-pick { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin-top: 6px; }
+    .shp-pick label { margin: 0; cursor: pointer; display: block; }
+    .shp-pick input { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+    .shp-box {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+      padding: 8px 0; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--input-bg);
+      color: var(--muted); font-size: 0.68rem; font-weight: 600;
+      transition: border-color .15s, background .15s, transform .15s, color .15s;
+    }
+    .shp-box svg { width: 100%; max-width: 26px; height: auto; aspect-ratio: 1; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .shp-pick label:active .shp-box { transform: scale(0.95); }
+    .shp-pick input:checked + .shp-box {
+      border-color: var(--gold); color: var(--gold);
+      background: linear-gradient(180deg, rgba(251,191,36,0.14), rgba(251,191,36,0.04));
+      box-shadow: 0 0 0 1px rgba(251,191,36,0.25), 0 4px 14px var(--glow);
+    }
+    .shp-pick input:focus-visible + .shp-box { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    .clr-pick { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-top: 6px; }
+    .clr-pick label { margin: 0; cursor: pointer; display: block; }
+    .clr-pick input { position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0; }
+    .clr-dot { display: block; width: 100%; max-width: 30px; aspect-ratio: 1; margin: 0 auto; border-radius: 50%; border: 2px solid var(--border);
+      box-shadow: inset 0 0 0 2px var(--card); transition: transform .15s, border-color .15s, box-shadow .15s; }
+    .clr-pick label:active .clr-dot { transform: scale(0.9); }
+    .clr-pick input:checked + .clr-dot { border-color: var(--gold); transform: scale(1.12); box-shadow: inset 0 0 0 2px var(--card), 0 0 0 2px var(--gold), 0 3px 10px var(--glow); }
+    .clr-pick input:focus-visible + .clr-dot { outline: 2px solid var(--gold); outline-offset: 3px; }
+    /* ===== VIDEO LINK BANNER ===== */
+    .vid-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text);
+      overflow: hidden;
+      background:
+        linear-gradient(var(--card), var(--card)) padding-box,
+        linear-gradient(120deg, var(--gold), var(--accent2), var(--gold)) border-box;
+      border: 1.5px solid transparent;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.28), 0 0 0 1px rgba(251,191,36,0.06), inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: transform .2s, box-shadow .25s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .vid-link::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 35%, rgba(251,191,36,0.14) 50%, transparent 65%);
+      transform: translateX(120%);
+      animation: vidShine 4.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes vidShine { 0%, 55% { transform: translateX(120%); } 100% { transform: translateX(-120%); } }
+    .vid-link:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.35), 0 0 22px var(--glow); }
+    .vid-link:active { transform: scale(0.985); }
+    .vid-play {
+      flex: 0 0 auto;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      box-shadow: 0 4px 14px rgba(239,68,68,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
+      position: relative;
+    }
+    .vid-play::after {
+      content: "";
+      position: absolute; inset: -5px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(239,68,68,0.45);
+      animation: vidPulse 2.2s ease-out infinite;
+    }
+    @keyframes vidPulse { 0% { transform: scale(.85); opacity: .9; } 100% { transform: scale(1.3); opacity: 0; } }
+    .vid-play svg { width: 20px; height: 20px; fill: #fff; margin-right: -2px; }
+    .vid-body { flex: 1; min-width: 0; text-align: right; }
+    .vid-badge {
+      display: inline-block;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.4px;
+      color: var(--gold);
+      margin-bottom: 1px;
+    }
+    .vid-title { font-size: 0.98rem; font-weight: 700; color: var(--text); line-height: 1.35; }
+    .vid-sub { font-size: 0.74rem; color: var(--muted); margin-top: 1px; }
+    .vid-arrow { flex: 0 0 auto; color: var(--gold); font-size: 1.3rem; font-weight: 700; transition: transform .2s; }
+    .vid-link:hover .vid-arrow { transform: translateX(-4px); }
+    body.light-mode .vid-link { box-shadow: 0 6px 18px rgba(15,23,42,0.12); }
+    @media (prefers-reduced-motion: reduce) { .vid-link::before, .vid-play::after { animation: none; } }
+
     /* ===== SECTIONS ===== */
     .section {
       background: var(--card);
@@ -3202,6 +3294,15 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <h2>Infrastructure — البنية التحتية</h2>
         <p>اختر القسم</p>
       </div>
+      <a class="vid-link" href="https://youtu.be/wn5-O9zZ5ds" target="_blank" rel="noopener noreferrer">
+        <span class="vid-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="vid-body">
+          <span class="vid-badge" dir="ltr" style="display:block;text-align:right">Watch the Infrastructure</span>
+          <span class="vid-title" style="display:block">شاهد شرح البنية التحتية</span>
+          <span class="vid-sub" style="display:block">اضغط وشاهد الشرح الكامل خطوة بخطوة</span>
+        </span>
+        <span class="vid-arrow">‹</span>
+      </a>
       <div class="menu-stack">
         <div class="menu-card menu-card-row" onclick="showView('infra')">
           <div class="menu-icon infra">
@@ -4029,6 +4130,15 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <h2>Constructions — الإنشاءات</h2>
         <p>اختر القسم</p>
       </div>
+      <a class="vid-link" href="https://youtu.be/O6Vo7Oy7TqY" target="_blank" rel="noopener noreferrer">
+        <span class="vid-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="vid-body">
+          <span class="vid-badge" dir="ltr" style="display:block;text-align:right">Watch the Constructions</span>
+          <span class="vid-title" style="display:block">شاهد شرح الإنشاءات</span>
+          <span class="vid-sub" style="display:block">اضغط وشاهد الشرح الكامل خطوة بخطوة</span>
+        </span>
+        <span class="vid-arrow">‹</span>
+      </a>
       <div class="menu-stack">
         <div class="menu-card menu-card-row" onclick="showView('const-slab')">
           <div class="menu-icon" style="background:linear-gradient(135deg,#9a3412,#ea580c);">
@@ -4894,6 +5004,15 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <h2>SDR &amp; Text Converter — محول SDR و Text</h2>
         <p>حوّل ملف SDR / GSI8 / GSI16 / PNT / Text إلى DXF (نقاط بعلامة X — يفتح في AutoCAD) مع كروكي سريع</p>
       </div>
+      <a class="vid-link" href="https://youtu.be/uTRAM1zQTPo" target="_blank" rel="noopener noreferrer">
+        <span class="vid-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="vid-body">
+          <span class="vid-badge" dir="ltr" style="display:block;text-align:right">Watch the SDR &amp; Text Converter</span>
+          <span class="vid-title" style="display:block">شاهد شرح محول SDR و Text</span>
+          <span class="vid-sub" style="display:block">اضغط وشاهد الشرح الكامل خطوة بخطوة</span>
+        </span>
+        <span class="vid-arrow">‹</span>
+      </a>
       <div class="section">
         <div class="section-title">ملف التوتل ستيشن</div>
         <div class="form-group">
@@ -4912,13 +5031,53 @@ body.admin-edit #view-home .menu-card{clip-path:none}
           <label>أو الصق محتوى الملف هنا — SDR / Text / CSV / نسخ من Excel (لو الرفع مش شغال)</label>
           <textarea id="sdr-paste" rows="4" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font-family:monospace;font-size:0.8rem;" placeholder="الصق النص هنا"></textarea>
         </div>
-        <div class="btn-row"><button class="btn-calc" onclick="sdrFromText()">قراءة النص</button></div>
-      </div>
-      <div class="section">
-        <div class="section-title">إعدادات DXF والكروكي</div>
+        <div style="margin:14px 0 8px;font-weight:700;font-size:0.9rem;color:var(--gold);">إعدادات DXF والكروكي</div>
         <div class="form-group">
           <label>ارتفاع النص في الرسم (متر)</label>
           <input type="number" id="sdr-th" value="0.5" min="0.01" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>شكل النقطة اللي هتتصدر على الكاد</label>
+        <div class="shp-pick" id="sdr-shape-picker">
+          <label title="X"><input type="radio" name="sdr-shape" value="x" checked><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></label>
+          <label title="+"><input type="radio" name="sdr-shape" value="plus"><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg></span></label>
+          <label title="دايرة"><input type="radio" name="sdr-shape" value="circle"><span class="shp-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></span></label>
+          <label title="مربع"><input type="radio" name="sdr-shape" value="square"><span class="shp-box"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></svg></span></label>
+          <label title="معين"><input type="radio" name="sdr-shape" value="diamond"><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M12 3l9 9-9 9-9-9z"/></svg></span></label>
+          <label title="مثلث"><input type="radio" name="sdr-shape" value="triangle"><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/></svg></span></label>
+          <label title="دايرة ونقطة"><input type="radio" name="sdr-shape" value="dot"><span class="shp-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></span></label>
+          <label title="دايرة وX"><input type="radio" name="sdr-shape" value="circlex"><span class="shp-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M6.4 6.4l11.2 11.2M17.6 6.4L6.4 17.6"/></svg></span></label>
+        </div>
+        </div>
+        <div class="form-group">
+          <label>لون النقطة</label>
+          <div class="clr-pick" id="sdr-pcol-picker">
+            <label title="حسب الطبقة (الافتراضي)"><input type="radio" name="sdr-pcol" value="" checked><span class="clr-dot" style="background:conic-gradient(#ef4444,#fbbf24,#4ade80,#38bdf8,#a78bfa,#ef4444)"></span></label>
+            <label title="أحمر"><input type="radio" name="sdr-pcol" value="1"><span class="clr-dot" style="background:#ff0000"></span></label>
+            <label title="أصفر"><input type="radio" name="sdr-pcol" value="2"><span class="clr-dot" style="background:#ffff00"></span></label>
+            <label title="أخضر"><input type="radio" name="sdr-pcol" value="3"><span class="clr-dot" style="background:#00ff00"></span></label>
+            <label title="سماوي"><input type="radio" name="sdr-pcol" value="4"><span class="clr-dot" style="background:#00ffff"></span></label>
+            <label title="أزرق"><input type="radio" name="sdr-pcol" value="5"><span class="clr-dot" style="background:#0066ff"></span></label>
+            <label title="ماجنتا"><input type="radio" name="sdr-pcol" value="6"><span class="clr-dot" style="background:#ff00ff"></span></label>
+            <label title="برتقالي"><input type="radio" name="sdr-pcol" value="30"><span class="clr-dot" style="background:#ff8c00"></span></label>
+            <label title="رمادي"><input type="radio" name="sdr-pcol" value="8"><span class="clr-dot" style="background:#808080"></span></label>
+            <label title="أبيض / أسود"><input type="radio" name="sdr-pcol" value="7"><span class="clr-dot" style="background:#ffffff"></span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>لون الكتابة</label>
+          <div class="clr-pick" id="sdr-tcol-picker">
+            <label title="حسب الطبقة (الافتراضي)"><input type="radio" name="sdr-tcol" value="" checked><span class="clr-dot" style="background:conic-gradient(#ef4444,#fbbf24,#4ade80,#38bdf8,#a78bfa,#ef4444)"></span></label>
+            <label title="أحمر"><input type="radio" name="sdr-tcol" value="1"><span class="clr-dot" style="background:#ff0000"></span></label>
+            <label title="أصفر"><input type="radio" name="sdr-tcol" value="2"><span class="clr-dot" style="background:#ffff00"></span></label>
+            <label title="أخضر"><input type="radio" name="sdr-tcol" value="3"><span class="clr-dot" style="background:#00ff00"></span></label>
+            <label title="سماوي"><input type="radio" name="sdr-tcol" value="4"><span class="clr-dot" style="background:#00ffff"></span></label>
+            <label title="أزرق"><input type="radio" name="sdr-tcol" value="5"><span class="clr-dot" style="background:#0066ff"></span></label>
+            <label title="ماجنتا"><input type="radio" name="sdr-tcol" value="6"><span class="clr-dot" style="background:#ff00ff"></span></label>
+            <label title="برتقالي"><input type="radio" name="sdr-tcol" value="30"><span class="clr-dot" style="background:#ff8c00"></span></label>
+            <label title="رمادي"><input type="radio" name="sdr-tcol" value="8"><span class="clr-dot" style="background:#808080"></span></label>
+            <label title="أبيض / أسود"><input type="radio" name="sdr-tcol" value="7"><span class="clr-dot" style="background:#ffffff"></span></label>
+          </div>
         </div>
         <div class="sdr-checks">
           <label><input type="checkbox" id="sdr-no" checked> رقم النقطة</label>
@@ -4927,7 +5086,7 @@ body.admin-edit #view-home .menu-card{clip-path:none}
           <label><input type="checkbox" id="sdr-line"> ربط النقاط بخط</label>
           <label><input type="checkbox" id="sdr-labels" checked> أسماء على الكروكي</label>
         </div>
-        <div class="btn-row"><button class="btn-reset" onclick="sdrClear()">مسح</button></div>
+        <div class="btn-row"><button class="btn-calc" onclick="sdrFromText()">قراءة النص</button><button class="btn-reset" onclick="sdrClear()">مسح</button></div>
       </div>
       <div id="sdr-out"></div>
       <div class="section" id="sdr-map-sec" style="display:none;">
@@ -5228,6 +5387,76 @@ body.admin-edit #view-home .menu-card{clip-path:none}
         <div class="form-group">
           <label>تسامح المطابقة الأفقية (متر)</label>
           <input type="number" id="ss-tol" value="0.10" min="0.01" max="50" step="0.01">
+        </div>
+        <div style="margin:14px 0 8px;font-weight:700;font-size:0.9rem;color:var(--gold);">إعدادات DXF</div>
+        <div class="form-group">
+          <label>ارتفاع النص في الرسم (متر)</label>
+          <input type="number" id="ss-th" value="0.5" min="0.01" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>شكل النقطة اللي هتتصدر على الكاد</label>
+        <div class="shp-pick" id="ss-shape-picker">
+          <label title="X"><input type="radio" name="ss-shape" value="x" checked><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></label>
+          <label title="+"><input type="radio" name="ss-shape" value="plus"><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg></span></label>
+          <label title="دايرة"><input type="radio" name="ss-shape" value="circle"><span class="shp-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></span></label>
+          <label title="مربع"><input type="radio" name="ss-shape" value="square"><span class="shp-box"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14"/></svg></span></label>
+          <label title="معين"><input type="radio" name="ss-shape" value="diamond"><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M12 3l9 9-9 9-9-9z"/></svg></span></label>
+          <label title="مثلث"><input type="radio" name="ss-shape" value="triangle"><span class="shp-box"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/></svg></span></label>
+          <label title="دايرة ونقطة"><input type="radio" name="ss-shape" value="dot"><span class="shp-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></span></label>
+          <label title="دايرة وX"><input type="radio" name="ss-shape" value="circlex"><span class="shp-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M6.4 6.4l11.2 11.2M17.6 6.4L6.4 17.6"/></svg></span></label>
+        </div>
+        </div>
+        <div class="form-group">
+          <label>لون نقطة الملف الأول (الأصلي)</label>
+          <div class="clr-pick" id="ss-pcol-a-picker">
+            <label title="حسب الطبقة (الافتراضي)"><input type="radio" name="ss-pcol-a" value="" checked><span class="clr-dot" style="background:conic-gradient(#ef4444,#fbbf24,#4ade80,#38bdf8,#a78bfa,#ef4444)"></span></label>
+            <label title="أحمر"><input type="radio" name="ss-pcol-a" value="1"><span class="clr-dot" style="background:#ff0000"></span></label>
+            <label title="أصفر"><input type="radio" name="ss-pcol-a" value="2"><span class="clr-dot" style="background:#ffff00"></span></label>
+            <label title="أخضر"><input type="radio" name="ss-pcol-a" value="3"><span class="clr-dot" style="background:#00ff00"></span></label>
+            <label title="سماوي"><input type="radio" name="ss-pcol-a" value="4"><span class="clr-dot" style="background:#00ffff"></span></label>
+            <label title="أزرق"><input type="radio" name="ss-pcol-a" value="5"><span class="clr-dot" style="background:#0066ff"></span></label>
+            <label title="ماجنتا"><input type="radio" name="ss-pcol-a" value="6"><span class="clr-dot" style="background:#ff00ff"></span></label>
+            <label title="برتقالي"><input type="radio" name="ss-pcol-a" value="30"><span class="clr-dot" style="background:#ff8c00"></span></label>
+            <label title="رمادي"><input type="radio" name="ss-pcol-a" value="8"><span class="clr-dot" style="background:#808080"></span></label>
+            <label title="أبيض / أسود"><input type="radio" name="ss-pcol-a" value="7"><span class="clr-dot" style="background:#ffffff"></span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>لون نقطة الملف الثاني (الموقع)</label>
+          <div class="clr-pick" id="ss-pcol-b-picker">
+            <label title="حسب الطبقة (الافتراضي)"><input type="radio" name="ss-pcol-b" value="" checked><span class="clr-dot" style="background:conic-gradient(#ef4444,#fbbf24,#4ade80,#38bdf8,#a78bfa,#ef4444)"></span></label>
+            <label title="أحمر"><input type="radio" name="ss-pcol-b" value="1"><span class="clr-dot" style="background:#ff0000"></span></label>
+            <label title="أصفر"><input type="radio" name="ss-pcol-b" value="2"><span class="clr-dot" style="background:#ffff00"></span></label>
+            <label title="أخضر"><input type="radio" name="ss-pcol-b" value="3"><span class="clr-dot" style="background:#00ff00"></span></label>
+            <label title="سماوي"><input type="radio" name="ss-pcol-b" value="4"><span class="clr-dot" style="background:#00ffff"></span></label>
+            <label title="أزرق"><input type="radio" name="ss-pcol-b" value="5"><span class="clr-dot" style="background:#0066ff"></span></label>
+            <label title="ماجنتا"><input type="radio" name="ss-pcol-b" value="6"><span class="clr-dot" style="background:#ff00ff"></span></label>
+            <label title="برتقالي"><input type="radio" name="ss-pcol-b" value="30"><span class="clr-dot" style="background:#ff8c00"></span></label>
+            <label title="رمادي"><input type="radio" name="ss-pcol-b" value="8"><span class="clr-dot" style="background:#808080"></span></label>
+            <label title="أبيض / أسود"><input type="radio" name="ss-pcol-b" value="7"><span class="clr-dot" style="background:#ffffff"></span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>لون الكتابة</label>
+          <div class="clr-pick" id="ss-tcol-picker">
+            <label title="حسب الطبقة (الافتراضي)"><input type="radio" name="ss-tcol" value="" checked><span class="clr-dot" style="background:conic-gradient(#ef4444,#fbbf24,#4ade80,#38bdf8,#a78bfa,#ef4444)"></span></label>
+            <label title="أحمر"><input type="radio" name="ss-tcol" value="1"><span class="clr-dot" style="background:#ff0000"></span></label>
+            <label title="أصفر"><input type="radio" name="ss-tcol" value="2"><span class="clr-dot" style="background:#ffff00"></span></label>
+            <label title="أخضر"><input type="radio" name="ss-tcol" value="3"><span class="clr-dot" style="background:#00ff00"></span></label>
+            <label title="سماوي"><input type="radio" name="ss-tcol" value="4"><span class="clr-dot" style="background:#00ffff"></span></label>
+            <label title="أزرق"><input type="radio" name="ss-tcol" value="5"><span class="clr-dot" style="background:#0066ff"></span></label>
+            <label title="ماجنتا"><input type="radio" name="ss-tcol" value="6"><span class="clr-dot" style="background:#ff00ff"></span></label>
+            <label title="برتقالي"><input type="radio" name="ss-tcol" value="30"><span class="clr-dot" style="background:#ff8c00"></span></label>
+            <label title="رمادي"><input type="radio" name="ss-tcol" value="8"><span class="clr-dot" style="background:#808080"></span></label>
+            <label title="أبيض / أسود"><input type="radio" name="ss-tcol" value="7"><span class="clr-dot" style="background:#ffffff"></span></label>
+          </div>
+        </div>
+        <div class="sdr-checks">
+          <label><input type="checkbox" id="ss-no" checked> رقم النقطة</label>
+          <label><input type="checkbox" id="ss-elev" checked> المنسوب</label>
+          <label><input type="checkbox" id="ss-code"> الكود</label>
+          <label><input type="checkbox" id="ss-lines" checked> خطوط الربط بين النقطتين</label>
+          <label><input type="checkbox" id="ss-cloud" checked> سحابة (Cloud) على غير المتطابق</label>
         </div>
         <div class="btn-row">
           <button class="btn-calc" onclick="ssCompare()">مقارنة الرفع</button>
@@ -12856,7 +13085,7 @@ function openCroquisFS(fromEl, title) {
     var h = Math.max(0.3, o.th || (span*0.01), span*0.008);
     var rad = Math.max(0.12, span * 0.006, h * 0.3);
     function text(layer,x,y,z,hh,s){
-      g(0,'TEXT'); g(8,layer); g(7,'STANDARD');
+      g(0,'TEXT'); g(8,layer); if(o.tcol) g(62,o.tcol); g(7,'STANDARD');
       g(10,Number(x).toFixed(4)); g(20,Number(y).toFixed(4)); g(30,Number(z).toFixed(4));
       g(40,Number(hh).toFixed(4)); g(1,dxfClean(s)); g(50,0.0);
     }
@@ -12869,9 +13098,7 @@ function openCroquisFS(fromEl, title) {
       }
     }
     function xmark(layer,e,n,z,r){
-      var zz=(z||0).toFixed(4);
-      g(0,'LINE'); g(8,layer); g(10,(e-r).toFixed(4)); g(20,(n-r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n+r).toFixed(4)); g(31,zz);
-      g(0,'LINE'); g(8,layer); g(10,(e-r).toFixed(4)); g(20,(n+r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n-r).toFixed(4)); g(31,zz);
+      window.dxfDrawMarker(g, layer, e, n, z, r, o.shape || 'x', o.pcol || 0);
     }
     pts.forEach(function(p){
       /* علامة X (خطين متقاطعين) على الطبقة المسماة + الطبقة 0 */
@@ -13386,7 +13613,7 @@ window.sdrKML = function(){
     $g('sdr-dl-dxf').onclick = function(){
       try {
         if (!S.pts || !S.pts.length) { alert('مفيش نقاط للتحميل'); return; }
-        var o = {th: parseFloat($g('sdr-th').value)||0.5, no:$g('sdr-no').checked, elev:$g('sdr-elev').checked, code:$g('sdr-code').checked, line:$g('sdr-line').checked};
+        var o = {th: parseFloat($g('sdr-th').value)||0.5, no:$g('sdr-no').checked, elev:$g('sdr-elev').checked, code:$g('sdr-code').checked, line:$g('sdr-line').checked, shape:window.dxfShapeVal('sdr-shape'), pcol:window.dxfColorVal('sdr-pcol'), tcol:window.dxfColorVal('sdr-tcol')};
         download((S.name||'survey')+'.dxf', buildDXF(S.pts,o), 'application/octet-stream');
         status('تم تحميل DXF ('+S.pts.length+' نقطة)');
       } catch (err) {
@@ -17953,8 +18180,12 @@ function ssBuildDxf(kind){
   });
   var span = Math.max(maxE-minE, maxN-minN, 1);
   var pad = span * 0.08;
-  var rad = Math.max(span * 0.006, 0.12); /* نصف قطر ظاهر عند Zoom Extents */
-  var th  = Math.max(span * 0.01, 0.25);
+  var thIn = parseFloat(($('ss-th')||{}).value) || 0.5;
+  var th  = Math.max(0.3, thIn, span * 0.008);
+  var rad = Math.max(0.12, span * 0.006, th * 0.3); /* نصف قطر ظاهر عند Zoom Extents */
+  function chk(id, def){ var el = $(id); return el ? !!el.checked : def; }
+  var optNo = chk('ss-no', true), optElev = chk('ss-elev', true), optCode = chk('ss-code', false);
+  var optLines = chk('ss-lines', true), optCloud = chk('ss-cloud', true);
 
   var layers = [
     ['0', 7],
@@ -17962,7 +18193,8 @@ function ssBuildDxf(kind){
     ['FIELD', 2],
     ['OK', 3],
     ['DELTA', 1],
-    ['TXT', 7]
+    ['TXT', 7],
+    ['CLOUD', 1]
   ];
 
   g(0,'SECTION'); g(2,'HEADER');
@@ -17995,15 +18227,40 @@ function ssBuildDxf(kind){
 
   g(0,'SECTION'); g(2,'ENTITIES');
 
-  function circle(layer, e, n, z, r){ /* العلامة الآن X */
-    e=Number(e); n=Number(n); r=Number(r); var zz=Number(z||0).toFixed(4);
-    g(0,'LINE'); g(8, layer); g(10,(e-r).toFixed(4)); g(20,(n-r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n+r).toFixed(4)); g(31,zz);
-    g(0,'LINE'); g(8, layer); g(10,(e-r).toFixed(4)); g(20,(n+r).toFixed(4)); g(30,zz); g(11,(e+r).toFixed(4)); g(21,(n-r).toFixed(4)); g(31,zz);
+  var ssShape = window.dxfShapeVal('ss-shape');
+  var ssPcolA = window.dxfColorVal('ss-pcol-a'), ssPcolB = window.dxfColorVal('ss-pcol-b'), ssTcol = window.dxfColorVal('ss-tcol');
+  function circle(layer, e, n, z, r, col){ /* علامة النقطة حسب الشكل واللون المختارين */
+    window.dxfDrawMarker(g, layer, e, n, z, r, ssShape, col);
+  }
+  function lbl(pt, withZ){
+    var parts = [];
+    if(optNo && pt.id) parts.push(String(pt.id));
+    if(optElev && withZ && isFinite(pt.z)) parts.push(Number(pt.z).toFixed(2));
+    if(optCode && pt.code) parts.push(String(pt.code));
+    return parts.join(' ');
+  }
+  /* سحابة مراجعة (Revision Cloud): أقواس نصف دائرية حول مجموعة نقاط */
+  function cloud(pts){
+    var minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;
+    pts.forEach(function(q){ if(q.e<minx)minx=q.e; if(q.e>maxx)maxx=q.e; if(q.n<miny)miny=q.n; if(q.n>maxy)maxy=q.n; });
+    var cx=(minx+maxx)/2, cy=(miny+maxy)/2, R=rad*4;
+    pts.forEach(function(q){ var d=Math.sqrt((q.e-cx)*(q.e-cx)+(q.n-cy)*(q.n-cy)); if(d+rad*3>R) R=d+rad*3; });
+    var N = Math.max(10, Math.min(48, Math.round(2*Math.PI*R/(rad*2.4))));
+    for(var i=0;i<N;i++){
+      var a1=2*Math.PI*i/N, a2=2*Math.PI*(i+1)/N;
+      var x1=cx+R*Math.cos(a1), y1=cy+R*Math.sin(a1), x2=cx+R*Math.cos(a2), y2=cy+R*Math.sin(a2);
+      var mx=(x1+x2)/2, my=(y1+y2)/2, cr=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))/2;
+      var dir=Math.atan2(y2-y1,x2-x1)*180/Math.PI;
+      var sa=((dir-180)%360+360)%360, ea=((dir)%360+360)%360;
+      g(0,'ARC'); g(8,'CLOUD'); g(62,1);
+      g(10,mx.toFixed(4)); g(20,my.toFixed(4)); g(30,'0.0');
+      g(40,cr.toFixed(4)); g(50,sa.toFixed(4)); g(51,ea.toFixed(4));
+    }
   }
   function txt(layer, e, n, h, s){
     s = String(s == null ? '' : s).replace(/[\r\n\t]/g,' ').substring(0, 120);
     if(!s) return;
-    g(0,'TEXT'); g(8, layer); g(7,'STANDARD');
+    g(0,'TEXT'); g(8, layer); if(ssTcol) g(62,ssTcol); g(7,'STANDARD');
     g(10, Number(e).toFixed(4)); g(20, Number(n).toFixed(4)); g(30,'0.0');
     g(40, Number(h).toFixed(4)); g(1, s); g(50,'0.0');
   }
@@ -18016,20 +18273,20 @@ function ssBuildDxf(kind){
   if(kind === 'a' || kind === 'both'){
     (SS.a||[]).forEach(function(pt){
       if(!pt||!isFinite(pt.e)||!isFinite(pt.n)) return;
-      circle('ORIG', pt.e, pt.n, pt.z, rad);
-      circle('0', pt.e, pt.n, pt.z, rad); /* layer 0 for picky apps */
-      txt('TXT', pt.e + rad*1.8, pt.n + rad*1.8, th, String(pt.id||'') + (isFinite(pt.z)?(' '+Number(pt.z).toFixed(2)):'') );
+      circle('ORIG', pt.e, pt.n, pt.z, rad, ssPcolA);
+      circle('0', pt.e, pt.n, pt.z, rad, ssPcolA); /* layer 0 for picky apps */
+      txt('TXT', pt.e + rad*1.8, pt.n + rad*1.8, th, lbl(pt, true));
     });
   }
   if(kind === 'b' || kind === 'both'){
     (SS.b||[]).forEach(function(pt){
       if(!pt||!isFinite(pt.e)||!isFinite(pt.n)) return;
-      circle('FIELD', pt.e, pt.n, pt.z, rad*0.85);
-      circle('0', pt.e, pt.n, pt.z, rad*0.85);
-      txt('TXT', pt.e + rad*1.8, pt.n - rad*2.2, th*0.9, String(pt.id||'') );
+      circle('FIELD', pt.e, pt.n, pt.z, rad*0.85, ssPcolB);
+      circle('0', pt.e, pt.n, pt.z, rad*0.85, ssPcolB);
+      txt('TXT', pt.e + rad*1.8, pt.n - rad*2.2, th*0.9, lbl(pt, true));
     });
   }
-  if(kind === 'both' && SS.rows && SS.rows.length){
+  if(kind === 'both' && optLines && SS.rows && SS.rows.length){
     SS.rows.forEach(function(r){
       if(r.pa && r.pb){
         line(r.ok ? 'OK' : 'DELTA', r.pa, r.pb);
@@ -18039,6 +18296,19 @@ function ssBuildDxf(kind){
           txt('TXT', mx, my, th*0.75, (r.ok?'OK ':'dH=') + Number(r.h).toFixed(3) + 'm');
         }
       }
+    });
+  }
+
+  /* سحابة حول النقاط غير المتطابقة (انحراف / موجودة في ملف واحد فقط) */
+  if(optCloud && SS.rows && SS.rows.length){
+    SS.rows.forEach(function(r){
+      if(r.kind === 'ok') return;
+      var set = [];
+      if(kind === 'both'){ if(r.pa) set.push(r.pa); if(r.pb) set.push(r.pb); }
+      else if(kind === 'a'){ if(r.pa) set.push(r.pa); }
+      else { if(r.pb) set.push(r.pb); }
+      set = set.filter(function(q){ return q && isFinite(q.e) && isFinite(q.n); });
+      if(set.length) cloud(set);
     });
   }
 
@@ -19370,5 +19640,36 @@ window.CV={addPhone:addPhone,delPhone:delPhone,clearAll:clearAll,resetNow:resetN
 })();
 </script>
 
+<script>
+/* رسم علامة النقطة في DXF حسب الشكل المختار (LINE / CIRCLE فقط — متوافق R12) */
+window.dxfShapeVal = function(name){
+  try { var el = document.querySelector('input[name="'+name+'"]:checked'); return el ? el.value : 'x'; } catch(e){ return 'x'; }
+};
+window.dxfColorVal = function(name){
+  try { var el = document.querySelector('input[name="'+name+'"]:checked'); var v = el ? parseInt(el.value,10) : 0; return v>0 ? v : 0; } catch(e){ return 0; }
+};
+window.dxfDrawMarker = function(g, layer, e, n, z, r, shape, color){
+  e = Number(e); n = Number(n); r = Number(r); var zz = Number(z||0).toFixed(4);
+  function L(x1,y1,x2,y2){
+    g(0,'LINE'); g(8,layer); if(color) g(62,color);
+    g(10,(e+x1).toFixed(4)); g(20,(n+y1).toFixed(4)); g(30,zz);
+    g(11,(e+x2).toFixed(4)); g(21,(n+y2).toFixed(4)); g(31,zz);
+  }
+  function C(rr){
+    g(0,'CIRCLE'); g(8,layer); if(color) g(62,color);
+    g(10,e.toFixed(4)); g(20,n.toFixed(4)); g(30,zz); g(40,rr.toFixed(4));
+  }
+  switch(shape){
+    case 'plus':     L(-r,0,r,0); L(0,-r,0,r); break;
+    case 'circle':   C(r); break;
+    case 'square':   L(-r,-r,r,-r); L(r,-r,r,r); L(r,r,-r,r); L(-r,r,-r,-r); break;
+    case 'diamond':  var d=r*1.25; L(0,-d,d,0); L(d,0,0,d); L(0,d,-d,0); L(-d,0,0,-d); break;
+    case 'triangle': var t=r*1.2, b=-r*0.75; L(0,t,r*1.1,b); L(r*1.1,b,-r*1.1,b); L(-r*1.1,b,0,t); break;
+    case 'dot':      C(r); C(Math.max(r*0.18, 0.01)); break;
+    case 'circlex':  var k=r*0.7071; C(r); L(-k,-k,k,k); L(-k,k,k,-k); break;
+    default:         L(-r,-r,r,r); L(-r,r,r,-r); /* X */
+  }
+};
+</script>
 </body>
 </html>
