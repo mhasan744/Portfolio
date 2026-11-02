@@ -251,14 +251,13 @@ if(r&&r.v&&r.v!=="apt"&&Date.now()-r.t<216e5){window.__aesRestore=r.v;document.d
             <div class="menu-card" onclick="showView('coord')">
               <div class="menu-icon coord">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
-                  <path d="M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                  <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/>
+                  <path d="M8.5 7.5h0M15.5 7.5h0M8.5 16.5h0M15.5 16.5h0" stroke-linecap="round"/>
                 </svg>
               </div>
               <div class="menu-text">
-                <h2><span class="en">Coordinates</span><span class="ar">محول إحداثيات</span></h2>
-                <p>UTM ↔ Lat/Lon</p>
+                <h2><span class="en">Format Converter</span><span class="ar">محول الصيغ</span></h2>
+                <p>SDR / Text / Excel / GSI / PNT</p>
               </div>
             </div>
             <div class="menu-card" onclick="openToolGate('trav')">
@@ -935,251 +934,77 @@ if(r&&r.v&&r.v!=="apt"&&Date.now()-r.t<216e5){window.__aesRestore=r.v;document.d
       </div>
     </div>
 
-    <!-- ===== COORDINATES ===== -->
+    <!-- ===== FORMAT CONVERTER (was COORDINATES) ===== -->
     <div id="view-coord" class="app-view">
       <button class="back-btn" onclick="showView('home')">› الرجوع للقائمة</button>
       <div class="app-header">
-        <h2>Coordinate Converter — محول الإحداثيات</h2>
-        <p>تحويل UTM ⇄ خطوط الطول ودوائر العرض وفتح النقاط على الخرائط</p>
+        <h2>Format Converter — محول الصيغ</h2>
+        <p>حوّل بين SDR • Text • Excel • CSV • GSI • PNT • DXF • KML</p>
       </div>
 
       <div class="section">
-        <div class="section-title">اختيار الدولة والمنطقة / الزون</div>
+        <div class="section-title"><span class="num">1</span> رفع الملف</div>
+        <p class="note" style="margin-top:0;">الصيغ المدعومة للقراءة: <b>SDR / Text / CSV / Excel / GSI / PNT</b></p>
         <div class="form-group">
-          <label>الدولة</label>
-          <select id="country-select" onchange="onCountryChange()">
-            <option value="">— اختر الدولة —</option>
-            <option value="eg">جمهورية مصر العربية</option>
-            <option value="sa">المملكة العربية السعودية</option>
-            <option value="ae">الإمارات العربية المتحدة</option>
-            <option value="kw">الكويت</option>
-            <option value="ly">ليبيا</option>
-          </select>
+          <label>اختر الملف</label>
+          <input type="file" id="fmt-file" accept=".sdr,.txt,.csv,.xlsx,.xls,.gsi,.pnt,.dat,.crd,.xyz,.tsv" style="padding:10px;">
         </div>
-        <div class="form-group">
-          <label>المحافظة / المنطقة</label>
-          <select id="gov-select" onchange="onGovChange()">
-            <option value="">— اختر الدولة أولاً —</option>
-          </select>
-        </div>
-        <p class="note" id="zone-hint" style="margin-top:0;margin-bottom:10px;">
-          اختر الدولة ثم المحافظة ليتم تحديد رقم الزون تلقائيًا
-        </p>
-        <div class="form-group">
-          <label>رقم الزون (UTM Zone)</label>
-          <input type="number" id="utm-zone" min="1" max="60" step="1" placeholder="مثال: 35 أو 36" value="36">
-        </div>
-        <div class="form-group">
-          <label>نصف الكرة</label>
-          <select id="utm-hemi">
-            <option value="N" selected>شمالي (N)</option>
-            <option value="S">جنوبي (S)</option>
-          </select>
-        </div>
+        <div id="fmt-file-info" class="note" style="display:none;margin-top:8px;"></div>
       </div>
 
       <div class="section">
-        <div class="section-title">تحويل نقطة واحدة (UTM → خريطة)</div>
+        <div class="section-title"><span class="num">2</span> ترتيب الإحداثيات</div>
         <div class="form-group">
-          <label>Easting (E) — الشرق</label>
-          <input type="number" id="utm-e" step="0.001" placeholder="مثال: 330000">
+          <label>ترتيب الأعمدة في الملف / التصدير</label>
+          <select id="fmt-order">
+            <option value="EN">PT — E — N — Z — Code</option>
+            <option value="NE" selected>PT — N — E — Z — Code</option>
+          </select>
         </div>
+        <p class="note" style="margin-top:0;">اختر نفس ترتيب ملفك الأصلي حتى تُقرأ النقاط صح، وسيتبعه ملف التصدير.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="num">3</span> صيغة التصدير</div>
         <div class="form-group">
-          <label>Northing (N) — الشمال</label>
-          <input type="number" id="utm-n" step="0.001" placeholder="مثال: 3320000">
+          <label>عايز الملف بصيغة إيه؟</label>
+          <select id="fmt-out">
+            <option value="sdr">SDR (Total Station)</option>
+            <option value="text">Text (.txt)</option>
+            <option value="excel">Excel (.xlsx)</option>
+            <option value="csv">CSV</option>
+            <option value="gsi">GSI (Leica)</option>
+            <option value="pnt">PNT</option>
+            <option value="dxf">DXF (AutoCAD)</option>
+            <option value="kml">KML (Google Earth)</option>
+          </select>
         </div>
-        <div class="form-group">
-          <label>اسم النقطة (اختياري)</label>
-          <input type="text" id="utm-name" placeholder="مثال: نقطة 1">
+        <div class="form-group" id="fmt-zone-wrap" style="display:none;">
+          <label>رقم الزون UTM (لكملف KML فقط — تحويل تقريبي)</label>
+          <input type="number" id="fmt-zone" value="36" min="1" max="60" step="1">
         </div>
         <div class="btn-row">
-          <button class="btn-calc" onclick="convertSingleUTM()">تحويل ورسم ع اللوحة</button>
-          <button class="btn-reset" onclick="clearSingleUTM()">مسح</button>
+          <button class="btn-calc" id="fmt-convert-btn" onclick="fmtConvert()">تحويل وتنزيل الملف</button>
+          <button class="btn-reset" onclick="fmtReset()">مسح</button>
         </div>
-        <div id="single-result" style="display:none; margin-top:14px;">
-          <div class="result-row">
-            <span class="result-label">خط العرض (Lat)</span>
-            <span class="result-value blue" id="out-lat">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">خط الطول (Lon)</span>
-            <span class="result-value blue" id="out-lon">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Lat (DMS)</span>
-            <span class="result-value" id="out-latdms">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Lon (DMS)</span>
-            <span class="result-value" id="out-londms">—</span>
-          </div>
-          <div class="map-btns" style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-            <a id="link-gmaps" href="#" target="_blank" class="map-link maps">فتح في Google Maps</a>
-            <a id="link-gearth" href="#" target="_blank" class="map-link earth" onclick="return earthClick(event, 'single')">فتح في Google Earth</a>
-            <button type="button" class="map-link kml" onclick="downloadSingleKML()">تحميل KML</button>
-          </div>
-        </div>
+        <div id="fmt-status" class="note" style="display:none;margin-top:12px;"></div>
       </div>
 
-      <div class="section" id="cm-sec">
-        <div class="section-title">الخريطة — اضغط لتنزيل نقطة</div>
-        <p class="note" style="display:block; margin-top:0; margin-bottom:10px;">اضغط على أي مكان في الخريطة وهتتحول النقطة فورًا لـ E / N والزون وتتضاف للوحة النقاط والتصدير. اضغط على النقطة لعرض بياناتها أو حذفها.</p>
-        <div class="form-group">
-          <label>الزون للنقاط اللي بتنزلها</label>
-          <select id="cm-zone-mode">
-            <option value="auto" selected>تلقائي (حسب خط الطول)</option>
-            <option value="manual">استخدام الزون المحدد بالأعلى</option>
-          </select>
-        </div>
-        <div id="cm-map"></div>
-        <p id="cm-status" class="note" style="display:block; margin:8px 0 0;">اضغط على أي مكان في الخريطة لتنزيل نقطة.</p>
-        <div id="cm-last"></div>
-        <div class="btn-row" style="flex-wrap:wrap;">
-          <button class="btn-calc" onclick="cmLocate()">موقعي</button>
-          <button class="btn-calc" onclick="cmFit()">كل النقاط</button>
-          <button class="btn-reset" onclick="cmUndo()">تراجع</button>
-          <button class="btn-reset" onclick="clearPlot()">مسح الكل</button>
-        </div>
-        <div class="table-wrap" id="cm-list-wrap" style="display:none; margin-top:10px; max-height:220px; overflow:auto;">
-          <table><thead><tr><th>الاسم</th><th>E</th><th>N</th><th>Z</th><th></th></tr></thead><tbody id="cm-list"></tbody></table>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-title">تحويل عكسي (خطوط الطول ودوائر العرض → UTM)</div>
-        <div class="form-group">
-          <label>صيغة الإدخال</label>
-          <select id="ll-format" onchange="onLLFormatChange()">
-            <option value="dd" selected>درجات عشرية (مثال: 30.0444)</option>
-            <option value="dms">درجات ودقائق وثواني (DMS)</option>
-          </select>
-        </div>
-        <div id="ll-dd-box">
-          <div class="form-group">
-            <label>دائرة العرض (Latitude)</label>
-            <input type="number" id="ll-lat" step="any" placeholder="مثال: 30.044420">
-          </div>
-          <div class="form-group">
-            <label>خط الطول (Longitude)</label>
-            <input type="number" id="ll-lon" step="any" placeholder="مثال: 31.235712">
-          </div>
-        </div>
-        <div id="ll-dms-box" style="display:none;">
-          <div class="form-group">
-            <label>دائرة العرض (Latitude) — د / ق / ث / اتجاه</label>
-            <div style="display:flex; gap:6px;">
-              <input type="number" id="ll-lat-d" step="1" placeholder="درجة">
-              <input type="number" id="ll-lat-m" step="1" placeholder="دقيقة">
-              <input type="number" id="ll-lat-s" step="any" placeholder="ثانية">
-              <select id="ll-lat-h"><option value="N">N</option><option value="S">S</option></select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>خط الطول (Longitude) — د / ق / ث / اتجاه</label>
-            <div style="display:flex; gap:6px;">
-              <input type="number" id="ll-lon-d" step="1" placeholder="درجة">
-              <input type="number" id="ll-lon-m" step="1" placeholder="دقيقة">
-              <input type="number" id="ll-lon-s" step="any" placeholder="ثانية">
-              <select id="ll-lon-h"><option value="E">E</option><option value="W">W</option></select>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>الزون</label>
-          <select id="ll-zone-mode">
-            <option value="auto" selected>تلقائي (حسب خط الطول)</option>
-            <option value="manual">استخدام الزون المحدد بالأعلى</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>اسم النقطة (اختياري)</label>
-          <input type="text" id="ll-name" placeholder="مثال: نقطة 1">
-        </div>
-        <div class="btn-row">
-          <button class="btn-calc" onclick="convertLatLonToUTM()">تحويل</button>
-          <button class="btn-reset" onclick="clearLatLon()">مسح</button>
-        </div>
-        <div id="ll-result" style="display:none; margin-top:14px;">
-          <div class="result-row">
-            <span class="result-label">Easting (E)</span>
-            <span class="result-value blue" id="ll-out-e">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Northing (N)</span>
-            <span class="result-value blue" id="ll-out-n">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">الزون</span>
-            <span class="result-value green" id="ll-out-zone">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Lat (DMS)</span>
-            <span class="result-value" id="ll-out-latdms">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-label">Lon (DMS)</span>
-            <span class="result-value" id="ll-out-londms">—</span>
-          </div>
-          <div class="map-btns" style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-            <a id="ll-link-gmaps" href="#" target="_blank" class="map-link maps">فتح في Google Maps</a>
-            <a id="ll-link-gearth" href="#" target="_blank" class="map-link earth" onclick="return earthClick(event, 'll')">فتح في Google Earth</a>
-            <button type="button" class="map-link kml" onclick="copyLLResult()">نسخ E , N</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">استيراد ملف Excel (عدة نقاط)</div>
-        <p class="note" style="margin-top:0; margin-bottom:12px;">
-          الأعمدة المطلوبة: <b>E</b> (أو Easting) و <b>N</b> (أو Northing)<br>
-          اختياري: Name / الاسم — Zone / الزون
-        </p>
-        <div class="form-group">
-          <label>اختر ملف Excel (.xlsx / .xls / .csv)</label>
-          <input type="file" id="excel-file" accept=".xlsx,.xls,.csv" style="padding:10px;">
-        </div>
-        <div class="btn-row">
-          <button class="btn-calc" onclick="importExcelCoords()">استيراد وتحويل</button>
-        </div>
-        <div id="batch-result" style="display:none; margin-top:14px;">
-          <div class="result-row">
-            <span class="result-label">عدد النقاط</span>
-            <span class="result-value green" id="batch-count">—</span>
-          </div>
-          <div class="table-wrap" style="margin-top:10px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>E</th>
-                  <th>N</th>
-                  <th>Lat</th>
-                  <th>Lon</th>
-                </tr>
-              </thead>
-              <tbody id="batch-body"></tbody>
-            </table>
-          </div>
-          <div class="map-btns" style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-            <button type="button" class="map-link kml" onclick="downloadBatchKML()" style="flex:1;">تحميل كل النقاط KML (Google Earth)</button>
-            <button type="button" class="map-link maps" onclick="openBatchMaps()" style="flex:1;">فتح أول نقطة في Maps</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">لوحة النقاط والتصدير</div>
-        <p class="note" style="margin-top:0;">أي نقطة تحولها (UTM أو لات/لون أو ملف Excel) تُضاف تلقائيًا للوحة.</p>
-        <div class="form-group" style="display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="plot-link" onchange="renderPlot()" style="width:auto;">
-          <label style="margin:0;">ربط النقاط بخط بالترتيب</label>
-        </div>
-        <div class="diagram-box"><div class="diagram-title">رسم النقاط (<span id="plot-count">0</span>)</div><div id="plot-svg"></div></div>
-        <div class="btn-row" style="flex-wrap:wrap;">
-          <button class="btn-calc" onclick="exportPlotXlsx()">Excel</button>
-          <button class="btn-calc" onclick="exportPlotCsv()">CSV</button>
-          <button class="btn-calc" onclick="exportPlotKml()">KML</button>
-          <button class="btn-calc" onclick="exportPlotSvg()">SVG</button>
-          <button class="btn-reset" onclick="clearPlot()">مسح النقاط</button>
+      <div class="section" id="fmt-preview-sec" style="display:none;">
+        <div class="section-title">معاينة النقاط (<span id="fmt-pt-count">0</span>)</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>PT</th>
+                <th id="fmt-th-a">N</th>
+                <th id="fmt-th-b">E</th>
+                <th>Z</th>
+                <th>Code</th>
+              </tr>
+            </thead>
+            <tbody id="fmt-tbody"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -2425,6 +2250,14 @@ if(r&&r.v&&r.v!=="apt"&&Date.now()-r.t<216e5){window.__aesRestore=r.v;document.d
           <label>رفع الملف الأصلي (SDR / Text / CSV / Excel / أي امتداد)</label>
           <input type="file" id="ss-file-a" accept="*/*" multiple>
         </div>
+        <div class="form-group">
+          <label>ترتيب الإحداثيات في هذا الملف</label>
+          <select id="ss-order-a">
+            <option value="AUTO" selected>تلقائي (موصى به)</option>
+            <option value="NE">Northing ثم Easting (N, E) — N-E</option>
+            <option value="EN">Easting ثم Northing (E, N) — E-N</option>
+          </select>
+        </div>
         <p id="ss-status-a" class="note" style="margin-top:8px;">لم يُحمَّل بعد</p>
       </div>
 
@@ -2435,21 +2268,22 @@ if(r&&r.v&&r.v!=="apt"&&Date.now()-r.t<216e5){window.__aesRestore=r.v;document.d
           <label>رفع ملف الموقع (SDR / Text / CSV / Excel / أي امتداد)</label>
           <input type="file" id="ss-file-b" accept="*/*" multiple>
         </div>
+        <div class="form-group">
+          <label>ترتيب الإحداثيات في هذا الملف</label>
+          <select id="ss-order-b">
+            <option value="AUTO" selected>تلقائي (موصى به)</option>
+            <option value="NE">Northing ثم Easting (N, E) — N-E</option>
+            <option value="EN">Easting ثم Northing (E, N) — E-N</option>
+          </select>
+        </div>
         <p id="ss-status-b" class="note" style="margin-top:8px;">لم يُحمَّل بعد</p>
       </div>
 
       <div class="section">
         <div class="section-title"><span class="num">3</span> إعدادات المطابقة والعرض</div>
         <div class="form-group">
-          <label>ترتيب الأعمدة</label>
-          <select id="ss-order">
-            <option value="EN">Easting ثم Northing (E, N)</option>
-            <option value="NE" selected>Northing ثم Easting (N, E) — شائع في SDR</option>
-          </select>
-        </div>
-        <div class="form-group">
           <label>تسامح المطابقة الأفقية (متر)</label>
-          <input type="number" id="ss-tol" value="0.10" min="0.01" max="50" step="0.01">
+          <input type="number" id="ss-tol" value="0.001" min="0.001" max="50" step="0.001">
         </div>
         <div style="margin:14px 0 8px;font-weight:700;font-size:0.9rem;color:var(--gold);">إعدادات DXF</div>
         <div class="form-group">
@@ -2541,7 +2375,7 @@ if(r&&r.v&&r.v!=="apt"&&Date.now()-r.t<216e5){window.__aesRestore=r.v;document.d
           <p id="ss-map-info" class="note"></p>
           <p class="note" style="margin-top:8px;">
             ملف DXF يفتح على الموبايل (AutoCAD / DWG FastView / CAD Pockets) أو اللابتوب (AutoCAD / Civil 3D).<br>
-            شكل النقطة من الإعدادات أعلاه — بدون أرقام نقاط وبدون قيم الخطأ.<br>
+            النقاط = POINT حقيقية (غيّر شكلها/حجمها من أمر <b>DDPTYPE</b>) • الكتابة TEXT (الأمر <b>SCALETEXT</b>) • السحابة Polyline واحدة (الأمر <b>SCALE</b>).<br>
             الطبقات: <b style="color:#38bdf8">ORIG</b> أصلي • <b style="color:#fbbf24">FIELD</b> موقع • <b style="color:#4ade80">OK</b> مطابق • <b style="color:#f87171">DELTA</b> انحراف
           </p>
         </div>
@@ -3290,7 +3124,125 @@ endstream`);var xr=len;add(`xref
 startxref
 `+xr+`
 %%EOF`);var out=new Uint8Array(len),o=0;return parts.forEach(function(u){out.set(u,o),o+=u.length}),new Blob([out],{type:"application/pdf"})}async function exportSketch(box,btn){var svg=sketchSvg(box);if(!svg){alert("\u0645\u0641\u064A\u0634 \u0643\u0631\u0648\u0643\u064A \u0644\u0633\u0647 \u2014 \u0627\u0636\u063A\u0637 \u0627\u062D\u0633\u0628 \u0627\u0644\u0623\u0648\u0644");return}var old=btn.innerHTML;btn.disabled=!0,btn.textContent="\u062C\u0627\u0631\u064A \u0627\u0644\u062A\u062C\u0647\u064A\u0632...";try{var r=await svgToImage(svg),SC=3,pad=20,head=54,foot=34,title=(box.querySelector(".diagram-title")||{}).textContent||"\u0643\u0631\u0648\u0643\u064A";title=title.replace(/\s+/g," ").trim();var iw=Math.round((r.w+pad*2)*SC),ih=Math.round((r.h+head+foot+pad)*SC),cv=document.createElement("canvas");cv.width=iw,cv.height=ih;var cx=cv.getContext("2d");cx.fillStyle="#050a12",cx.fillRect(0,0,iw,ih),cx.scale(SC,SC),cx.direction="rtl",cx.textAlign="center",cx.textBaseline="middle",cx.fillStyle="#fbbf24",cx.font="bold 17px Tahoma,Arial,sans-serif",cx.fillText(title,(r.w+pad*2)/2,head/2+4),cx.strokeStyle="#38bdf8",cx.lineWidth=1,cx.beginPath(),cx.moveTo(pad,head-4),cx.lineTo(r.w+pad,head-4),cx.stroke(),cx.drawImage(r.img,pad,head,r.w,r.h);var d=new Date().toISOString().slice(0,10);cx.fillStyle="#94a3b8",cx.font="11px Tahoma,Arial,sans-serif",cx.direction="ltr",cx.fillText("Ahmed Eltabakh for Modern Surveying  \u2022  "+d,(r.w+pad*2)/2,head+r.h+foot/2+4);var jpg=b64ToBytes(cv.toDataURL("image/jpeg",.92).split(",")[1]),land=iw>ih,pw=land?841.89:595.28,ph=land?595.28:841.89,blob=buildPdf(jpg,pw,ph,iw,ih),fn="Sketch_"+(box.id||title.slice(0,18).replace(/[^\w\u0600-\u06FF]+/g,"_"))+"_"+d+".pdf";if(typeof window.saveFile=="function")await window.saveFile(blob,fn,"application/pdf");else{var a=document.createElement("a");a.href=URL.createObjectURL(blob),a.download=fn,document.body.appendChild(a),a.click(),setTimeout(function(){URL.revokeObjectURL(a.href),a.remove()},8e3)}}catch(e){console.error(e),alert("\u062A\u0639\u0630\u0631 \u062A\u0635\u062F\u064A\u0631 PDF: "+(e&&e.message?e.message:e))}btn.disabled=!1,btn.innerHTML=old}function init(){document.querySelectorAll(".diagram-box").forEach(function(box){if(!box.querySelector(".sk-pdf-btn")){var b=document.createElement("button");b.type="button",b.className="sk-pdf-btn",b.innerHTML=ICON+"\u062A\u0635\u062F\u064A\u0631 \u0627\u0644\u0643\u0631\u0648\u0643\u064A PDF",b.addEventListener("click",function(){exportSketch(box,b)}),box.appendChild(b)}})}window.ensureSketchPdfButtons=init,window.exportDiagramBoxPdf=function(boxOrId){var box=typeof boxOrId=="string"?document.getElementById(boxOrId):boxOrId;if(!box){alert("\u0644\u0627 \u064A\u0648\u062C\u062F \u0643\u0631\u0648\u0643\u064A");return}init();var btn=box.querySelector(".sk-pdf-btn");if(!btn){alert("\u062A\u0639\u0630\u0631 \u0625\u0646\u0634\u0627\u0621 \u0632\u0631 \u0627\u0644\u062A\u0635\u062F\u064A\u0631");return}exportSketch(box,btn)},document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init()})();</script>
-<script>(function(){var S={pts:[],name:"survey",ignored:0,obs:0};function $g(id){return document.getElementById(id)}function isNum(s){return s!==""&&s!=null&&isFinite(Number(s))}function normKeySdr(k){return String(k||"").trim().toLowerCase().replace(/[\s\-]+/g,"_")}function parseGsiLine(raw){var s=raw.trim().replace(/^\*/,""),w;if(/\s/.test(s))w=s.split(/\s+/);else{var L2=s.length,wl=L2%16===0?16:L2%24===0?24:16;w=[];for(var i=0;i<L2;i+=wl)w.push(s.slice(i,i+wl))}var d={};return w.forEach(function(x){if(!(x.length<8||x.charAt(6)!=="+"&&x.charAt(6)!=="-")){var wi=x.slice(0,2),u=x.charAt(5),data=x.slice(7),sg=x.charAt(6)==="-"?-1:1;if(wi==="11"||wi==="71"||wi==="41")d[wi]=data.replace(/^0+/,""),wi==="11"&&!d[wi]&&(d[wi]="0");else if((wi==="81"||wi==="82"||wi==="83")&&/^\d+$/.test(data)){var sc={0:.001,1:3048e-7,6:1e-4,7:3048e-8,8:1e-5}[u]||.001;d[wi]=Number((sg*Number(data)*sc).toFixed(5))}}}),d[81]===void 0||d[82]===void 0?null:{id:d[11]||"",n:d[82],e:d[81],z:d[83]!==void 0?d[83]:0,code:d[71]||d[41]||"",attrs:{}}}function parseSDR(text,swap){var pts=[],ignored=0,obs=0,lines=String(text).split(/\r\n|\r|\n/);return lines.forEach(function(raw){if(!(!raw||!raw.trim())){if(/^\*?\d\d[.\d]{4}[+-]\d{6,}/.test(raw.trim())){var gp=parseGsiLine(raw);gp?(gp.id||(gp.id=String(pts.length+1)),pts.push(gp)):ignored++;return}var line=raw.replace(/\t/g," "),id,a,b,z,code,rec=/^\d\d[A-Za-z][A-Za-z0-9]/.test(line)?line.slice(0,4).toUpperCase():null;if(rec)if(rec.slice(0,2)==="08"){var body=line.slice(4),f=[0,16,32,48,64].map(function(i){return body.slice(i,i+16).trim()});if(isNum(f[1])&&isNum(f[2]))id=f[0],a=Number(f[1]),b=Number(f[2]),z=isNum(f[3])?Number(f[3]):0,code=f[4]||"";else{var t=body.trim().split(/\s+/);if(t.length>=3&&isNum(t[1])&&isNum(t[2]))id=t[0],a=Number(t[1]),b=Number(t[2]),z=isNum(t[3])?Number(t[3]):0,code=t.slice(4).join(" ");else{ignored++;return}}}else{(rec==="09F1"||rec==="07F1"||rec==="09F2"||rec==="07F2")&&obs++,ignored++;return}else{var tk=line.trim().split(/[,;\s]+/).map(function(x){return x.replace(/^["']+|["']+$/g,"")});if(tk.length>=3&&isNum(tk[1])&&isNum(tk[2]))id=tk[0],a=Number(tk[1]),b=Number(tk[2]),z=isNum(tk[3])?Number(tk[3]):0,code=tk.slice(4).join(" ");else{ignored++;return}}var n=swap?b:a,e=swap?a:b,attrs={};code&&String(code).split(/[|;/]/).forEach(function(part){var m=String(part).trim().match(/^([A-Za-z\u0600-\u06FF_]+)\s*[=:]\s*(.+)$/);m&&(attrs[normKeySdr(m[1])]=m[2].trim())}),pts.push({id:id||String(pts.length+1),n,e,z,code:code||"",attrs})}}),{pts,ignored,obs}}function dxfClean(s){return String(s).replace(/[\r\n]+/g," ")}function buildDXF(pts,o){var out=[];function g(c,v){out.push(String(c)),out.push(String(v))}var layers=[["0",7],["SDR_POINTS",1],["SDR_NO",3],["SDR_ELEV",2],["SDR_CODE",6],["SDR_LINE",5]],minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0,minZ=0,maxZ=0;pts.forEach(function(p){p.e<minE&&(minE=p.e),p.e>maxE&&(maxE=p.e),p.n<minN&&(minN=p.n),p.n>maxN&&(maxN=p.n),isFinite(p.z)&&(p.z<minZ&&(minZ=p.z),p.z>maxZ&&(maxZ=p.z))}),isFinite(minE)||(minE=0,maxE=1,minN=0,maxN=1);var pr=Math.max(maxE-minE,maxN-minN)*.05||1;g(0,"SECTION"),g(2,"HEADER"),g(9,"$ACADVER"),g(1,"AC1009"),g(9,"$DWGCODEPAGE"),g(3,"ANSI_1252"),g(9,"$INSUNITS"),g(70,6),g(9,"$INSBASE"),g(10,0),g(20,0),g(30,0),g(9,"$EXTMIN"),g(10,(minE-pr).toFixed(6)),g(20,(minN-pr).toFixed(6)),g(30,minZ),g(9,"$EXTMAX"),g(10,(maxE+pr).toFixed(6)),g(20,(maxN+pr).toFixed(6)),g(30,maxZ),g(9,"$LIMMIN"),g(10,(minE-pr).toFixed(6)),g(20,(minN-pr).toFixed(6)),g(9,"$LIMMAX"),g(10,(maxE+pr).toFixed(6)),g(20,(maxN+pr).toFixed(6)),g(9,"$PDMODE"),g(70,35),g(9,"$PDSIZE"),g(40,Math.max(.2,(o.th||.5)*.6)),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"TABLES"),g(0,"TABLE"),g(2,"LTYPE"),g(70,1),g(0,"LTYPE"),g(2,"CONTINUOUS"),g(70,0),g(3,"Solid line"),g(72,65),g(73,0),g(40,0),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"LAYER"),g(70,layers.length),layers.forEach(function(l){g(0,"LAYER"),g(2,l[0]),g(70,0),g(62,l[1]),g(6,"CONTINUOUS")}),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"STYLE"),g(70,1),g(0,"STYLE"),g(2,"STANDARD"),g(70,0),g(40,0),g(41,1),g(50,0),g(71,0),g(42,1),g(3,"txt"),g(4,""),g(0,"ENDTAB"),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"ENTITIES");var span=Math.max(maxE-minE,maxN-minN,1),h=Math.max(.3,o.th||span*.01,span*.008),rad=Math.max(.12,span*.006,h*.3);function text(layer,x,y,z,hh,s){g(0,"TEXT"),g(8,layer),o.tcol&&g(62,o.tcol),g(7,"STANDARD"),g(10,Number(x).toFixed(4)),g(20,Number(y).toFixed(4)),g(30,Number(z).toFixed(4)),g(40,Number(hh).toFixed(4)),g(1,dxfClean(s)),g(50,0)}if(o.line&&pts.length>1)for(var k=1;k<pts.length;k++){var A=pts[k-1],B=pts[k];g(0,"LINE"),g(8,"SDR_LINE"),g(10,A.e.toFixed(4)),g(20,A.n.toFixed(4)),g(30,(A.z||0).toFixed(4)),g(11,B.e.toFixed(4)),g(21,B.n.toFixed(4)),g(31,(B.z||0).toFixed(4))}function xmark(layer,e,n,z,r){window.dxfDrawMarker(g,layer,e,n,z,r,o.shape||"x",o.pcol||0)}return pts.forEach(function(p){xmark("SDR_POINTS",p.e,p.n,p.z,rad),xmark("0",p.e,p.n,p.z,rad);var dx=h*.6,y=p.n;o.no&&text("SDR_NO",p.e+dx,y+h*.35,0,h,String(p.id)),o.elev&&text("SDR_ELEV",p.e+dx,y-h*1,0,h*.8,Number(p.z).toFixed(3)),o.code&&p.code&&text("SDR_CODE",p.e+dx,y-h*1.9,0,h*.75,String(p.code))}),g(0,"ENDSEC"),g(0,"EOF"),out.join(`\r\n`)+`\r\n`}function toCSV(pts,ll){var hasLL=!!(ll&&ll.length===pts.length),head="ID,Northing,Easting,Elevation,Code"+(hasLL?",Latitude,Longitude":""),rows=pts.map(function(p,i){var cells=[String(p.id==null?"":p.id).replace(/,/g,";"),Number(p.n).toFixed(4),Number(p.e).toFixed(4),Number(p.z).toFixed(4),String(p.code==null?"":p.code).replace(/,/g,";")];return hasLL&&ll[i]&&isFinite(ll[i].lat)&&isFinite(ll[i].lon)?cells.push(ll[i].lat.toFixed(8),ll[i].lon.toFixed(8)):hasLL&&cells.push("",""),cells.join(",")});return head+`\r\n`+rows.join(`\r\n`)+`\r\n`}function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}function sketch(pts,showLabels,showLine){var W=640,H=460,pad=36,minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0;pts.forEach(function(p){minE=Math.min(minE,p.e),maxE=Math.max(maxE,p.e),minN=Math.min(minN,p.n),maxN=Math.max(maxN,p.n)});var dE=Math.max(maxE-minE,1e-6),dN=Math.max(maxN-minN,1e-6),sc=Math.min((W-2*pad)/dE,(H-2*pad)/dN);(!isFinite(sc)||sc<=0)&&(sc=1);var offX=(W-dE*sc)/2,offY=(H-dN*sc)/2;function X(e){return offX+(e-minE)*sc}function Y(n){return H-(offY+(n-minN)*sc)}var r=pts.length>1500?1.6:pts.length>400?2.4:3.6,fs=pts.length>200?8:10,s='<div class="sk-wrap"><div class="sk-tb"><button type="button" data-sk="in" title="\u062A\u0643\u0628\u064A\u0631">\uFF0B</button><button type="button" data-sk="out" title="\u062A\u0635\u063A\u064A\u0631">\uFF0D</button><button type="button" data-sk="rl" title="\u0644\u0641 \u064A\u0633\u0627\u0631 15\xB0">\u27F2</button><button type="button" data-sk="rr" title="\u0644\u0641 \u064A\u0645\u064A\u0646 15\xB0">\u27F3</button><button type="button" data-sk="north" title="\u0631\u062C\u0651\u0639 \u0627\u0644\u0634\u0645\u0627\u0644 \u0644\u0641\u0648\u0642">N\u2191</button><button type="button" data-sk="reset" title="\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0623\u0635\u0644\u064A">\u2302</button><span class="sk-info">100% \u2022 0\xB0</span></div><svg class="sk-svg" data-sc="'+sc+'" viewBox="0 0 '+W+" "+H+'" width="100%" style="display:block;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;touch-action:none;cursor:grab;overflow:hidden;-webkit-user-select:none;user-select:none;" xmlns="http://www.w3.org/2000/svg">';return s+='<g class="sk-north" data-t="translate('+(W-30)+',44)" transform="translate('+(W-30)+',44)"><path d="M0 -24 L7 6 L0 0 L-7 6 Z" fill="var(--accent)"/><text y="22" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text)">N</text></g>',s+='<g class="sk-sb" transform="translate('+pad+","+(H-14)+')"></g>',s+='<g class="sk-vp">',showLine&&pts.length>1&&(s+='<polyline points="'+pts.map(function(p){return X(p.e).toFixed(1)+","+Y(p.n).toFixed(1)}).join(" ")+'" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-linejoin="round"/>'),pts.forEach(function(p){var x=X(p.e),y=Y(p.n);s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r+'" fill="var(--accent)" stroke="var(--card)" stroke-width="0.8"/>',showLabels&&(s+='<text x="'+(x+r+2).toFixed(1)+'" y="'+(y-r).toFixed(1)+'" font-size="'+fs+'" fill="var(--text)">'+esc(p.id)+"</text>")}),s+'</g></svg><div class="sk-hint">\u0627\u0633\u062D\u0628 \u0628\u0625\u0635\u0628\u0639 \u0644\u0644\u062A\u062D\u0631\u064A\u0643 \u2022 \u0628\u0625\u0635\u0628\u0639\u064A\u0646: \u0642\u0631\u0651\u0628/\u0628\u0639\u0651\u062F \u0648\u0644\u0641 \u0627\u0644\u0644\u0648\u062D\u0629 \u2022 \u0627\u0644\u0645\u0627\u0648\u0633: \u0627\u0644\u0639\u062C\u0644\u0629 \u0644\u0644\u0632\u0648\u0645\u060C Shift+\u0627\u0644\u0639\u062C\u0644\u0629 \u0644\u0644\u062F\u0648\u0631\u0627\u0646\u060C \u062F\u0628\u0644 \u0643\u0644\u064A\u0643 \u0644\u0625\u0631\u062C\u0627\u0639 \u0627\u0644\u0648\u0636\u0639</div></div>'}var SV={k:1,a:0,tx:0,ty:0};function skReset(){SV={k:1,a:0,tx:0,ty:0}}function skClamp(k){return Math.max(.2,Math.min(80,k))}function skApply(svg){var g=svg.querySelector(".sk-vp");if(g){var deg=SV.a*180/Math.PI;g.setAttribute("transform","translate("+SV.tx.toFixed(2)+","+SV.ty.toFixed(2)+") rotate("+deg.toFixed(3)+") scale("+SV.k.toFixed(5)+")");var n=svg.querySelector(".sk-north");n&&n.setAttribute("transform",n.getAttribute("data-t")+" rotate("+deg.toFixed(3)+")");var sb=svg.querySelector(".sk-sb");if(sb){var W=640,pad=36,eff=(parseFloat(svg.getAttribute("data-sc"))||1)*SV.k,target=(W-2*pad)/eff/5,pw=Math.pow(10,Math.floor(Math.log10(target||1))),nice=pw;[1,2,5,10].forEach(function(m){m*pw<=target&&(nice=m*pw)});var bp=nice*eff;sb.innerHTML='<line x2="'+bp+'" stroke="var(--text)" stroke-width="2"/><line y1="-4" y2="4" stroke="var(--text)" stroke-width="2"/><line x1="'+bp+'" x2="'+bp+'" y1="-4" y2="4" stroke="var(--text)" stroke-width="2"/><text x="'+(bp+6)+'" y="4" font-size="10" fill="var(--muted)">'+ +nice.toPrecision(6)+" m</text>"}var info=svg.parentNode.querySelector(".sk-info");if(info){var d=(Math.round(deg)%360+360)%360;info.textContent=Math.round(SV.k*100)+"% \u2022 "+d+"\xB0"}}}function skInit(box){var svg=box.querySelector(".sk-svg");if(!svg)return;var wrap=svg.parentNode,vb=svg.viewBox.baseVal,CC={x:vb.width/2,y:vb.height/2};function toSvg(cx,cy){var pt=svg.createSVGPoint();pt.x=cx,pt.y=cy;var m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):{x:cx,y:cy}}function worldOf(c){var dx=c.x-SV.tx,dy=c.y-SV.ty,co=Math.cos(-SV.a),si=Math.sin(-SV.a);return{x:(dx*co-dy*si)/SV.k,y:(dx*si+dy*co)/SV.k}}function placeAt(w,c,k,a){SV.k=k,SV.a=a;var co=Math.cos(a),si=Math.sin(a);SV.tx=c.x-k*(w.x*co-w.y*si),SV.ty=c.y-k*(w.x*si+w.y*co)}function zoomAt(c,f){placeAt(worldOf(c),c,skClamp(SV.k*f),SV.a),skApply(svg)}function rotAt(c,da){placeAt(worldOf(c),c,SV.k,SV.a+da),skApply(svg)}wrap.querySelector(".sk-tb").addEventListener("click",function(e){var b=e.target.closest("button");if(b){var act=b.getAttribute("data-sk"),R=Math.PI/12;act==="in"?zoomAt(CC,1.4):act==="out"?zoomAt(CC,1/1.4):act==="rl"?rotAt(CC,-R):act==="rr"?rotAt(CC,R):act==="north"?rotAt(CC,-SV.a):act==="reset"&&(skReset(),skApply(svg))}}),svg.addEventListener("wheel",function(e){e.preventDefault();var c=toSvg(e.clientX,e.clientY);e.shiftKey||e.altKey?rotAt(c,(e.deltaY||e.deltaX)*.004):zoomAt(c,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)))},{passive:!1}),svg.addEventListener("dblclick",function(e){e.preventDefault(),skReset(),skApply(svg)});var ptrs={};function ids(){return Object.keys(ptrs)}svg.addEventListener("pointerdown",function(e){ptrs[e.pointerId]={x:e.clientX,y:e.clientY};try{svg.setPointerCapture(e.pointerId)}catch(_){}svg.style.cursor="grabbing"}),svg.addEventListener("pointermove",function(e){var p=ptrs[e.pointerId];if(p){var all=ids();if(all.length===1){var a=toSvg(p.x,p.y),b=toSvg(e.clientX,e.clientY);SV.tx+=b.x-a.x,SV.ty+=b.y-a.y,p.x=e.clientX,p.y=e.clientY,skApply(svg)}else if(all.length>=2){var o=ptrs[all[0]===String(e.pointerId)?all[1]:all[0]],a1=toSvg(p.x,p.y),a2=toSvg(o.x,o.y);p.x=e.clientX,p.y=e.clientY;var b1=toSvg(p.x,p.y),b2=a2,pm={x:(a1.x+a2.x)/2,y:(a1.y+a2.y)/2},nm={x:(b1.x+b2.x)/2,y:(b1.y+b2.y)/2},pd=Math.hypot(a1.x-a2.x,a1.y-a2.y)||1,nd=Math.hypot(b1.x-b2.x,b1.y-b2.y)||1,pa=Math.atan2(a1.y-a2.y,a1.x-a2.x),na=Math.atan2(b1.y-b2.y,b1.x-b2.x);placeAt(worldOf(pm),nm,skClamp(SV.k*nd/pd),SV.a+(na-pa)),skApply(svg)}}});function up(e){delete ptrs[e.pointerId],ids().length||(svg.style.cursor="grab")}svg.addEventListener("pointerup",up),svg.addEventListener("pointercancel",up),svg.addEventListener("lostpointercapture",up),skApply(svg)}function download(name,content,type){var mime=type||"application/octet-stream";try{if(typeof window.saveDownload=="function"){window.saveDownload(name,content,mime);return}if(typeof window.saveFile=="function"){window.saveFile(content,name,mime);return}}catch(e){}var blob=content instanceof Blob?content:new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url,a.download=name,a.rel="noopener",a.style.display="none",document.body.appendChild(a),a.click(),setTimeout(function(){try{a.remove(),URL.revokeObjectURL(url)}catch(e){}},8e3)}var LM=null,BELTS={purple:{lon0:27,fe:7e5,fn:2e5},xpurple:{lon0:27,fe:7e5,fn:12e5},red:{lon0:31,fe:615e3,fn:81e4},blue:{lon0:35,fe:3e5,fn:11e5}},SYS_NAMES={utm:"UTM (WGS84)",purple:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0628\u0646\u0641\u0633\u062C\u064A (\u0645\u0635\u0631 1907)",xpurple:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0628\u0646\u0641\u0633\u062C\u064A \u0627\u0644\u0645\u0645\u062A\u062F (\u0645\u0635\u0631 1907)",red:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0623\u062D\u0645\u0631 (\u0645\u0635\u0631 1907)",blue:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0623\u0632\u0631\u0642 (\u0645\u0635\u0631 1907)"};function tmInverse(E,N,q){var a=q.a,f=q.f,e2=2*f-f*f,ep2=e2/(1-e2),pw=Math.pow;function M(phi){return a*((1-e2/4-3*e2*e2/64-5*e2*e2*e2/256)*phi-(3*e2/8+3*e2*e2/32+45*e2*e2*e2/1024)*Math.sin(2*phi)+(15*e2*e2/256+45*e2*e2*e2/1024)*Math.sin(4*phi)-35*e2*e2*e2/3072*Math.sin(6*phi))}var M1=M(q.lat0*Math.PI/180)+(N-q.fn)/q.k0,mu=M1/(a*(1-e2/4-3*e2*e2/64-5*e2*e2*e2/256)),e1=(1-Math.sqrt(1-e2))/(1+Math.sqrt(1-e2)),phi1=mu+(3*e1/2-27*pw(e1,3)/32)*Math.sin(2*mu)+(21*e1*e1/16-55*pw(e1,4)/32)*Math.sin(4*mu)+151*pw(e1,3)/96*Math.sin(6*mu)+1097*pw(e1,4)/512*Math.sin(8*mu),s1=Math.sin(phi1),c1=Math.cos(phi1),t1=Math.tan(phi1),N1=a/Math.sqrt(1-e2*s1*s1),T1=t1*t1,C1=ep2*c1*c1,R1=a*(1-e2)/pw(1-e2*s1*s1,1.5),D=(E-q.fe)/(N1*q.k0),lat=phi1-N1*t1/R1*(D*D/2-(5+3*T1+10*C1-4*C1*C1-9*ep2)*pw(D,4)/24+(61+90*T1+298*C1+45*T1*T1-252*ep2-3*C1*C1)*pw(D,6)/720),lon=(D-(1+2*T1+C1)*pw(D,3)/6+(5-2*C1+28*T1-3*C1*C1+8*ep2+24*T1*T1)*pw(D,5)/120)/c1;return{lat,lon:q.lon0*Math.PI/180+lon}}function beltLL(key,E,N){for(var b=BELTS[key],a=6378200,f=1/298.3,r=tmInverse(E,N,{a,f,lat0:30,lon0:b.lon0,k0:1,fe:b.fe,fn:b.fn}),e2=2*f-f*f,sl=Math.sin(r.lat),cl=Math.cos(r.lat),Nn=a/Math.sqrt(1-e2*sl*sl),X=Nn*cl*Math.cos(r.lon)-130,Y=Nn*cl*Math.sin(r.lon)+110,Z=Nn*(1-e2)*sl-13,a2=6378137,f2=1/298.257223563,e22=2*f2-f2*f2,pp=Math.sqrt(X*X+Y*Y),phi=Math.atan2(Z,pp*(1-e22)),i=0;i<6;i++){var sp=Math.sin(phi),N2=a2/Math.sqrt(1-e22*sp*sp);phi=Math.atan2(Z+e22*N2*sp,pp)}return{lat:phi*180/Math.PI,lon:Math.atan2(Y,X)*180/Math.PI}}function conv(sys,E,N,zone,north){return sys==="utm"?utmToLatLon(E,N,zone,north):beltLL(sys,E,N)}function inEgypt(r){return r&&isFinite(r.lat)&&isFinite(r.lon)&&r.lat>21.5&&r.lat<32&&r.lon>24.5&&r.lon<37}function areaOk(sys,r){return inEgypt(r)?sys==="purple"?r.lon<29.2&&r.lat>28.1:sys==="xpurple"?r.lon<29.2&&r.lat<28.3:sys==="red"?r.lon>=28.8:sys==="blue"?r.lon>=32.4&&r.lat>=27.6&&r.lat<=31.4:!0:!1}function detectSys(zone,north){var ce=0,cn=0,nn=0;if(S.pts.forEach(function(p){isFinite(p.e)&&isFinite(p.n)&&(ce+=p.e,cn+=p.n,nn++)}),!nn)return null;ce/=nn,cn/=nn;var cc=$g("sdr-country").value;if(cc&&cc!=="eg")return{sys:"utm",swap:!1};for(var list=["utm","purple","red","xpurple","blue"],best=null,pass=0;pass<2;pass++)for(var E=pass?cn:ce,N=pass?ce:cn,i=0;i<list.length;i++){var sys=list[i];if(!(sys==="utm"&&!zone))try{var r=conv(sys,E,N,zone||36,north);if(!r||!areaOk(sys,r))continue;var score=50;sys==="purple"&&N>15e4&&N<55e4&&E>5e5&&E<95e4&&(score+=30),sys==="xpurple"&&N>9e5&&(score+=25),sys==="red"&&N>55e4&&N<12e5&&E>4e5&&E<9e5&&(score+=25),sys==="blue"&&E<5e5&&(score+=20),sys==="utm"&&(N>15e5||E>15e5)&&(score+=30),pass||(score+=2),sys==="purple"&&r.lat>30&&r.lon>25&&r.lon<29.5&&(score+=35),sys==="red"&&r.lat>29.5&&r.lon>29.5&&r.lon<33&&(score+=25),sys==="utm"&&r.lat>30.5&&r.lat<32&&r.lon>26&&r.lon<30&&(score+=25),sys==="red"&&r.lat<28&&(score-=15),sys==="purple"&&r.lon>30&&(score-=15),(!best||score>best.score)&&(best={sys,swap:!!pass,score})}catch(e){}}return best}function allLL(){if(S.sysUsed=null,S.mapMsg="",!S.pts.length)return null;var zone=parseInt($g("sdr-zone").value,10);zone>=1&&zone<=60||(zone=0);var north=$g("sdr-hemi").value==="N",v=$g("sdr-sys").value,d;if(v==="auto"){if(d=detectSys(zone,north),!d)return S.mapMsg="\u0645\u0634 \u0642\u0627\u062F\u0631 \u0623\u062D\u062F\u062F \u0646\u0638\u0627\u0645 \u0627\u0644\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627. \u0627\u062E\u062A\u0627\u0631 \u0627\u0644\u0646\u0638\u0627\u0645 \u064A\u062F\u0648\u064A\u064B\u0627 \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629.",null}else{if(v==="utm"&&!zone)return S.mapMsg="\u0627\u0643\u062A\u0628 \u0631\u0642\u0645 \u0632\u0648\u0646 \u0635\u062D\u064A\u062D (1 \u0625\u0644\u0649 60)",null;d={sys:v,swap:!1}}for(var out=[],i=0;i<S.pts.length;i++){var p=S.pts[i],r=d.swap?conv(d.sys,p.n,p.e,zone,north):conv(d.sys,p.e,p.n,zone,north);if(!r||!isFinite(r.lat)||!isFinite(r.lon))return S.mapMsg="\u062A\u0639\u0630\u0631 \u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u0628\u0627\u0644\u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u062E\u062A\u0627\u0631",null;out.push(r)}return S.sysUsed=d,out}function centerOf(ll){var a=1/0,b=-1/0,c=1/0,d=-1/0;return ll.forEach(function(r){a=Math.min(a,r.lat),b=Math.max(b,r.lat),c=Math.min(c,r.lon),d=Math.max(d,r.lon)}),{lat:(a+b)/2,lon:(c+d)/2}}function mapInfo(){var el=$g("sdr-map-info");if(!S.pts.length){el.textContent="";return}var ll=allLL();if(!ll){el.textContent=S.mapMsg||"";return}var d=S.sysUsed;if(d&&d.swap&&!S.swapDone){S.swapDone=!0,S.swapNote=!0,$g("sdr-order").value=$g("sdr-order").value==="EN"?"NE":"EN",reparse();return}var c=centerOf(ll),inEg=inEgypt(c),warn=!inEg&&$g("sdr-country").value!==""&&$g("sdr-country").value!=="eg"?"":!inEg&&$g("sdr-sys").value!=="auto"?'<br><span style="color:var(--warning)">\u26A0 \u0627\u0644\u0645\u0643\u0627\u0646 \u062F\u0647 \u062E\u0627\u0631\u062C \u0645\u0635\u0631. \u062C\u0631\u0651\u0628 \u062A\u062E\u062A\u0627\u0631 \xAB\u062A\u0644\u0642\u0627\u0626\u064A\xBB \u0623\u0648 \u0646\u0638\u0627\u0645 \u062A\u0627\u0646\u064A.</span>':"",note=S.swapDone&&S.swapNote?"<br>\u062A\u0645 \u062A\u0628\u062F\u064A\u0644 \u062A\u0631\u062A\u064A\u0628 \u0627\u0644\u0623\u0639\u0645\u062F\u0629 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0625\u0644\u0649 E \u062B\u0645 N.":"";el.innerHTML="\u0627\u0644\u0646\u0638\u0627\u0645: "+(SYS_NAMES[d.sys]||d.sys)+" \u2022 \u062A\u0645 \u062A\u062D\u0648\u064A\u0644 "+ll.length+" \u0646\u0642\u0637\u0629 \u2022 \u0645\u0631\u0643\u0632 \u0627\u0644\u0646\u0642\u0627\u0637: "+c.lat.toFixed(6)+"\xB0\u060C "+c.lon.toFixed(6)+"\xB0"+note+warn}function showMapSec(){$g("sdr-map-sec").style.display="block",mapInfo()}function onCountry(){var code=$g("sdr-country").value,rg=$g("sdr-region"),hint=$g("sdr-zone-hint");if(rg.innerHTML="",!code||typeof ZONE_DATA=="undefined"||!ZONE_DATA[code]){rg.innerHTML='<option value="">\u2014 \u0627\u062E\u062A\u0631 \u0627\u0644\u062F\u0648\u0644\u0629 \u0623\u0648\u0644\u0627\u064B \u2014</option>',hint.textContent="\u0627\u062E\u062A\u0627\u0631 \u0627\u0644\u062F\u0648\u0644\u0629 \u0648\u0627\u0644\u0645\u0646\u0637\u0642\u0629 \u0644\u064A\u062A\u062D\u062F\u062F \u0631\u0642\u0645 \u0627\u0644\u0632\u0648\u0646 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627";return}var d=ZONE_DATA[code];hint.textContent=d.hint,rg.innerHTML='<option value="">\u2014 \u0627\u062E\u062A\u0631 \u0627\u0644\u0645\u062F\u064A\u0646\u0629 / \u0627\u0644\u0645\u0646\u0637\u0642\u0629 \u2014</option>',d.regions.forEach(function(r){var o=document.createElement("option");o.value=r.zone,o.textContent=r.name+" \u2014 Zone "+r.zone+"N",rg.appendChild(o)})}function onRegion(){var v=$g("sdr-region").value;v&&($g("sdr-zone").value=v,$g("sdr-hemi").value="N",showMapSec())}window.sdrOpen=function(kind){var ll=allLL();if(!ll){mapInfo();return}var c=centerOf(ll),u=kind==="ge"?"https://earth.google.com/web/search/"+c.lat+","+c.lon:"https://www.google.com/maps/place/"+c.lat+","+c.lon+"/@"+c.lat+","+c.lon+",19z/data=!3m1!1e3";window.open(u,"_blank")};var OV=null,showNames=!0;function ensureOV(){if(OV)return OV;OV=document.createElement("div"),OV.id="sdr-map-ov",OV.style.cssText="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0b1220;flex-direction:column;direction:rtl;";var bs="padding:8px 12px;border-radius:10px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:0.9rem;";return OV.innerHTML='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#0f172a;color:#f1f5f9;"><button id="sdr-ov-close" type="button" style="'+bs+'">\u2715 \u0625\u063A\u0644\u0627\u0642</button><span id="sdr-ov-title" style="flex:1;text-align:center;font-size:0.85rem;"></span><button id="sdr-ov-names" type="button" style="'+bs+'">\u0627\u0644\u0623\u0633\u0645\u0627\u0621</button><button id="sdr-ov-fit" type="button" style="'+bs+'">\u2922</button></div><div id="sdr-ov-warn" style="display:none;padding:10px 12px;background:#422006;color:#fde68a;font-size:0.82rem;line-height:1.6;"></div><style>#sdr-map .leaflet-tile{visibility:visible!important;max-width:none!important;max-height:none!important}#sdr-map{position:relative;background:#0b1220}</style><div id="sdr-map" style="flex:1;min-height:0;"></div>',document.body.appendChild(OV),$g("sdr-ov-close").onclick=function(){OV.style.display="none"},$g("sdr-ov-names").onclick=function(){showNames=!showNames,drawPts(!1)},$g("sdr-ov-fit").onclick=function(){fitAll()},OV}var CUR=null;function fitAll(){!LM||!CUR||(LM.invalidateSize(),LM.fitBounds(L.latLngBounds(CUR.map(function(r){return[r.lat,r.lon]})),{padding:[30,30],maxZoom:22}))}function drawPts(fit){if(!(!LM||!CUR)){LM._sdrGrp&&LM.removeLayer(LM._sdrGrp);var g=L.layerGroup(),latlngs=CUR.map(function(r){return[r.lat,r.lon]});$g("sdr-line").checked&&CUR.length>1&&L.polyline(latlngs,{color:"#fbbf24",weight:3}).addTo(g),CUR.forEach(function(r,i){var m=L.circleMarker([r.lat,r.lon],{radius:CUR.length>400?4:6,color:"#ffffff",weight:2,fillColor:"#ef4444",fillOpacity:1});m.bindTooltip(String(S.pts[i].id),{permanent:showNames,direction:"right",offset:[6,0]}),m.addTo(g)}),g.addTo(LM),LM._sdrGrp=g,fit&&fitAll()}}function showMapWarn(){var w=$g("sdr-ov-warn");if(!(!w||!CUR)){var c=centerOf(CUR),gm="https://www.google.com/maps/place/"+c.lat+","+c.lon+"/@"+c.lat+","+c.lon+",19z/data=!3m1!1e3",gj="";if(CUR.length<=400){var f=CUR.map(function(r,i){return{type:"Feature",properties:{name:String(S.pts[i].id)},geometry:{type:"Point",coordinates:[+r.lon.toFixed(6),+r.lat.toFixed(6)]}}});gj="https://geojson.io/#data=data:application/json,"+encodeURIComponent(JSON.stringify({type:"FeatureCollection",features:f}))}var a='style="color:#fbbf24;text-decoration:underline;margin-inline-end:12px;"';w.innerHTML="\u0635\u0648\u0631 \u0627\u0644\u0642\u0645\u0631 \u0627\u0644\u0635\u0646\u0627\u0639\u064A \u0645\u0634 \u0628\u062A\u062A\u062D\u0645\u0644. \u0627\u0644\u0635\u0641\u062D\u0629 \u063A\u0627\u0644\u0628\u064B\u0627 \u0645\u0641\u062A\u0648\u062D\u0629 \u062F\u0627\u062E\u0644 \u0645\u0639\u0627\u064A\u0646\u0629 (Claude / \u0648\u0627\u062A\u0633\u0627\u0628) \u0628\u062A\u0645\u0646\u0639 \u0627\u0644\u0635\u0648\u0631 \u0645\u0646 \u0627\u0644\u0625\u0646\u062A\u0631\u0646\u062A. \u0627\u0641\u062A\u062D \u0645\u0644\u0641 \u0627\u0644\u0640 HTML \u0645\u0646 \u0645\u062A\u0635\u0641\u062D <b>Chrome \u0623\u0648 Safari</b> \u0648\u0647\u062A\u0634\u062A\u063A\u0644.<br><a "+a+' target="_blank" rel="noopener" href="'+gm+'">Google Maps \u0642\u0645\u0631 \u0635\u0646\u0627\u0639\u064A</a>'+(gj?"<a "+a+' target="_blank" rel="noopener" href="'+gj+'">\u0643\u0644 \u0627\u0644\u0646\u0642\u0627\u0637 \u0639\u0644\u0649 geojson.io</a>':""),w.style.display="block"}}window.sdrShowMap=function(){var ll=allLL();if(!ll){mapInfo();return}if(typeof L=="undefined"){alert("\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u062E\u0631\u064A\u0637\u0629 \u0644\u0645 \u062A\u064F\u062D\u0645\u064E\u0651\u0644. \u062A\u0623\u0643\u062F \u0645\u0646 \u0627\u0644\u0625\u0646\u062A\u0631\u0646\u062A \u0648\u062D\u0627\u0648\u0644 \u062A\u0627\u0646\u064A.");return}var lk=document.querySelector('link[href*="leaflet"]');lk&&(lk.media="all"),CUR=ll,showNames=ll.length<=150;var ov=ensureOV();if(ov.style.display="flex",$g("sdr-ov-title").textContent=ll.length+" \u0646\u0642\u0637\u0629 \u2022 \u0635\u0648\u0631 \u0642\u0645\u0631 \u0635\u0646\u0627\u0639\u064A Esri",!LM){LM=L.map($g("sdr-map"),{zoomControl:!0,maxZoom:22,minZoom:2});var errs=0,ok=0,swapped=!1,U1="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",U2="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",sat=L.tileLayer(U1,{maxZoom:18,maxNativeZoom:18,attribution:"Esri, Maxar, Earthstar Geographics"}).addTo(LM);sat.on("tileload",function(){ok++,$g("sdr-ov-warn").style.display="none"}),sat.on("tileerror",function(){errs++,errs===3&&!ok&&!swapped&&(swapped=!0,sat.setUrl(U2)),errs>=8&&!ok&&showMapWarn()}),L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{maxZoom:22,maxNativeZoom:18}).addTo(LM),setTimeout(function(){ok||showMapWarn()},6e3)}LM.invalidateSize(),drawPts(!0),setTimeout(function(){LM.invalidateSize(),fitAll()},250)};function buildSdrKmlString(){var ll=allLL();if(!ll)return mapInfo(),null;function x(t){return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;")}function descOf(p){var lines=["ID: "+p.id,"Z: "+p.z.toFixed(3)];p.code&&lines.push("Code: "+p.code);var a=p.attrs||{};return Object.keys(a).forEach(function(k2){a[k2]!=""&&lines.push(k2+": "+a[k2])}),lines.join(`
+<script>(function(){var S={pts:[],name:"survey",ignored:0,obs:0};function $g(id){return document.getElementById(id)}function isNum(s){return s!==""&&s!=null&&isFinite(Number(s))}function normKeySdr(k){return String(k||"").trim().toLowerCase().replace(/[\s\-]+/g,"_")}function parseGsiLine(raw){var s=raw.trim().replace(/^\*/,""),w;if(/\s/.test(s))w=s.split(/\s+/);else{var L2=s.length,wl=L2%16===0?16:L2%24===0?24:16;w=[];for(var i=0;i<L2;i+=wl)w.push(s.slice(i,i+wl))}var d={};return w.forEach(function(x){if(!(x.length<8||x.charAt(6)!=="+"&&x.charAt(6)!=="-")){var wi=x.slice(0,2),u=x.charAt(5),data=x.slice(7),sg=x.charAt(6)==="-"?-1:1;if(wi==="11"||wi==="71"||wi==="41")d[wi]=data.replace(/^0+/,""),wi==="11"&&!d[wi]&&(d[wi]="0");else if((wi==="81"||wi==="82"||wi==="83")&&/^\d+$/.test(data)){var sc={0:.001,1:3048e-7,6:1e-4,7:3048e-8,8:1e-5}[u]||.001;d[wi]=Number((sg*Number(data)*sc).toFixed(5))}}}),d[81]===void 0||d[82]===void 0?null:{id:d[11]||"",n:d[82],e:d[81],z:d[83]!==void 0?d[83]:0,code:d[71]||d[41]||"",attrs:{}}}function parseSDR(text,swap){
+var pts=[],ignored=0,obs=0,curId=null,curCode="",lines=String(text).replace(/^\ufeff/,"").split(/\r\n|\r|\n/);
+function normNum(s){if(s==null||s==="")return NaN;var t=String(s).trim().replace(/,/g,".");if(/[٠-٩]/.test(t))t=t.replace(/[٠-٩]/g,function(d){return"0123456789"["٠١٢٣٤٥٦٧٨٩".indexOf(d)]});var n=Number(t);return isFinite(n)?n:NaN}
+function pushPt(id,a,b,z,code){
+  a=normNum(a);b=normNum(b);z=normNum(z);
+  if(!isFinite(a)||!isFinite(b)){ignored++;return}
+  var n=swap?b:a,e=swap?a:b;
+  pts.push({id:String(id==null||id===""?pts.length+1:id).trim()||String(pts.length+1),n:n,e:e,z:isFinite(z)?z:0,code:code?String(code).trim():"",attrs:{}});
+}
+function numsIn(s){var out=[],re=/[-+]?\d+(?:[.,]\d+)?/g,m;while((m=re.exec(String(s))))out.push(m[0]);return out}
+// Split stuck id+coord: "1319926.37" → {id:"1",val:319926.37}, "1791082.585" → {id:"1",val:791082.585}
+function splitIdCoord(tok){
+  var s=String(tok).replace(/,/g,".");
+  if(!/^\d+\.?\d*$/.test(s))return null;
+  // id (1-4 digits) + coordinate with 6+ digits before decimal
+  var m=s.match(/^(\d{1,4})(\d{6,}(?:\.\d+)?)$/);
+  if(!m)return null;
+  var id=m[1],val=parseFloat(m[2]);
+  if(!isFinite(val)||val<1000)return null;
+  // avoid splitting real coordinates that just happen to be long (e.g. 319926.37 alone has no leading id)
+  // only split when total leading digits before decimal > 6
+  var before=s.split(".")[0];
+  if(before.length<=6)return null;
+  return{id:String(parseInt(id,10)),val:val};
+}
+function parse08Body(body){
+  // fixed-width 16-char fields (SDR33 style)
+  var fields=[],i;for(i=0;i<5;i++)fields.push(body.slice(i*16,(i+1)*16).trim());
+  if(fields[0]!==""||fields[1]!==""){
+    var fnums=fields.map(normNum);
+    // case: id in field0, coords in field1,2,3
+    if(fields[0]!==""&&isFinite(fnums[1])&&isFinite(fnums[2])&&Math.abs(fnums[1])>10&&Math.abs(fnums[2])>10){
+      return{id:fields[0].replace(/^0+(?=\d)/,""),a:fnums[1],b:fnums[2],z:isFinite(fnums[3])?fnums[3]:0};
+    }
+  }
+  // space-separated tokens
+  var parts=body.trim().split(/\s+/).filter(Boolean);
+  if(!parts.length)return null;
+  var nums=numsIn(body);
+  if(nums.length<2)return null;
+  // Try: first token is pure id (non-numeric or small int), then a b z
+  var id=null,a,b,z=0;
+  var p0=parts[0],n0=normNum(p0);
+  if(!isFinite(n0)||(Number.isInteger(n0)&&Math.abs(n0)<1e6&&nums.length>=3&&Math.abs(normNum(nums[1]))>100)){
+    // id then coords — but check if nums[0] is stuck id+coord
+    var sc0=splitIdCoord(nums[0]);
+    if(sc0&&nums.length>=2){
+      id=sc0.id;a=sc0.val;b=normNum(nums[1]);z=nums.length>2?normNum(nums[2]):0;
+    }else if(isFinite(n0)&&Number.isInteger(n0)&&Math.abs(n0)<1e6&&nums.length>=3){
+      id=String(Math.trunc(n0));a=normNum(nums[1]);b=normNum(nums[2]);z=nums.length>3?normNum(nums[3]):0;
+    }else if(!isFinite(n0)){
+      id=p0;a=normNum(nums[0]);b=normNum(nums[1]);z=nums.length>2?normNum(nums[2]):0;
+    }else{
+      var sc=splitIdCoord(nums[0]);
+      if(sc){id=sc.id;a=sc.val;b=normNum(nums[1]);z=nums.length>2?normNum(nums[2]):0}
+      else{id=String(pts.length+1);a=normNum(nums[0]);b=normNum(nums[1]);z=nums.length>2?normNum(nums[2]):0}
+    }
+  }else{
+    var sc2=splitIdCoord(nums[0]);
+    if(sc2){id=sc2.id;a=sc2.val;b=normNum(nums[1]);z=nums.length>2?normNum(nums[2]):0}
+    else{id=String(pts.length+1);a=normNum(nums[0]);b=normNum(nums[1]);z=nums.length>2?normNum(nums[2]):0}
+  }
+  if(!isFinite(a)||!isFinite(b))return null;
+  return{id:id,a:a,b:b,z:isFinite(z)?z:0};
+}
+for(var li=0;li<lines.length;li++){
+  var raw=lines[li];
+  if(!raw||!String(raw).trim())continue;
+  var line=String(raw).replace(/\t/g," ").trim();
+  // GSI
+  if(/^\*?\d\d[.\d]{4}[+-]\d{6,}/.test(line)){
+    var gp=parseGsiLine(raw);
+    if(gp){gp.id||(gp.id=String(pts.length+1));pts.push(gp)}else ignored++;
+    continue;
+  }
+  // Headers / units / notes — never treat as points
+  if(/^(00|01|02|03|04|05|06|07NM|10|12|13)/i.test(line)&&!/^07F/i.test(line)){continue}
+  // 08KI / 08TP / 08NM — point with coords on same line (RED Export / total station)
+  if(/^08/i.test(line)){
+    var body08=line.slice(4); // after "08xx" or "08"
+    // if starts with letters (KI/TP/NM), skip those 2 chars of subtype already included in slice(4) for "08KI"
+    // line is "08KI...." so slice(4) is after 08KI
+    var rec4=line.slice(0,4).toUpperCase();
+    if(/^08[A-Z]{2}/i.test(line))body08=line.slice(4);
+    else body08=line.slice(2);
+    var p08=parse08Body(body08);
+    if(p08){pushPt(p08.id,p08.a,p08.b,p08.z,curCode||"");curId=null}
+    else{
+      // id-only 08 line
+      var idOnly=body08.trim().split(/\s+/)[0];
+      if(idOnly&&!isFinite(normNum(idOnly)))curId=idOnly;
+      else if(idOnly&&Number.isInteger(normNum(idOnly)))curId=String(Math.trunc(normNum(idOnly)));
+      else ignored++;
+    }
+    continue;
+  }
+  // 09 / 07F coordinate records
+  if(/^(09|07F)/i.test(line)){
+    var body09=line.replace(/^(09|07)\s*[A-Za-z0-9]{0,4}\s*/i,"").trim();
+    var p09=numsIn(body09);
+    if(p09.length>=2){
+      var sc9=splitIdCoord(p09[0]);
+      if(sc9&&p09.length>=2)pushPt(curId||sc9.id,sc9.val,p09[1],p09[2],curCode||"");
+      else pushPt(curId,p09[0],p09[1],p09[2],curCode||"");
+      curId=null;curCode="";
+    }else{obs++;ignored++}
+    continue;
+  }
+  // generic text/CSV — skip if looks like prose
+  var tk=line.split(/[,;\s]+/).map(function(x){return x.replace(/^["']+|["']+$/g,"")}).filter(Boolean);
+  if(tk.length>=2&&!isFinite(normNum(tk[0]))&&!isFinite(normNum(tk[1])))continue;
+  if(tk.length>=3&&isFinite(normNum(tk[1]))&&isFinite(normNum(tk[2]))){
+    pushPt(tk[0],tk[1],tk[2],tk[3],tk.slice(4).join(" "));
+  }else if(tk.length>=2&&isFinite(normNum(tk[0]))&&isFinite(normNum(tk[1]))&&Math.abs(normNum(tk[0]))>10&&Math.abs(normNum(tk[1]))>10){
+    pushPt(String(pts.length+1),tk[0],tk[1],tk[2],tk.slice(3).join(" "));
+  }else ignored++;
+}
+return{pts:pts,ignored:ignored,obs:obs}
+}function dxfClean(s){return String(s).replace(/[\r\n]+/g," ")}function buildDXF(pts,o){var out=[];function g(c,v){out.push(String(c)),out.push(String(v))}var layers=[["0",7],["SDR_POINTS",1],["SDR_NO",3],["SDR_ELEV",2],["SDR_CODE",6],["SDR_LINE",5]],minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0,minZ=0,maxZ=0;pts.forEach(function(p){p.e<minE&&(minE=p.e),p.e>maxE&&(maxE=p.e),p.n<minN&&(minN=p.n),p.n>maxN&&(maxN=p.n),isFinite(p.z)&&(p.z<minZ&&(minZ=p.z),p.z>maxZ&&(maxZ=p.z))}),isFinite(minE)||(minE=0,maxE=1,minN=0,maxN=1);var pr=Math.max(maxE-minE,maxN-minN)*.05||1;g(0,"SECTION"),g(2,"HEADER"),g(9,"$ACADVER"),g(1,"AC1009"),g(9,"$DWGCODEPAGE"),g(3,"ANSI_1252"),g(9,"$INSUNITS"),g(70,6),g(9,"$INSBASE"),g(10,0),g(20,0),g(30,0),g(9,"$EXTMIN"),g(10,(minE-pr).toFixed(6)),g(20,(minN-pr).toFixed(6)),g(30,minZ),g(9,"$EXTMAX"),g(10,(maxE+pr).toFixed(6)),g(20,(maxN+pr).toFixed(6)),g(30,maxZ),g(9,"$LIMMIN"),g(10,(minE-pr).toFixed(6)),g(20,(minN-pr).toFixed(6)),g(9,"$LIMMAX"),g(10,(maxE+pr).toFixed(6)),g(20,(maxN+pr).toFixed(6)),g(9,"$PDMODE"),g(70,35),g(9,"$PDSIZE"),g(40,Math.max(.2,(o.th||.5)*.6)),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"TABLES"),g(0,"TABLE"),g(2,"LTYPE"),g(70,1),g(0,"LTYPE"),g(2,"CONTINUOUS"),g(70,0),g(3,"Solid line"),g(72,65),g(73,0),g(40,0),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"LAYER"),g(70,layers.length),layers.forEach(function(l){g(0,"LAYER"),g(2,l[0]),g(70,0),g(62,l[1]),g(6,"CONTINUOUS")}),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"STYLE"),g(70,1),g(0,"STYLE"),g(2,"STANDARD"),g(70,0),g(40,0),g(41,1),g(50,0),g(71,0),g(42,1),g(3,"txt"),g(4,""),g(0,"ENDTAB"),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"ENTITIES");var span=Math.max(maxE-minE,maxN-minN,1),h=Math.max(.3,o.th||span*.01,span*.008),rad=Math.max(.12,span*.006,h*.3);function text(layer,x,y,z,hh,s){g(0,"TEXT"),g(8,layer),o.tcol&&g(62,o.tcol),g(7,"STANDARD"),g(10,Number(x).toFixed(4)),g(20,Number(y).toFixed(4)),g(30,Number(z).toFixed(4)),g(40,Number(hh).toFixed(4)),g(1,dxfClean(s)),g(50,0)}if(o.line&&pts.length>1)for(var k=1;k<pts.length;k++){var A=pts[k-1],B=pts[k];g(0,"LINE"),g(8,"SDR_LINE"),g(10,A.e.toFixed(4)),g(20,A.n.toFixed(4)),g(30,(A.z||0).toFixed(4)),g(11,B.e.toFixed(4)),g(21,B.n.toFixed(4)),g(31,(B.z||0).toFixed(4))}function xmark(layer,e,n,z,r){window.dxfDrawMarker(g,layer,e,n,z,r,o.shape||"x",o.pcol||0)}return pts.forEach(function(p){xmark("SDR_POINTS",p.e,p.n,p.z,rad),xmark("0",p.e,p.n,p.z,rad);var dx=h*.6,y=p.n;o.no&&text("SDR_NO",p.e+dx,y+h*.35,0,h,String(p.id)),o.elev&&text("SDR_ELEV",p.e+dx,y-h*1,0,h*.8,Number(p.z).toFixed(3)),o.code&&p.code&&text("SDR_CODE",p.e+dx,y-h*1.9,0,h*.75,String(p.code))}),g(0,"ENDSEC"),g(0,"EOF"),out.join(`\r\n`)+`\r\n`}function toCSV(pts,ll){var hasLL=!!(ll&&ll.length===pts.length),head="ID,Northing,Easting,Elevation,Code"+(hasLL?",Latitude,Longitude":""),rows=pts.map(function(p,i){var cells=[String(p.id==null?"":p.id).replace(/,/g,";"),Number(p.n).toFixed(4),Number(p.e).toFixed(4),Number(p.z).toFixed(4),String(p.code==null?"":p.code).replace(/,/g,";")];return hasLL&&ll[i]&&isFinite(ll[i].lat)&&isFinite(ll[i].lon)?cells.push(ll[i].lat.toFixed(8),ll[i].lon.toFixed(8)):hasLL&&cells.push("",""),cells.join(",")});return head+`\r\n`+rows.join(`\r\n`)+`\r\n`}function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}function sketch(pts,showLabels,showLine){var W=640,H=460,pad=36,minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0;pts.forEach(function(p){minE=Math.min(minE,p.e),maxE=Math.max(maxE,p.e),minN=Math.min(minN,p.n),maxN=Math.max(maxN,p.n)});var dE=Math.max(maxE-minE,1e-6),dN=Math.max(maxN-minN,1e-6),sc=Math.min((W-2*pad)/dE,(H-2*pad)/dN);(!isFinite(sc)||sc<=0)&&(sc=1);var offX=(W-dE*sc)/2,offY=(H-dN*sc)/2;function X(e){return offX+(e-minE)*sc}function Y(n){return H-(offY+(n-minN)*sc)}var r=pts.length>1500?1.6:pts.length>400?2.4:3.6,fs=pts.length>200?8:10,s='<div class="sk-wrap"><div class="sk-tb"><button type="button" data-sk="in" title="\u062A\u0643\u0628\u064A\u0631">\uFF0B</button><button type="button" data-sk="out" title="\u062A\u0635\u063A\u064A\u0631">\uFF0D</button><button type="button" data-sk="rl" title="\u0644\u0641 \u064A\u0633\u0627\u0631 15\xB0">\u27F2</button><button type="button" data-sk="rr" title="\u0644\u0641 \u064A\u0645\u064A\u0646 15\xB0">\u27F3</button><button type="button" data-sk="north" title="\u0631\u062C\u0651\u0639 \u0627\u0644\u0634\u0645\u0627\u0644 \u0644\u0641\u0648\u0642">N\u2191</button><button type="button" data-sk="reset" title="\u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0623\u0635\u0644\u064A">\u2302</button><span class="sk-info">100% \u2022 0\xB0</span></div><svg class="sk-svg" data-sc="'+sc+'" viewBox="0 0 '+W+" "+H+'" width="100%" style="display:block;background:var(--input-bg);border:1px solid var(--border);border-radius:12px;touch-action:none;cursor:grab;overflow:hidden;-webkit-user-select:none;user-select:none;" xmlns="http://www.w3.org/2000/svg">';return s+='<g class="sk-north" data-t="translate('+(W-30)+',44)" transform="translate('+(W-30)+',44)"><path d="M0 -24 L7 6 L0 0 L-7 6 Z" fill="var(--accent)"/><text y="22" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text)">N</text></g>',s+='<g class="sk-sb" transform="translate('+pad+","+(H-14)+')"></g>',s+='<g class="sk-vp">',showLine&&pts.length>1&&(s+='<polyline points="'+pts.map(function(p){return X(p.e).toFixed(1)+","+Y(p.n).toFixed(1)}).join(" ")+'" fill="none" stroke="var(--gold)" stroke-width="1.6" stroke-linejoin="round"/>'),pts.forEach(function(p){var x=X(p.e),y=Y(p.n);s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r+'" fill="var(--accent)" stroke="var(--card)" stroke-width="0.8"/>',showLabels&&(s+='<text x="'+(x+r+2).toFixed(1)+'" y="'+(y-r).toFixed(1)+'" font-size="'+fs+'" fill="var(--text)">'+esc(p.id)+"</text>")}),s+'</g></svg><div class="sk-hint">\u0627\u0633\u062D\u0628 \u0628\u0625\u0635\u0628\u0639 \u0644\u0644\u062A\u062D\u0631\u064A\u0643 \u2022 \u0628\u0625\u0635\u0628\u0639\u064A\u0646: \u0642\u0631\u0651\u0628/\u0628\u0639\u0651\u062F \u0648\u0644\u0641 \u0627\u0644\u0644\u0648\u062D\u0629 \u2022 \u0627\u0644\u0645\u0627\u0648\u0633: \u0627\u0644\u0639\u062C\u0644\u0629 \u0644\u0644\u0632\u0648\u0645\u060C Shift+\u0627\u0644\u0639\u062C\u0644\u0629 \u0644\u0644\u062F\u0648\u0631\u0627\u0646\u060C \u062F\u0628\u0644 \u0643\u0644\u064A\u0643 \u0644\u0625\u0631\u062C\u0627\u0639 \u0627\u0644\u0648\u0636\u0639</div></div>'}var SV={k:1,a:0,tx:0,ty:0};function skReset(){SV={k:1,a:0,tx:0,ty:0}}function skClamp(k){return Math.max(.2,Math.min(80,k))}function skApply(svg){var g=svg.querySelector(".sk-vp");if(g){var deg=SV.a*180/Math.PI;g.setAttribute("transform","translate("+SV.tx.toFixed(2)+","+SV.ty.toFixed(2)+") rotate("+deg.toFixed(3)+") scale("+SV.k.toFixed(5)+")");var n=svg.querySelector(".sk-north");n&&n.setAttribute("transform",n.getAttribute("data-t")+" rotate("+deg.toFixed(3)+")");var sb=svg.querySelector(".sk-sb");if(sb){var W=640,pad=36,eff=(parseFloat(svg.getAttribute("data-sc"))||1)*SV.k,target=(W-2*pad)/eff/5,pw=Math.pow(10,Math.floor(Math.log10(target||1))),nice=pw;[1,2,5,10].forEach(function(m){m*pw<=target&&(nice=m*pw)});var bp=nice*eff;sb.innerHTML='<line x2="'+bp+'" stroke="var(--text)" stroke-width="2"/><line y1="-4" y2="4" stroke="var(--text)" stroke-width="2"/><line x1="'+bp+'" x2="'+bp+'" y1="-4" y2="4" stroke="var(--text)" stroke-width="2"/><text x="'+(bp+6)+'" y="4" font-size="10" fill="var(--muted)">'+ +nice.toPrecision(6)+" m</text>"}var info=svg.parentNode.querySelector(".sk-info");if(info){var d=(Math.round(deg)%360+360)%360;info.textContent=Math.round(SV.k*100)+"% \u2022 "+d+"\xB0"}}}function skInit(box){var svg=box.querySelector(".sk-svg");if(!svg)return;var wrap=svg.parentNode,vb=svg.viewBox.baseVal,CC={x:vb.width/2,y:vb.height/2};function toSvg(cx,cy){var pt=svg.createSVGPoint();pt.x=cx,pt.y=cy;var m=svg.getScreenCTM();return m?pt.matrixTransform(m.inverse()):{x:cx,y:cy}}function worldOf(c){var dx=c.x-SV.tx,dy=c.y-SV.ty,co=Math.cos(-SV.a),si=Math.sin(-SV.a);return{x:(dx*co-dy*si)/SV.k,y:(dx*si+dy*co)/SV.k}}function placeAt(w,c,k,a){SV.k=k,SV.a=a;var co=Math.cos(a),si=Math.sin(a);SV.tx=c.x-k*(w.x*co-w.y*si),SV.ty=c.y-k*(w.x*si+w.y*co)}function zoomAt(c,f){placeAt(worldOf(c),c,skClamp(SV.k*f),SV.a),skApply(svg)}function rotAt(c,da){placeAt(worldOf(c),c,SV.k,SV.a+da),skApply(svg)}wrap.querySelector(".sk-tb").addEventListener("click",function(e){var b=e.target.closest("button");if(b){var act=b.getAttribute("data-sk"),R=Math.PI/12;act==="in"?zoomAt(CC,1.4):act==="out"?zoomAt(CC,1/1.4):act==="rl"?rotAt(CC,-R):act==="rr"?rotAt(CC,R):act==="north"?rotAt(CC,-SV.a):act==="reset"&&(skReset(),skApply(svg))}}),svg.addEventListener("wheel",function(e){e.preventDefault();var c=toSvg(e.clientX,e.clientY);e.shiftKey||e.altKey?rotAt(c,(e.deltaY||e.deltaX)*.004):zoomAt(c,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)))},{passive:!1}),svg.addEventListener("dblclick",function(e){e.preventDefault(),skReset(),skApply(svg)});var ptrs={};function ids(){return Object.keys(ptrs)}svg.addEventListener("pointerdown",function(e){ptrs[e.pointerId]={x:e.clientX,y:e.clientY};try{svg.setPointerCapture(e.pointerId)}catch(_){}svg.style.cursor="grabbing"}),svg.addEventListener("pointermove",function(e){var p=ptrs[e.pointerId];if(p){var all=ids();if(all.length===1){var a=toSvg(p.x,p.y),b=toSvg(e.clientX,e.clientY);SV.tx+=b.x-a.x,SV.ty+=b.y-a.y,p.x=e.clientX,p.y=e.clientY,skApply(svg)}else if(all.length>=2){var o=ptrs[all[0]===String(e.pointerId)?all[1]:all[0]],a1=toSvg(p.x,p.y),a2=toSvg(o.x,o.y);p.x=e.clientX,p.y=e.clientY;var b1=toSvg(p.x,p.y),b2=a2,pm={x:(a1.x+a2.x)/2,y:(a1.y+a2.y)/2},nm={x:(b1.x+b2.x)/2,y:(b1.y+b2.y)/2},pd=Math.hypot(a1.x-a2.x,a1.y-a2.y)||1,nd=Math.hypot(b1.x-b2.x,b1.y-b2.y)||1,pa=Math.atan2(a1.y-a2.y,a1.x-a2.x),na=Math.atan2(b1.y-b2.y,b1.x-b2.x);placeAt(worldOf(pm),nm,skClamp(SV.k*nd/pd),SV.a+(na-pa)),skApply(svg)}}});function up(e){delete ptrs[e.pointerId],ids().length||(svg.style.cursor="grab")}svg.addEventListener("pointerup",up),svg.addEventListener("pointercancel",up),svg.addEventListener("lostpointercapture",up),skApply(svg)}function download(name,content,type){var mime=type||"application/octet-stream";try{if(typeof window.saveDownload=="function"){window.saveDownload(name,content,mime);return}if(typeof window.saveFile=="function"){window.saveFile(content,name,mime);return}}catch(e){}var blob=content instanceof Blob?content:new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url,a.download=name,a.rel="noopener",a.style.display="none",document.body.appendChild(a),a.click(),setTimeout(function(){try{a.remove(),URL.revokeObjectURL(url)}catch(e){}},8e3)}var LM=null,BELTS={purple:{lon0:27,fe:7e5,fn:2e5},xpurple:{lon0:27,fe:7e5,fn:12e5},red:{lon0:31,fe:615e3,fn:81e4},blue:{lon0:35,fe:3e5,fn:11e5}},SYS_NAMES={utm:"UTM (WGS84)",purple:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0628\u0646\u0641\u0633\u062C\u064A (\u0645\u0635\u0631 1907)",xpurple:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0628\u0646\u0641\u0633\u062C\u064A \u0627\u0644\u0645\u0645\u062A\u062F (\u0645\u0635\u0631 1907)",red:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0623\u062D\u0645\u0631 (\u0645\u0635\u0631 1907)",blue:"\u0627\u0644\u062D\u0632\u0627\u0645 \u0627\u0644\u0623\u0632\u0631\u0642 (\u0645\u0635\u0631 1907)"};function tmInverse(E,N,q){var a=q.a,f=q.f,e2=2*f-f*f,ep2=e2/(1-e2),pw=Math.pow;function M(phi){return a*((1-e2/4-3*e2*e2/64-5*e2*e2*e2/256)*phi-(3*e2/8+3*e2*e2/32+45*e2*e2*e2/1024)*Math.sin(2*phi)+(15*e2*e2/256+45*e2*e2*e2/1024)*Math.sin(4*phi)-35*e2*e2*e2/3072*Math.sin(6*phi))}var M1=M(q.lat0*Math.PI/180)+(N-q.fn)/q.k0,mu=M1/(a*(1-e2/4-3*e2*e2/64-5*e2*e2*e2/256)),e1=(1-Math.sqrt(1-e2))/(1+Math.sqrt(1-e2)),phi1=mu+(3*e1/2-27*pw(e1,3)/32)*Math.sin(2*mu)+(21*e1*e1/16-55*pw(e1,4)/32)*Math.sin(4*mu)+151*pw(e1,3)/96*Math.sin(6*mu)+1097*pw(e1,4)/512*Math.sin(8*mu),s1=Math.sin(phi1),c1=Math.cos(phi1),t1=Math.tan(phi1),N1=a/Math.sqrt(1-e2*s1*s1),T1=t1*t1,C1=ep2*c1*c1,R1=a*(1-e2)/pw(1-e2*s1*s1,1.5),D=(E-q.fe)/(N1*q.k0),lat=phi1-N1*t1/R1*(D*D/2-(5+3*T1+10*C1-4*C1*C1-9*ep2)*pw(D,4)/24+(61+90*T1+298*C1+45*T1*T1-252*ep2-3*C1*C1)*pw(D,6)/720),lon=(D-(1+2*T1+C1)*pw(D,3)/6+(5-2*C1+28*T1-3*C1*C1+8*ep2+24*T1*T1)*pw(D,5)/120)/c1;return{lat,lon:q.lon0*Math.PI/180+lon}}function beltLL(key,E,N){for(var b=BELTS[key],a=6378200,f=1/298.3,r=tmInverse(E,N,{a,f,lat0:30,lon0:b.lon0,k0:1,fe:b.fe,fn:b.fn}),e2=2*f-f*f,sl=Math.sin(r.lat),cl=Math.cos(r.lat),Nn=a/Math.sqrt(1-e2*sl*sl),X=Nn*cl*Math.cos(r.lon)-130,Y=Nn*cl*Math.sin(r.lon)+110,Z=Nn*(1-e2)*sl-13,a2=6378137,f2=1/298.257223563,e22=2*f2-f2*f2,pp=Math.sqrt(X*X+Y*Y),phi=Math.atan2(Z,pp*(1-e22)),i=0;i<6;i++){var sp=Math.sin(phi),N2=a2/Math.sqrt(1-e22*sp*sp);phi=Math.atan2(Z+e22*N2*sp,pp)}return{lat:phi*180/Math.PI,lon:Math.atan2(Y,X)*180/Math.PI}}function conv(sys,E,N,zone,north){return sys==="utm"?utmToLatLon(E,N,zone,north):beltLL(sys,E,N)}function inEgypt(r){return r&&isFinite(r.lat)&&isFinite(r.lon)&&r.lat>21.5&&r.lat<32&&r.lon>24.5&&r.lon<37}function areaOk(sys,r){return inEgypt(r)?sys==="purple"?r.lon<29.2&&r.lat>28.1:sys==="xpurple"?r.lon<29.2&&r.lat<28.3:sys==="red"?r.lon>=28.8:sys==="blue"?r.lon>=32.4&&r.lat>=27.6&&r.lat<=31.4:!0:!1}function detectSys(zone,north){var ce=0,cn=0,nn=0;if(S.pts.forEach(function(p){isFinite(p.e)&&isFinite(p.n)&&(ce+=p.e,cn+=p.n,nn++)}),!nn)return null;ce/=nn,cn/=nn;var cc=$g("sdr-country").value;if(cc&&cc!=="eg")return{sys:"utm",swap:!1};for(var list=["utm","purple","red","xpurple","blue"],best=null,pass=0;pass<2;pass++)for(var E=pass?cn:ce,N=pass?ce:cn,i=0;i<list.length;i++){var sys=list[i];if(!(sys==="utm"&&!zone))try{var r=conv(sys,E,N,zone||36,north);if(!r||!areaOk(sys,r))continue;var score=50;sys==="purple"&&N>15e4&&N<55e4&&E>5e5&&E<95e4&&(score+=30),sys==="xpurple"&&N>9e5&&(score+=25),sys==="red"&&N>55e4&&N<12e5&&E>4e5&&E<9e5&&(score+=25),sys==="blue"&&E<5e5&&(score+=20),sys==="utm"&&(N>15e5||E>15e5)&&(score+=30),pass||(score+=2),sys==="purple"&&r.lat>30&&r.lon>25&&r.lon<29.5&&(score+=35),sys==="red"&&r.lat>29.5&&r.lon>29.5&&r.lon<33&&(score+=25),sys==="utm"&&r.lat>30.5&&r.lat<32&&r.lon>26&&r.lon<30&&(score+=25),sys==="red"&&r.lat<28&&(score-=15),sys==="purple"&&r.lon>30&&(score-=15),(!best||score>best.score)&&(best={sys,swap:!!pass,score})}catch(e){}}return best}function allLL(){if(S.sysUsed=null,S.mapMsg="",!S.pts.length)return null;var zone=parseInt($g("sdr-zone").value,10);zone>=1&&zone<=60||(zone=0);var north=$g("sdr-hemi").value==="N",v=$g("sdr-sys").value,d;if(v==="auto"){if(d=detectSys(zone,north),!d)return S.mapMsg="\u0645\u0634 \u0642\u0627\u062F\u0631 \u0623\u062D\u062F\u062F \u0646\u0638\u0627\u0645 \u0627\u0644\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627. \u0627\u062E\u062A\u0627\u0631 \u0627\u0644\u0646\u0638\u0627\u0645 \u064A\u062F\u0648\u064A\u064B\u0627 \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629.",null}else{if(v==="utm"&&!zone)return S.mapMsg="\u0627\u0643\u062A\u0628 \u0631\u0642\u0645 \u0632\u0648\u0646 \u0635\u062D\u064A\u062D (1 \u0625\u0644\u0649 60)",null;d={sys:v,swap:!1}}for(var out=[],i=0;i<S.pts.length;i++){var p=S.pts[i],r=d.swap?conv(d.sys,p.n,p.e,zone,north):conv(d.sys,p.e,p.n,zone,north);if(!r||!isFinite(r.lat)||!isFinite(r.lon))return S.mapMsg="\u062A\u0639\u0630\u0631 \u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u0628\u0627\u0644\u0646\u0638\u0627\u0645 \u0627\u0644\u0645\u062E\u062A\u0627\u0631",null;out.push(r)}return S.sysUsed=d,out}function centerOf(ll){var a=1/0,b=-1/0,c=1/0,d=-1/0;return ll.forEach(function(r){a=Math.min(a,r.lat),b=Math.max(b,r.lat),c=Math.min(c,r.lon),d=Math.max(d,r.lon)}),{lat:(a+b)/2,lon:(c+d)/2}}function mapInfo(){var el=$g("sdr-map-info");if(!S.pts.length){el.textContent="";return}var ll=allLL();if(!ll){el.textContent=S.mapMsg||"";return}var d=S.sysUsed;if(d&&d.swap&&!S.swapDone){S.swapDone=!0,S.swapNote=!0,$g("sdr-order").value=$g("sdr-order").value==="EN"?"NE":"EN",reparse();return}var c=centerOf(ll),inEg=inEgypt(c),warn=!inEg&&$g("sdr-country").value!==""&&$g("sdr-country").value!=="eg"?"":!inEg&&$g("sdr-sys").value!=="auto"?'<br><span style="color:var(--warning)">\u26A0 \u0627\u0644\u0645\u0643\u0627\u0646 \u062F\u0647 \u062E\u0627\u0631\u062C \u0645\u0635\u0631. \u062C\u0631\u0651\u0628 \u062A\u062E\u062A\u0627\u0631 \xAB\u062A\u0644\u0642\u0627\u0626\u064A\xBB \u0623\u0648 \u0646\u0638\u0627\u0645 \u062A\u0627\u0646\u064A.</span>':"",note=S.swapDone&&S.swapNote?"<br>\u062A\u0645 \u062A\u0628\u062F\u064A\u0644 \u062A\u0631\u062A\u064A\u0628 \u0627\u0644\u0623\u0639\u0645\u062F\u0629 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0625\u0644\u0649 E \u062B\u0645 N.":"";el.innerHTML="\u0627\u0644\u0646\u0638\u0627\u0645: "+(SYS_NAMES[d.sys]||d.sys)+" \u2022 \u062A\u0645 \u062A\u062D\u0648\u064A\u0644 "+ll.length+" \u0646\u0642\u0637\u0629 \u2022 \u0645\u0631\u0643\u0632 \u0627\u0644\u0646\u0642\u0627\u0637: "+c.lat.toFixed(6)+"\xB0\u060C "+c.lon.toFixed(6)+"\xB0"+note+warn}function showMapSec(){$g("sdr-map-sec").style.display="block",mapInfo()}function onCountry(){var code=$g("sdr-country").value,rg=$g("sdr-region"),hint=$g("sdr-zone-hint");if(rg.innerHTML="",!code||typeof ZONE_DATA=="undefined"||!ZONE_DATA[code]){rg.innerHTML='<option value="">\u2014 \u0627\u062E\u062A\u0631 \u0627\u0644\u062F\u0648\u0644\u0629 \u0623\u0648\u0644\u0627\u064B \u2014</option>',hint.textContent="\u0627\u062E\u062A\u0627\u0631 \u0627\u0644\u062F\u0648\u0644\u0629 \u0648\u0627\u0644\u0645\u0646\u0637\u0642\u0629 \u0644\u064A\u062A\u062D\u062F\u062F \u0631\u0642\u0645 \u0627\u0644\u0632\u0648\u0646 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627";return}var d=ZONE_DATA[code];hint.textContent=d.hint,rg.innerHTML='<option value="">\u2014 \u0627\u062E\u062A\u0631 \u0627\u0644\u0645\u062F\u064A\u0646\u0629 / \u0627\u0644\u0645\u0646\u0637\u0642\u0629 \u2014</option>',d.regions.forEach(function(r){var o=document.createElement("option");o.value=r.zone,o.textContent=r.name+" \u2014 Zone "+r.zone+"N",rg.appendChild(o)})}function onRegion(){var v=$g("sdr-region").value;v&&($g("sdr-zone").value=v,$g("sdr-hemi").value="N",showMapSec())}window.sdrOpen=function(kind){var ll=allLL();if(!ll){mapInfo();return}var c=centerOf(ll),u=kind==="ge"?"https://earth.google.com/web/search/"+c.lat+","+c.lon:"https://www.google.com/maps/place/"+c.lat+","+c.lon+"/@"+c.lat+","+c.lon+",19z/data=!3m1!1e3";window.open(u,"_blank")};var OV=null,showNames=!0;function ensureOV(){if(OV)return OV;OV=document.createElement("div"),OV.id="sdr-map-ov",OV.style.cssText="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0b1220;flex-direction:column;direction:rtl;";var bs="padding:8px 12px;border-radius:10px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:0.9rem;";return OV.innerHTML='<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#0f172a;color:#f1f5f9;"><button id="sdr-ov-close" type="button" style="'+bs+'">\u2715 \u0625\u063A\u0644\u0627\u0642</button><span id="sdr-ov-title" style="flex:1;text-align:center;font-size:0.85rem;"></span><button id="sdr-ov-names" type="button" style="'+bs+'">\u0627\u0644\u0623\u0633\u0645\u0627\u0621</button><button id="sdr-ov-fit" type="button" style="'+bs+'">\u2922</button></div><div id="sdr-ov-warn" style="display:none;padding:10px 12px;background:#422006;color:#fde68a;font-size:0.82rem;line-height:1.6;"></div><style>#sdr-map .leaflet-tile{visibility:visible!important;max-width:none!important;max-height:none!important}#sdr-map{position:relative;background:#0b1220}</style><div id="sdr-map" style="flex:1;min-height:0;"></div>',document.body.appendChild(OV),$g("sdr-ov-close").onclick=function(){OV.style.display="none"},$g("sdr-ov-names").onclick=function(){showNames=!showNames,drawPts(!1)},$g("sdr-ov-fit").onclick=function(){fitAll()},OV}var CUR=null;function fitAll(){!LM||!CUR||(LM.invalidateSize(),LM.fitBounds(L.latLngBounds(CUR.map(function(r){return[r.lat,r.lon]})),{padding:[30,30],maxZoom:22}))}function drawPts(fit){if(!(!LM||!CUR)){LM._sdrGrp&&LM.removeLayer(LM._sdrGrp);var g=L.layerGroup(),latlngs=CUR.map(function(r){return[r.lat,r.lon]});$g("sdr-line").checked&&CUR.length>1&&L.polyline(latlngs,{color:"#fbbf24",weight:3}).addTo(g),CUR.forEach(function(r,i){var m=L.circleMarker([r.lat,r.lon],{radius:CUR.length>400?4:6,color:"#ffffff",weight:2,fillColor:"#ef4444",fillOpacity:1});m.bindTooltip(String(S.pts[i].id),{permanent:showNames,direction:"right",offset:[6,0]}),m.addTo(g)}),g.addTo(LM),LM._sdrGrp=g,fit&&fitAll()}}function showMapWarn(){var w=$g("sdr-ov-warn");if(!(!w||!CUR)){var c=centerOf(CUR),gm="https://www.google.com/maps/place/"+c.lat+","+c.lon+"/@"+c.lat+","+c.lon+",19z/data=!3m1!1e3",gj="";if(CUR.length<=400){var f=CUR.map(function(r,i){return{type:"Feature",properties:{name:String(S.pts[i].id)},geometry:{type:"Point",coordinates:[+r.lon.toFixed(6),+r.lat.toFixed(6)]}}});gj="https://geojson.io/#data=data:application/json,"+encodeURIComponent(JSON.stringify({type:"FeatureCollection",features:f}))}var a='style="color:#fbbf24;text-decoration:underline;margin-inline-end:12px;"';w.innerHTML="\u0635\u0648\u0631 \u0627\u0644\u0642\u0645\u0631 \u0627\u0644\u0635\u0646\u0627\u0639\u064A \u0645\u0634 \u0628\u062A\u062A\u062D\u0645\u0644. \u0627\u0644\u0635\u0641\u062D\u0629 \u063A\u0627\u0644\u0628\u064B\u0627 \u0645\u0641\u062A\u0648\u062D\u0629 \u062F\u0627\u062E\u0644 \u0645\u0639\u0627\u064A\u0646\u0629 (Claude / \u0648\u0627\u062A\u0633\u0627\u0628) \u0628\u062A\u0645\u0646\u0639 \u0627\u0644\u0635\u0648\u0631 \u0645\u0646 \u0627\u0644\u0625\u0646\u062A\u0631\u0646\u062A. \u0627\u0641\u062A\u062D \u0645\u0644\u0641 \u0627\u0644\u0640 HTML \u0645\u0646 \u0645\u062A\u0635\u0641\u062D <b>Chrome \u0623\u0648 Safari</b> \u0648\u0647\u062A\u0634\u062A\u063A\u0644.<br><a "+a+' target="_blank" rel="noopener" href="'+gm+'">Google Maps \u0642\u0645\u0631 \u0635\u0646\u0627\u0639\u064A</a>'+(gj?"<a "+a+' target="_blank" rel="noopener" href="'+gj+'">\u0643\u0644 \u0627\u0644\u0646\u0642\u0627\u0637 \u0639\u0644\u0649 geojson.io</a>':""),w.style.display="block"}}window.sdrShowMap=function(){var ll=allLL();if(!ll){mapInfo();return}if(typeof L=="undefined"){alert("\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u062E\u0631\u064A\u0637\u0629 \u0644\u0645 \u062A\u064F\u062D\u0645\u064E\u0651\u0644. \u062A\u0623\u0643\u062F \u0645\u0646 \u0627\u0644\u0625\u0646\u062A\u0631\u0646\u062A \u0648\u062D\u0627\u0648\u0644 \u062A\u0627\u0646\u064A.");return}var lk=document.querySelector('link[href*="leaflet"]');lk&&(lk.media="all"),CUR=ll,showNames=ll.length<=150;var ov=ensureOV();if(ov.style.display="flex",$g("sdr-ov-title").textContent=ll.length+" \u0646\u0642\u0637\u0629 \u2022 \u0635\u0648\u0631 \u0642\u0645\u0631 \u0635\u0646\u0627\u0639\u064A Esri",!LM){LM=L.map($g("sdr-map"),{zoomControl:!0,maxZoom:22,minZoom:2});var errs=0,ok=0,swapped=!1,U1="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",U2="https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",sat=L.tileLayer(U1,{maxZoom:18,maxNativeZoom:18,attribution:"Esri, Maxar, Earthstar Geographics"}).addTo(LM);sat.on("tileload",function(){ok++,$g("sdr-ov-warn").style.display="none"}),sat.on("tileerror",function(){errs++,errs===3&&!ok&&!swapped&&(swapped=!0,sat.setUrl(U2)),errs>=8&&!ok&&showMapWarn()}),L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",{maxZoom:22,maxNativeZoom:18}).addTo(LM),setTimeout(function(){ok||showMapWarn()},6e3)}LM.invalidateSize(),drawPts(!0),setTimeout(function(){LM.invalidateSize(),fitAll()},250)};function buildSdrKmlString(){var ll=allLL();if(!ll)return mapInfo(),null;function x(t){return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;")}function descOf(p){var lines=["ID: "+p.id,"Z: "+p.z.toFixed(3)];p.code&&lines.push("Code: "+p.code);var a=p.attrs||{};return Object.keys(a).forEach(function(k2){a[k2]!=""&&lines.push(k2+": "+a[k2])}),lines.join(`
 `)}function extOf(p){var a=p.attrs||{},out=`<ExtendedData>
 `;return out+='<Data name="ID"><value>'+x(p.id)+`</value></Data>
 `,out+='<Data name="Z"><value>'+p.z.toFixed(3)+`</value></Data>
@@ -3376,7 +3328,190 @@ window.lvlCalc=function(){var out=$l("lvl-out");if(!LVL.S){out.innerHTML='<p cla
 `)}}else txt=new TextDecoder("utf-8").decode(new Uint8Array(fr.result));var data=parseTableText(txt,($("attr-order")||{}).value!=="NE");AD.pts=data.pts||[],AD.lines=data.lines||[],AD.pts.forEach(function(p){p.attrs=p.attrs||{},!p.attrs.layer&&p.attrs.type&&(p.attrs.layer=p.attrs.type)}),attrRenderSummary(),attrStatus("\u062A\u0645 \u0642\u0631\u0627\u0621\u0629 "+AD.pts.length+" \u0646\u0642\u0637\u0629"+(AD.lines.length?" \u2022 "+AD.lines.length+" \u062E\u0637":""))}catch(e){attrStatus("\u062A\u0639\u0630\u0631 \u0627\u0644\u0642\u0631\u0627\u0621\u0629: "+(e&&e.message?e.message:e),!0)}},fr.readAsArrayBuffer(file)}}window.gisInit=init,window.makeKmzBlob=makeKmzBlob,document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();var _sv=window.showView;typeof _sv=="function"&&(window.showView=function(name){var r=_sv.apply(this,arguments);return name==="gis"&&setTimeout(function(){typeof gisShowPanel=="function"&&gisShowPanel("menu"),G.map&&G.map.invalidateSize()},200),(name==="const"||name==="const-slab")&&setTimeout(function(){typeof slabEnsureThkFields=="function"&&slabEnsureThkFields()},50),r})})();</script>
 
 
-<script id="sitesurvey-script">(function(){"use strict";var SS={a:[],b:[],rows:[],nameA:"",nameB:"",map:null,layer:null};function $(id){return document.getElementById(id)}function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}function T(){return window.__sdrTools||null}function statusA(msg,bad){var el=$("ss-status-a");el&&(el.textContent=msg||"",el.style.color=bad?"var(--warning)":"var(--muted)")}function statusB(msg,bad){var el=$("ss-status-b");el&&(el.textContent=msg||"",el.style.color=bad?"var(--warning)":"var(--muted)")}function parseFileToPts(file,orderEN,cb){var t=T();if(!t||!t.parseSDR){cb(null,"\u0623\u062F\u0648\u0627\u062A \u0627\u0644\u0642\u0631\u0627\u0621\u0629 \u063A\u064A\u0631 \u062C\u0627\u0647\u0632\u0629");return}var fr=new FileReader,lower=(file.name||"").toLowerCase();fr.onload=function(){try{var txt;if(/\.(xlsx|xls|xlsm)$/i.test(lower))txt=t.excelToText?t.excelToText(fr.result):"";else try{txt=new TextDecoder("utf-8").decode(fr.result)}catch(e){txt=new TextDecoder("windows-1252").decode(fr.result)}var r=t.parseSDR(txt,!!orderEN);if(!r||!r.pts||!r.pts.length){cb(null,"\u0644\u0645 \u064A\u064F\u0639\u062B\u0631 \u0639\u0644\u0649 \u0646\u0642\u0627\u0637 \u0641\u064A \u0627\u0644\u0645\u0644\u0641");return}cb(r.pts.map(function(p){return{id:String(p.id||""),e:+p.e,n:+p.n,z:isFinite(p.z)?+p.z:0,code:p.code||""}}),null)}catch(e){cb(null,"\u062A\u0639\u0630\u0631 \u0627\u0644\u0642\u0631\u0627\u0621\u0629: "+(e.message||e))}},fr.onerror=function(){cb(null,"\u0641\u0634\u0644 \u0642\u0631\u0627\u0621\u0629 \u0627\u0644\u0645\u0644\u0641")},fr.readAsArrayBuffer(file)}function loadSide(which){var input=$(which==="a"?"ss-file-a":"ss-file-b");if(!(!input||!input.files||!input.files[0])){var file=input.files[0],orderEN=($("ss-order")||{}).value==="EN",setSt=which==="a"?statusA:statusB;setSt("\u062C\u0627\u0631\u064A \u0627\u0644\u0642\u0631\u0627\u0621\u0629\u2026"),parseFileToPts(file,orderEN,function(pts,err){if(err){setSt(err,!0),which==="a"?SS.a=[]:SS.b=[];return}which==="a"?(SS.a=pts,SS.nameA=file.name):(SS.b=pts,SS.nameB=file.name),setSt("\u062A\u0645: "+pts.length+" \u0646\u0642\u0637\u0629 \u2014 "+file.name)})}}function dist2(a,b){var de=a.e-b.e,dn=a.n-b.n;return de*de+dn*dn}window.ssCompare=function(){if(!SS.a.length||!SS.b.length){alert("\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641\u064A\u0646 \u0623\u0648\u0644\u064B\u0627 (\u0627\u0644\u0623\u0635\u0644\u064A + \u0627\u0644\u0645\u0648\u0642\u0639)");return}var tol=parseFloat(($("ss-tol")||{}).value);tol>0||(tol=.1);var tol2=tol*tol,byIdB={};SS.b.forEach(function(p){p.id&&(byIdB[p.id]=p)});var usedB={},rows=[],matchOk=0,matchBad=0,onlyA=0,onlyB=0,sumDZ=0,sumH=0,nMatch=0;SS.a.forEach(function(pa){var pb=byIdB[pa.id];if(pb){usedB[pb.id]=1;var de=pb.e-pa.e,dn=pb.n-pa.n,dz=pb.z-pa.z,h=Math.sqrt(de*de+dn*dn),ok=h<=tol;ok?matchOk++:matchBad++,sumDZ+=dz,sumH+=h,nMatch++,rows.push({id:pa.id,de,dn,dz,h,ok,kind:ok?"ok":"bad",pa,pb})}else{for(var best=null,bestD=1/0,i=0;i<SS.b.length;i++){var cand=SS.b[i];if(!usedB[cand.id]){var d2=dist2(pa,cand);d2<bestD&&(bestD=d2,best=cand)}}if(best&&bestD<=tol2*25){usedB[best.id]=1;var de2=best.e-pa.e,dn2=best.n-pa.n,dz2=best.z-pa.z,h2=Math.sqrt(de2*de2+dn2*dn2),ok2=h2<=tol;ok2?matchOk++:matchBad++,sumDZ+=dz2,sumH+=h2,nMatch++,rows.push({id:pa.id+"\u2248"+best.id,de:de2,dn:dn2,dz:dz2,h:h2,ok:ok2,kind:ok2?"ok":"bad",pa,pb:best})}else onlyA++,rows.push({id:pa.id,de:null,dn:null,dz:null,h:null,ok:!1,kind:"onlyA",pa,pb:null})}}),SS.b.forEach(function(pb){usedB[pb.id]||(onlyB++,rows.push({id:pb.id,de:null,dn:null,dz:null,h:null,ok:!1,kind:"onlyB",pa:null,pb}))}),SS.rows=rows;var box=$("ss-results");box&&(box.style.display="block");var kpi=$("ss-kpi");kpi&&(kpi.innerHTML='<div class="kpi"><span class="kpi-l">\u0645\u0637\u0627\u0628\u0642</span><span class="kpi-v" style="color:#4ade80">'+matchOk+'</span><span class="kpi-u">\u0646\u0642\u0637\u0629</span></div><div class="kpi"><span class="kpi-l">\u0627\u0646\u062D\u0631\u0627\u0641</span><span class="kpi-v" style="color:#fbbf24">'+matchBad+'</span><span class="kpi-u">\u0646\u0642\u0637\u0629</span></div><div class="kpi"><span class="kpi-l">\u0623\u0635\u0644\u064A \u0641\u0642\u0637</span><span class="kpi-v" style="color:#38bdf8">'+onlyA+'</span></div><div class="kpi"><span class="kpi-l">\u0645\u0648\u0642\u0639 \u0641\u0642\u0637</span><span class="kpi-v" style="color:#f87171">'+onlyB+'</span></div><div class="kpi main"><span class="kpi-l">\u0645\u062A\u0648\u0633\u0637 \u0627\u0644\u0625\u0632\u0627\u062D\u0629 \u0627\u0644\u0623\u0641\u0642\u064A\u0629</span><span class="kpi-v">'+(nMatch?(sumH/nMatch).toFixed(3):"\u2014")+'</span><span class="kpi-u">\u0645</span></div><div class="kpi"><span class="kpi-l">\u0645\u062A\u0648\u0633\u0637 \u0394Z</span><span class="kpi-v">'+(nMatch?(sumDZ/nMatch).toFixed(3):"\u2014")+'</span><span class="kpi-u">\u0645</span></div>');var tb=document.querySelector("#ss-table tbody");if(tb){var html="";rows.forEach(function(r){var st=r.kind==="ok"?'<span style="color:#4ade80">\u0645\u0637\u0627\u0628\u0642</span>':r.kind==="bad"?'<span style="color:#fbbf24">\u0627\u0646\u062D\u0631\u0627\u0641</span>':r.kind==="onlyA"?'<span style="color:#38bdf8">\u0623\u0635\u0644\u064A \u0641\u0642\u0637</span>':'<span style="color:#f87171">\u0645\u0648\u0642\u0639 \u0641\u0642\u0637</span>';html+="<tr><td>"+esc(r.id)+'</td><td dir="ltr">'+(r.de==null?"\u2014":r.de.toFixed(3))+'</td><td dir="ltr">'+(r.dn==null?"\u2014":r.dn.toFixed(3))+'</td><td dir="ltr">'+(r.dz==null?"\u2014":r.dz.toFixed(3))+'</td><td dir="ltr">'+(r.h==null?"\u2014":r.h.toFixed(3))+"</td><td>"+st+"</td></tr>"}),tb.innerHTML=html}},window.ssClear=function(){SS={a:[],b:[],rows:[],nameA:"",nameB:"",map:SS.map,layer:null},$("ss-file-a")&&($("ss-file-a").value=""),$("ss-file-b")&&($("ss-file-b").value=""),statusA("\u0644\u0645 \u064A\u064F\u062D\u0645\u0651\u064E\u0644 \u0628\u0639\u062F"),statusB("\u0644\u0645 \u064A\u064F\u062D\u0645\u0651\u064E\u0644 \u0628\u0639\u062F");var box=$("ss-results");box&&(box.style.display="none")},window.ssShowMap=function(){if(!SS.a.length&&!SS.b.length){alert("\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u0642\u0627\u0637");return}if(typeof L=="undefined"){alert("\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u062E\u0631\u064A\u0637\u0629 \u063A\u064A\u0631 \u0645\u062D\u0645\u0651\u0644\u0629");return}var t=T();if(!t||!t.convertPts){alert("\u0623\u062F\u0648\u0627\u062A \u0627\u0644\u062A\u062D\u0648\u064A\u0644 \u063A\u064A\u0631 \u062C\u0627\u0647\u0632\u0629");return}function toLL(pts){var sys=($("ss-sys")||{}).value||"auto",zone=parseInt(($("ss-zone")||{}).value,10)||36,res=t.convertPts(pts,{sys,zone,north:!0,country:"eg"});return res.ll||[]}var llA=toLL(SS.a),llB=toLL(SS.b);if(!llA.length&&!llB.length){alert("\u062A\u0639\u0630\u0631 \u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u0644\u0644\u0639\u0631\u0636. \u062A\u0623\u0643\u062F \u0623\u0646 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0628\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u0645\u0633\u0642\u0637\u0629 \u0635\u062D\u064A\u062D\u0629.");return}var OV=$("ss-map-ov");if(!OV){OV=document.createElement("div"),OV.id="ss-map-ov",OV.style.cssText="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0b1220;flex-direction:column;direction:rtl;";var bs="padding:8px 12px;border-radius:10px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:0.85rem;cursor:pointer;";OV.innerHTML='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#0f172a;"><button id="ss-ov-close" type="button" style="'+bs+'">\u2715 \u0625\u063A\u0644\u0627\u0642</button><span style="flex:1;text-align:center;font-size:0.82rem;color:#e0f2fe;">\u0645\u0642\u0627\u0631\u0646\u0629 \u0627\u0644\u0631\u0641\u0639 \u2014 <span style="color:#38bdf8">\u25CF \u0623\u0635\u0644\u064A</span> &nbsp; <span style="color:#fbbf24">\u25CF \u0645\u0648\u0642\u0639</span></span><button id="ss-ov-fit" type="button" style="'+bs+'">\u2922</button></div><div id="ss-ov-map" style="flex:1;min-height:0;"></div>',document.body.appendChild(OV),document.getElementById("ss-ov-close").onclick=function(){OV.style.display="none"}}OV.style.display="flex";var mapEl=document.getElementById("ss-ov-map");if(SS.map||(SS.map=L.map(mapEl,{zoomControl:!0,maxZoom:22,minZoom:2}),L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:22,maxNativeZoom:19,attribution:"Esri"}).addTo(SS.map)),SS.layer)try{SS.map.removeLayer(SS.layer)}catch(e){}var g=L.layerGroup(),bounds=[];llA.forEach(function(o){L.circleMarker([o.lat,o.lon],{radius:7,color:"#fff",weight:1.5,fillColor:"#38bdf8",fillOpacity:.95}).bindPopup('<b style="color:#38bdf8">\u0623\u0635\u0644\u064A</b><br>'+esc(o.p.id)+"<br>Z: "+(isFinite(o.p.z)?o.p.z.toFixed(3):"\u2014")).addTo(g),bounds.push([o.lat,o.lon])}),llB.forEach(function(o){L.circleMarker([o.lat,o.lon],{radius:6,color:"#fff",weight:1.5,fillColor:"#fbbf24",fillOpacity:.95}).bindPopup('<b style="color:#fbbf24">\u0645\u0648\u0642\u0639</b><br>'+esc(o.p.id)+"<br>Z: "+(isFinite(o.p.z)?o.p.z.toFixed(3):"\u2014")).addTo(g),bounds.push([o.lat,o.lon])}),SS.rows.forEach(function(r){if(!(!r.pa||!r.pb)){var a=llA.find(function(o){return o.p===r.pa||o.p&&o.p.id===r.pa.id}),b=llB.find(function(o){return o.p===r.pb||o.p&&o.p.id===r.pb.id});a&&b&&L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:r.ok?"#4ade80":"#f87171",weight:2,dashArray:r.ok?null:"4 4",opacity:.85}).addTo(g)}}),g.addTo(SS.map),SS.layer=g,SS.map.invalidateSize(),bounds.length&&SS.map.fitBounds(bounds,{padding:[40,40],maxZoom:22}),document.getElementById("ss-ov-fit").onclick=function(){SS.map.invalidateSize(),bounds.length&&SS.map.fitBounds(bounds,{padding:[40,40],maxZoom:22})},setTimeout(function(){SS.map.invalidateSize()},250);var info=$("ss-map-info");info&&(info.textContent="\u0623\u0632\u0631\u0642 = \u0623\u0635\u0644\u064A ("+llA.length+") \u2022 \u0630\u0647\u0628\u064A = \u0645\u0648\u0642\u0639 ("+llB.length+") \u2022 \u062E\u0637 \u0623\u062E\u0636\u0631 = \u0645\u0637\u0627\u0628\u0642 \u2022 \u062E\u0637 \u0623\u062D\u0645\u0631 \u0645\u062A\u0642\u0637\u0639 = \u0627\u0646\u062D\u0631\u0627\u0641")},window.ssExportExcel=function(){if(!SS.rows.length){alert("\u0646\u0641\u0651\u0630 \u0627\u0644\u0645\u0642\u0627\u0631\u0646\u0629 \u0623\u0648\u0644\u064B\u0627");return}if(typeof XLSX=="undefined"){alert("\u0645\u0643\u062A\u0628\u0629 Excel \u063A\u064A\u0631 \u0645\u062D\u0645\u0651\u0644\u0629");return}var data=[["ID","\u0394E_m","\u0394N_m","\u0394Z_m","Horizontal_m","Status","E_orig","N_orig","Z_orig","E_field","N_field","Z_field"]];SS.rows.forEach(function(r){var st=r.kind==="ok"?"OK":r.kind==="bad"?"DELTA":r.kind==="onlyA"?"ORIG_ONLY":"FIELD_ONLY";data.push([r.id,r.de,r.dn,r.dz,r.h,st,r.pa?r.pa.e:"",r.pa?r.pa.n:"",r.pa?r.pa.z:"",r.pb?r.pb.e:"",r.pb?r.pb.n:"",r.pb?r.pb.z:""])});var ws=XLSX.utils.aoa_to_sheet(data),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Compare"),XLSX.writeFile(wb,"AES_SiteSurvey_Compare.xlsx")};function ssDownloadText(name,content,mime){mime=mime||"application/dxf";try{if(typeof window.saveFile=="function"){var ret=window.saveFile(content,name,mime);if(ret&&typeof ret.then=="function"){ret.catch(function(){ssFallbackDl(name,content,mime)});return}return}}catch(e){}ssFallbackDl(name,content,mime)}function ssFallbackDl(name,content,mime){try{var blob=new Blob([content],{type:mime});if(typeof File!="undefined"&&navigator.share)try{var file=new File([blob],name,{type:"application/dxf"});if(!navigator.canShare||navigator.canShare({files:[file]})){navigator.share({files:[file],title:name}).catch(function(){ssAnchorDl(name,blob)});return}}catch(e){}ssAnchorDl(name,blob)}catch(e){alert("\u062A\u0639\u0630\u0631 \u0627\u0644\u062A\u062D\u0645\u064A\u0644: "+(e.message||e))}}function ssAnchorDl(name,blob){try{if(navigator.msSaveOrOpenBlob){navigator.msSaveOrOpenBlob(blob,name);return}}catch(e){}var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url,a.download=name,a.rel="noopener",a.style.display="none",document.body.appendChild(a),a.click(),setTimeout(function(){try{var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);isIOS&&window.open(url,"_blank")}catch(e){}},400),setTimeout(function(){try{a.remove()}catch(e){}},2e3),setTimeout(function(){try{URL.revokeObjectURL(url)}catch(e){}},12e4)}function ssBuildDxf(kind){var out=[];function g(c,v){out.push(String(c)),out.push(String(v))}var all=[];if((kind==="a"||kind==="both")&&(SS.a||[]).forEach(function(pt){pt&&isFinite(pt.e)&&isFinite(pt.n)&&all.push(pt)}),(kind==="b"||kind==="both")&&(SS.b||[]).forEach(function(pt){pt&&isFinite(pt.e)&&isFinite(pt.n)&&all.push(pt)}),!all.length)return null;var minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0,minZ=1e99,maxZ=-1e99;all.forEach(function(pt){pt.e<minE&&(minE=pt.e),pt.e>maxE&&(maxE=pt.e),pt.n<minN&&(minN=pt.n),pt.n>maxN&&(maxN=pt.n);var z=isFinite(pt.z)?pt.z:0;z<minZ&&(minZ=z),z>maxZ&&(maxZ=z)});var span=Math.max(maxE-minE,maxN-minN,1),pad=span*.08,thIn=parseFloat(($("ss-th")||{}).value)||.5,th=Math.max(.3,thIn,span*.008),rad=Math.max(.12,span*.006,th*.3);function chk(id,def){var el=$(id);return el?!!el.checked:def}var optNo=chk("ss-no",!1),optElev=chk("ss-elev",!0),optCode=chk("ss-code",!1),optLines=chk("ss-lines",!0),optCloud=chk("ss-cloud",!0);var ssShape=window.dxfShapeVal("ss-shape"),ssPcolA=window.dxfColorVal("ss-pcol-a"),ssPcolB=window.dxfColorVal("ss-pcol-b"),ssTcol=window.dxfColorVal("ss-tcol");var colOrig=ssPcolA||5,colField=ssPcolB||2,colTxt=ssTcol||7;var layers=[["0",7],["ORIG",colOrig],["FIELD",colField],["OK",3],["DELTA",1],["TXT",colTxt],["CLOUD",1]];g(0,"SECTION"),g(2,"HEADER"),g(9,"$ACADVER"),g(1,"AC1009"),g(9,"$DWGCODEPAGE"),g(3,"ANSI_1252"),g(9,"$INSUNITS"),g(70,6),g(9,"$INSBASE"),g(10,"0.0"),g(20,"0.0"),g(30,"0.0"),g(9,"$EXTMIN"),g(10,(minE-pad).toFixed(6)),g(20,(minN-pad).toFixed(6)),g(30,Number(minZ).toFixed(6)),g(9,"$EXTMAX"),g(10,(maxE+pad).toFixed(6)),g(20,(maxN+pad).toFixed(6)),g(30,Number(maxZ).toFixed(6)),g(9,"$LIMMIN"),g(10,(minE-pad).toFixed(6)),g(20,(minN-pad).toFixed(6)),g(9,"$LIMMAX"),g(10,(maxE+pad).toFixed(6)),g(20,(maxN+pad).toFixed(6)),g(9,"$PDMODE"),g(70,35),g(9,"$PDSIZE"),g(40,rad.toFixed(4)),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"TABLES"),g(0,"TABLE"),g(2,"LTYPE"),g(70,1),g(0,"LTYPE"),g(2,"CONTINUOUS"),g(70,0),g(3,"Solid line"),g(72,65),g(73,0),g(40,"0.0"),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"LAYER"),g(70,layers.length),layers.forEach(function(L2){g(0,"LAYER"),g(2,L2[0]),g(70,0),g(62,L2[1]),g(6,"CONTINUOUS")}),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"STYLE"),g(70,1),g(0,"STYLE"),g(2,"STANDARD"),g(70,0),g(40,"0.0"),g(41,"1.0"),g(50,"0.0"),g(71,0),g(42,"0.2"),g(3,"txt"),g(4,""),g(0,"ENDTAB"),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"ENTITIES");function circle(layer,e,n,z,r,col){window.dxfDrawMarker(g,layer,e,n,z,r,ssShape,col)}function lbl(pt,withZ){var parts=[];return optElev&&withZ&&isFinite(pt.z)&&parts.push(Number(pt.z).toFixed(2)),optCode&&pt.code&&parts.push(String(pt.code)),parts.join(" ")}function cloud(pts){var minx=1/0,maxx=-1/0,miny=1/0,maxy=-1/0;pts.forEach(function(q){q.e<minx&&(minx=q.e),q.e>maxx&&(maxx=q.e),q.n<miny&&(miny=q.n),q.n>maxy&&(maxy=q.n)});var cx=(minx+maxx)/2,cy=(miny+maxy)/2,R=rad*4;pts.forEach(function(q){var d=Math.sqrt((q.e-cx)*(q.e-cx)+(q.n-cy)*(q.n-cy));d+rad*3>R&&(R=d+rad*3)});for(var N=Math.max(10,Math.min(48,Math.round(2*Math.PI*R/(rad*2.4)))),i=0;i<N;i++){var a1=2*Math.PI*i/N,a2=2*Math.PI*(i+1)/N,x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1),x2=cx+R*Math.cos(a2),y2=cy+R*Math.sin(a2),mx=(x1+x2)/2,my=(y1+y2)/2,cr=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1))/2,dir=Math.atan2(y2-y1,x2-x1)*180/Math.PI,sa=((dir-180)%360+360)%360,ea=(dir%360+360)%360;g(0,"ARC"),g(8,"CLOUD"),g(62,1),g(10,mx.toFixed(4)),g(20,my.toFixed(4)),g(30,"0.0"),g(40,cr.toFixed(4)),g(50,sa.toFixed(4)),g(51,ea.toFixed(4))}}function txt(layer,e,n,h,s){s=String(s==null?"":s).replace(/[\r\n\t]/g," ").substring(0,120),s&&(g(0,"TEXT"),g(8,layer),ssTcol&&g(62,ssTcol),g(7,"STANDARD"),g(10,Number(e).toFixed(4)),g(20,Number(n).toFixed(4)),g(30,"0.0"),g(40,Number(h).toFixed(4)),g(1,s),g(50,"0.0"))}function line(layer,a,b){g(0,"LINE"),g(8,layer),g(10,Number(a.e).toFixed(4)),g(20,Number(a.n).toFixed(4)),g(30,Number(a.z||0).toFixed(4)),g(11,Number(b.e).toFixed(4)),g(21,Number(b.n).toFixed(4)),g(31,Number(b.z||0).toFixed(4))}return(kind==="a"||kind==="both")&&(SS.a||[]).forEach(function(pt){!pt||!isFinite(pt.e)||!isFinite(pt.n)||(circle("ORIG",pt.e,pt.n,pt.z,rad,ssPcolA||0),txt("TXT",pt.e+rad*1.8,pt.n+rad*1.8,th,lbl(pt,!0)))}),(kind==="b"||kind==="both")&&(SS.b||[]).forEach(function(pt){!pt||!isFinite(pt.e)||!isFinite(pt.n)||(circle("FIELD",pt.e,pt.n,pt.z,rad*.85,ssPcolB||0),txt("TXT",pt.e+rad*1.8,pt.n-rad*2.2,th*.9,lbl(pt,!0)))}),kind==="both"&&optLines&&SS.rows&&SS.rows.length&&SS.rows.forEach(function(r){r.pa&&r.pb&&line(r.ok?"OK":"DELTA",r.pa,r.pb)}),optCloud&&SS.rows&&SS.rows.length&&SS.rows.forEach(function(r){if(r.kind!=="ok"){var set=[];kind==="both"?(r.pa&&set.push(r.pa),r.pb&&set.push(r.pb)):kind==="a"?r.pa&&set.push(r.pa):r.pb&&set.push(r.pb),set=set.filter(function(q){return q&&isFinite(q.e)&&isFinite(q.n)}),set.length&&cloud(set)}}),g(0,"ENDSEC"),g(0,"EOF"),out.join(`\r\n`)+`\r\n`}window.ssExportDxf=function(kind){if(kind=kind||"both",kind==="a"&&!(SS.a&&SS.a.length)){alert("\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0623\u0635\u0644\u064A \u0623\u0648\u0644\u064B\u0627");return}if(kind==="b"&&!(SS.b&&SS.b.length)){alert("\u062D\u0645\u0651\u0644 \u0645\u0644\u0641 \u0627\u0644\u0645\u0648\u0642\u0639 \u0623\u0648\u0644\u064B\u0627");return}if(kind==="both"&&!(SS.a&&SS.a.length)&&!(SS.b&&SS.b.length)){alert("\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0623\u0648\u0644\u064B\u0627");return}var dxf=ssBuildDxf(kind);if(!dxf){alert("\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u0642\u0627\u0637 \u0635\u0627\u0644\u062D\u0629 \u0644\u0644\u062A\u0635\u062F\u064A\u0631");return}var name=kind==="a"?"AES_ORIG.dxf":kind==="b"?"AES_FIELD.dxf":"AES_COMPARE.dxf";ssDownloadText(name,dxf,"application/dxf");var info=$("ss-map-info");info&&(info.textContent="\u062A\u0645 \u062A\u062C\u0647\u064A\u0632 "+name+" \u2014 \u0639\u0644\u0649 \u0627\u0644\u0645\u0648\u0628\u0627\u064A\u0644: \u0634\u0627\u0631\u0643 \u0627\u0644\u0645\u0644\u0641 \u0625\u0644\u0649 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0623\u0648 \u0627\u0641\u062A\u062D\u0647 \u0645\u0628\u0627\u0634\u0631\u0629 \u0641\u064A DWG FastView / AutoCAD")};var SK={k:1,tx:0,ty:0,rot:0,showNames:!0,ready:!1,bounds:null,cx:200,cy:180};function ssSketchEls(){return{svg:$("ss-sketch"),wrap:$("ss-sketch-wrap")}}function ssComputeBounds(){var pts=[];if(SS.a.forEach(function(pt){isFinite(pt.e)&&isFinite(pt.n)&&pts.push(pt)}),SS.b.forEach(function(pt){isFinite(pt.e)&&isFinite(pt.n)&&pts.push(pt)}),!pts.length)return null;var minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0;pts.forEach(function(pt){pt.e<minE&&(minE=pt.e),pt.e>maxE&&(maxE=pt.e),pt.n<minN&&(minN=pt.n),pt.n>maxN&&(maxN=pt.n)}),minE===maxE&&(minE-=1,maxE+=1),minN===maxN&&(minN-=1,maxN+=1);var span=Math.max(maxE-minE,maxN-minN),midE=(minE+maxE)/2,midN=(minN+maxN)/2,pad=span*.1||1,half=span/2+pad;return{minE:midE-half,maxE:midE+half,minN:midN-half,maxN:midN+half,midE,midN,span:span+2*pad}}function ssWorldToSvg(e,n,b,W,H){var s=Math.min(W,H)/(b.maxE-b.minE),x=(W-(b.maxE-b.minE)*s)/2+(e-b.minE)*s,y=(H-(b.maxN-b.minN)*s)/2+(b.maxN-n)*s;return{x,y}}function ssApplyXform(){var g=document.getElementById("ss-sketch-g");if(g){var cx=SK.cx,cy=SK.cy;g.setAttribute("transform","translate("+SK.tx+","+SK.ty+") translate("+cx+","+cy+") rotate("+SK.rot+") scale("+SK.k+") translate("+-cx+","+-cy+")")}}window.ssDrawSketch=function(){var el=ssSketchEls().svg;if(!el)return;if(!SS.a.length&&!SS.b.length){el.innerHTML='<text x="200" y="180" text-anchor="middle" fill="#94a3b8" font-size="14">\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0648\u0646\u0641\u0651\u0630 \u0627\u0644\u0645\u0642\u0627\u0631\u0646\u0629</text>';return}var b=ssComputeBounds();if(!b)return;SK.bounds=b;var W=400,H=360;SK.cx=W/2,SK.cy=H/2;var gParts=[];gParts.push('<defs><filter id="ss-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><marker id="ss-arr-ok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,1.5 L8,5 L0,8.5 Z" fill="#4ade80"/></marker><marker id="ss-arr-bad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,1.5 L8,5 L0,8.5 Z" fill="#f87171"/></marker></defs>');gParts.push('<rect width="'+W+'" height="'+H+'" fill="#050a12"/>');gParts.push('<g stroke="rgba(56,189,248,0.07)" stroke-width="0.45">');for(var gi=0;gi<=12;gi++){var gx=gi/12*W,gy=gi/12*H;gParts.push('<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="'+H+'"/>');gParts.push('<line x1="0" y1="'+gy+'" x2="'+W+'" y2="'+gy+'"/>')}gParts.push("</g>");function drawSet(pts,color,r,stroke){pts.forEach(function(pt){if(!isFinite(pt.e)||!isFinite(pt.n))return;var c=ssWorldToSvg(pt.e,pt.n,b,W,H);gParts.push('<circle cx="'+c.x.toFixed(2)+'" cy="'+c.y.toFixed(2)+'" r="'+(r+1.4)+'" fill="none" stroke="'+color+'" stroke-width="0.9" opacity="0.35"/>');gParts.push('<circle cx="'+c.x.toFixed(2)+'" cy="'+c.y.toFixed(2)+'" r="'+r+'" fill="'+color+'" stroke="'+(stroke||"#fff")+'" stroke-width="0.85" filter="url(#ss-glow)"/>');if(SK.showNames&&pts.length<=120&&pt.id)gParts.push('<text x="'+(c.x+5.5).toFixed(2)+'" y="'+(c.y-5.5).toFixed(2)+'" fill="'+color+'" font-size="7.5" font-family="ui-monospace,Consolas,monospace" opacity="0.95">'+esc(pt.id)+"</text>")})}if(SS.rows&&SS.rows.length)SS.rows.forEach(function(row){if(!row.pa||!row.pb)return;var a=ssWorldToSvg(row.pa.e,row.pa.n,b,W,H),bb=ssWorldToSvg(row.pb.e,row.pb.n,b,W,H),col=row.ok?"#4ade80":"#f87171",dash=row.ok?"":' stroke-dasharray="4 2.5"',mk=row.ok?"url(#ss-arr-ok)":"url(#ss-arr-bad)";gParts.push('<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+bb.x.toFixed(2)+'" y2="'+bb.y.toFixed(2)+'" stroke="'+col+'" stroke-width="1.85" opacity="0.9" marker-end="'+mk+'"'+dash+"/>")});drawSet(SS.a,"#38bdf8",3.8,"#e0f2fe");drawSet(SS.b,"#fbbf24",3.3,"#fef3c7");var topC=ssWorldToSvg(b.midE,b.maxN-(b.maxN-b.minN)*.04,b,W,H);gParts.push('<g transform="translate('+topC.x.toFixed(1)+","+topC.y.toFixed(1)+')"><polygon points="0,-14 5,1 -5,1" fill="#f87171"/><text y="14" text-anchor="middle" fill="#f87171" font-size="10" font-weight="800">N</text></g>');var ax=ssWorldToSvg(b.minE+(b.maxE-b.minE)*.07,b.minN+(b.maxN-b.minN)*.07,b,W,H);gParts.push('<g transform="translate('+ax.x.toFixed(1)+","+ax.y.toFixed(1)+')" stroke="#94a3b8" fill="#94a3b8"><line x1="0" y1="0" x2="30" y2="0" stroke-width="1.6"/><polygon points="30,0 23,-4.5 23,4.5" fill="#38bdf8" stroke="none"/><text x="34" y="4" fill="#38bdf8" font-size="9" font-weight="700">E</text><line x1="0" y1="0" x2="0" y2="-30" stroke-width="1.6"/><polygon points="0,-30 -4.5,-23 4.5,-23" fill="#f87171" stroke="none"/><text x="7" y="-22" fill="#f87171" font-size="9" font-weight="700">N</text></g>');var okN=0,badN=0;if(SS.rows)SS.rows.forEach(function(r){if(r.kind==="ok")okN++;else if(r.kind==="bad")badN++});gParts.push('<rect x="6" y="6" width="148" height="62" rx="8" fill="rgba(8,14,24,0.92)" stroke="rgba(56,189,248,0.4)"/>');gParts.push('<circle cx="18" cy="20" r="4.2" fill="#38bdf8"/><text x="28" y="23" fill="#e0f2fe" font-size="9">\u0623\u0635\u0644\u064A ('+SS.a.length+")</text>");gParts.push('<circle cx="18" cy="36" r="4.2" fill="#fbbf24"/><text x="28" y="39" fill="#e0f2fe" font-size="9">\u0645\u0648\u0642\u0639 ('+SS.b.length+")</text>");gParts.push('<line x1="12" y1="50" x2="24" y2="50" stroke="#4ade80" stroke-width="2"/><text x="28" y="53" fill="#94a3b8" font-size="8">\u0645\u0637\u0627\u0628\u0642 '+okN+" \u00B7 \u0627\u0646\u062D\u0631\u0627\u0641 "+badN+"</text>");var scaleM=b.span*.2,sPx=Math.min(W,H)*0.2,sx0=W-sPx-14,sy0=H-18;gParts.push('<line x1="'+sx0+'" y1="'+sy0+'" x2="'+(sx0+sPx)+'" y2="'+sy0+'" stroke="#94a3b8" stroke-width="1.5"/>');gParts.push('<line x1="'+sx0+'" y1="'+(sy0-4)+'" x2="'+sx0+'" y2="'+(sy0+4)+'" stroke="#94a3b8" stroke-width="1.2"/>');gParts.push('<line x1="'+(sx0+sPx)+'" y1="'+(sy0-4)+'" x2="'+(sx0+sPx)+'" y2="'+(sy0+4)+'" stroke="#94a3b8" stroke-width="1.2"/>');gParts.push('<text x="'+(sx0+sPx/2)+'" y="'+(sy0-6)+'" text-anchor="middle" fill="#94a3b8" font-size="8">'+scaleM.toFixed(scaleM>=10?0:1)+" \u0645</text>");el.innerHTML='<g id="ss-sketch-g">'+gParts.join("")+"</g>",ssApplyXform(),SK.ready=!0,ssSketchBind(el)};window.ssSketchFit=function(){SK.k=1,SK.tx=0,SK.ty=0,SK.rot=0,ssDrawSketch()},window.ssSketchRot=function(deg){SK.rot=(SK.rot+deg)%360,ssApplyXform()},window.ssSketchToggleNames=function(){SK.showNames=!SK.showNames,ssDrawSketch()};function ssSketchBind(svg){if(svg._ssBound)return;svg._ssBound=1;var ptrs={},lastAng=null,lastDist=null;function ids(){return Object.keys(ptrs)}function mid(){var a=ids();if(a.length<2)return null;var p0=ptrs[a[0]],p1=ptrs[a[1]];return{x:(p0.x+p1.x)/2,y:(p0.y+p1.y)/2}}svg.addEventListener("pointerdown",function(e){ptrs[e.pointerId]={x:e.clientX,y:e.clientY};try{svg.setPointerCapture(e.pointerId)}catch(_){}if(svg.style.cursor="grabbing",ids().length>=2){var a=ids(),p0=ptrs[a[0]],p1=ptrs[a[1]];lastDist=Math.hypot(p0.x-p1.x,p0.y-p1.y)||1,lastAng=Math.atan2(p1.y-p0.y,p1.x-p0.x)}}),svg.addEventListener("pointermove",function(e){var p=ptrs[e.pointerId];if(p){var all=ids();if(all.length===1)SK.tx+=e.clientX-p.x,SK.ty+=e.clientY-p.y,p.x=e.clientX,p.y=e.clientY,ssApplyXform();else if(all.length>=2){p.x=e.clientX,p.y=e.clientY;var a=all,p0=ptrs[a[0]],p1=ptrs[a[1]];if(!p0||!p1)return;var dist=Math.hypot(p0.x-p1.x,p0.y-p1.y)||1,ang=Math.atan2(p1.y-p0.y,p1.x-p0.x);lastDist&&(SK.k=Math.max(.25,Math.min(12,SK.k*(dist/lastDist)))),lastAng!=null&&(SK.rot+=(ang-lastAng)*180/Math.PI),lastDist=dist,lastAng=ang,ssApplyXform()}}});function up(e){delete ptrs[e.pointerId],ids().length<2&&(lastAng=null,lastDist=null),ids().length||(svg.style.cursor="grab")}svg.addEventListener("pointerup",up),svg.addEventListener("pointercancel",up),svg.addEventListener("wheel",function(e){e.preventDefault();var factor=Math.exp(-(e.deltaY||0)*.0015);SK.k=Math.max(.25,Math.min(12,SK.k*factor)),ssApplyXform()},{passive:!1})}var _ssCompare=window.ssCompare;window.ssCompare=function(){_ssCompare.apply(this,arguments),SK.k=1,SK.tx=0,SK.ty=0,SK.rot=0,setTimeout(function(){ssDrawSketch()},30)};var _ssClear=window.ssClear;window.ssClear=function(){_ssClear.apply(this,arguments),SK.k=1,SK.tx=0,SK.ty=0,SK.rot=0,ssDrawSketch()};function init(){var fa=$("ss-file-a"),fb=$("ss-file-b");fa&&!fa._ss&&(fa._ss=1,fa.addEventListener("change",function(){loadSide("a")})),fb&&!fb._ss&&(fb._ss=1,fb.addEventListener("change",function(){loadSide("b")}))}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init()})();</script>
+<script id="sitesurvey-script">(function(){"use strict";var SS={a:[],b:[],rows:[],nameA:"",nameB:"",map:null,layer:null};function $(id){return document.getElementById(id)}function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}function T(){return window.__sdrTools||null}function statusA(msg,bad){var el=$("ss-status-a");el&&(el.textContent=msg||"",el.style.color=bad?"var(--warning)":"var(--muted)")}function statusB(msg,bad){var el=$("ss-status-b");el&&(el.textContent=msg||"",el.style.color=bad?"var(--warning)":"var(--muted)")}function parseFileToPts(file,orderEN,cb){var t=T();if(!t||!t.parseSDR){cb(null,"أدوات القراءة غير جاهزة");return}var fr=new FileReader,lower=(file.name||"").toLowerCase();fr.onload=function(){try{var txt;if(/\.(xlsx|xls|xlsm)$/i.test(lower))txt=t.excelToText?t.excelToText(fr.result):"";else try{txt=new TextDecoder("utf-8").decode(fr.result)}catch(e){txt=new TextDecoder("windows-1252").decode(fr.result)}function run(swap){var r=t.parseSDR(txt,!!swap);if(!r||!r.pts||!r.pts.length)return null;return r.pts.map(function(p){return{id:String(p.id==null?"":p.id).trim(),e:+p.e,n:+p.n,z:isFinite(p.z)?+p.z:0,code:p.code||""}})}function score(pts){if(!pts||!pts.length)return-1e99;var ok=0,i,e,n;for(i=0;i<Math.min(pts.length,200);i++){e=pts[i].e;n=pts[i].n;if(!isFinite(e)||!isFinite(n))continue;if(e>5e4&&e<1.2e6&&n>1.5e6&&n<5e6)ok+=3;else if(n>5e4&&n<1.2e6&&e>1.5e6&&e<5e6)ok-=3;else if(Math.abs(e)>10&&Math.abs(n)>10)ok+=.05}return ok}var pEN=run(true),pNE=run(false),pts,usedEN;if(orderEN===true){pts=pEN;usedEN=true}else if(orderEN===false){pts=pNE;usedEN=false}else{var sEN=score(pEN),sNE=score(pNE);if((pEN&&pEN.length)&&(sEN>=sNE||!pNE||!pNE.length)){pts=pEN;usedEN=true}else{pts=pNE;usedEN=false}}if(!pts||!pts.length){var head=String(txt||"").split(/\r\n|\r|\n/).filter(function(l){return l&&l.trim()}).slice(0,4).join(" | ");cb(null,"لم يُعثر على نقاط في الملف"+(head?" — عيّنة: "+head.slice(0,120):""));return}cb(pts,null,usedEN)}catch(e){cb(null,"تعذّر القراءة: "+(e.message||e))}},fr.onerror=function(){cb(null,"فشل قراءة الملف")},fr.readAsArrayBuffer(file)}function loadSide(which){var input=$(which==="a"?"ss-file-a":"ss-file-b");if(!(!input||!input.files||!input.files[0])){var file=input.files[0],ordEl=$("ss-order-"+which)||$("ss-order"),ov=(ordEl&&ordEl.value)||"AUTO",orderArg=ov==="EN"?true:ov==="NE"?false:null,setSt=which==="a"?statusA:statusB;setSt("جاري القراءة…"),parseFileToPts(file,orderArg,function(pts,err,usedEN){if(err){setSt(err,!0),which==="a"?SS.a=[]:SS.b=[];return}which==="a"?(SS.a=pts,SS.nameA=file.name):(SS.b=pts,SS.nameB=file.name);var s0=pts[0],ordLab=usedEN?"E-N":"N-E",sample=s0?(" | عيّنة: id="+s0.id+"  E="+Number(s0.e).toFixed(3)+"  N="+Number(s0.n).toFixed(3)+"  Z="+Number(s0.z).toFixed(3)):"";setSt("تم: "+pts.length+" نقطة — "+file.name+"  ["+ordLab+"]"+sample)})}}function dist2(a,b){var de=a.e-b.e,dn=a.n-b.n;return de*de+dn*dn}window.ssCompare=function(){if(!SS.a.length||!SS.b.length){alert("حمّل الملفين أولًا (الأصلي + الموقع)");return}
+var tol=parseFloat(($("ss-tol")||{}).value);if(!(tol>0))tol=0.001;
+var maxPair=Math.max(tol*5000,10);
+SS.a.forEach(function(p,i){p._i=i});
+function swapPts(arr){return arr.map(function(p){return{id:p.id,e:p.n,n:p.e,z:p.z,code:p.code,_i:p._i}})}
+function median(arr){if(!arr.length)return 0;var s=arr.slice().sort(function(a,b){return a-b});var m=Math.floor(s.length/2);return s.length%2?s[m]:.5*(s[m-1]+s[m])}
+// FIELD-DRIVEN matching (E/N only, id & Z ignored):
+// the FIELD file (B) is the reference. Every field point looks for its own original point (A).
+// Original points that have no field point (never staked out) are IGNORED completely:
+// they do not steal matches, are not counted, and never reach the table / Excel / DXF.
+function nearestPairs(A,B){
+  var rows=[],matchOk=0,matchBad=0,onlyB=0,sumDZ=0,sumH=0,nMatch=0,qs=0,i,j,q;
+  var dElist=[],dNlist=[],pairs=[];
+  var lim2=maxPair*maxPair,K=6,cand=[];
+  for(j=0;j<B.length;j++){
+    var bj=B[j],near=[];
+    for(i=0;i<A.length;i++){
+      var ex=A[i].e-bj.e,ey=A[i].n-bj.n,d2=ex*ex+ey*ey;
+      if(d2>lim2)continue;
+      if(near.length<K||d2<near[near.length-1].d){
+        var pos=near.length;
+        while(pos>0&&near[pos-1].d>d2)pos--;
+        near.splice(pos,0,{i:i,j:j,d:d2});
+        if(near.length>K)near.pop();
+      }
+    }
+    for(q=0;q<near.length;q++)cand.push(near[q]);
+  }
+  // global greedy: shortest distances first, so an original point is never "stolen" by a farther field point
+  cand.sort(function(x,y){return x.d-y.d});
+  var usedA={},asg=[];
+  for(q=0;q<cand.length;q++){var c=cand[q];if(usedA[c.i]||asg[c.j]!==undefined)continue;usedA[c.i]=1;asg[c.j]=c.i}
+  for(j=0;j<B.length;j++){
+    var pb=B[j];
+    if(asg[j]!==undefined){
+      var pa=A[asg[j]],de=pb.e-pa.e,dn=pb.n-pa.n,dz=pb.z-pa.z,h=Math.sqrt(de*de+dn*dn),ok=h<=tol;
+      if(ok)matchOk++;else matchBad++;
+      sumDZ+=dz;sumH+=h;nMatch++;qs+=Math.max(0,10-h);
+      dElist.push(de);dNlist.push(dn);
+      pairs.push({pa:pa,pb:pb});
+      rows.push({id:String(pa.id||"")+"↔"+String(pb.id||""),de:de,dn:dn,dz:dz,h:h,ok:ok,kind:ok?"ok":"bad",pa:pa,pb:pb});
+    }else{
+      onlyB++;
+      rows.push({id:pb.id,de:null,dn:null,dz:null,h:null,ok:!1,kind:"onlyB",pa:null,pb:pb});
+    }
+  }
+  return{rows:rows,matchOk:matchOk,matchBad:matchBad,onlyA:0,onlyB:onlyB,qs:qs,sumDZ:sumDZ,sumH:sumH,nMatch:nMatch,dElist:dElist,dNlist:dNlist,pairs:pairs};
+}
+function quality(r){return r.matchOk*10000+(r.qs||0)}
+function shiftPts(arr,tx,ty){return arr.map(function(p){return{id:p.id,e:p.e+tx,n:p.n+ty,z:p.z,code:p.code,_i:p._i}})}
+// Robust translation finder (vote): every (original - field) vector votes for a shift.
+// Real pairs agree on one shift, extra original points only give scattered random votes.
+function voteShift(A,B){
+  var nA=A.length,nB=B.length;
+  if(nA<3||nB<3)return null;
+  var cell=Math.max(0.05,tol*2),R=Math.max(maxPair*5,100),step=Math.max(1,Math.floor(nB/250)),sampled=0,M=new Map(),i,j,OFF=1000000,MUL=2000003;
+  for(j=0;j<nB;j+=step){
+    sampled++;
+    var bj=B[j];
+    for(i=0;i<nA;i++){
+      var dx=A[i].e-bj.e,dy=A[i].n-bj.n;
+      if(dx>R||dx<-R||dy>R||dy<-R)continue;
+      var ix=Math.round(dx/cell),iy=Math.round(dy/cell),key=(ix+OFF)*MUL+(iy+OFF),v=M.get(key);
+      if(v){v[0]++;v[1]+=dx;v[2]+=dy}else M.set(key,[1,dx,dy,ix,iy]);
+    }
+  }
+  var bestN=0,bt=null;
+  M.forEach(function(v){
+    if(v[0]<2)return;
+    var n9=0,sx=0,sy=0;
+    for(var a=-1;a<=1;a++)for(var b=-1;b<=1;b++){
+      var w=M.get((v[3]+a+OFF)*MUL+(v[4]+b+OFF));
+      if(w){n9+=w[0];sx+=w[1];sy+=w[2]}
+    }
+    if(n9>bestN){bestN=n9;bt={tx:sx/n9,ty:sy/n9,n:n9}}
+  });
+  if(!bt||bestN<Math.max(3,Math.round(sampled*0.3)))return null;
+  return bt;
+}
+// drop wrong pairs (outliers) before fitting the alignment
+function trimPairs(pairs){
+  if(pairs.length<5)return pairs;
+  var de=[],dn=[],k;
+  for(k=0;k<pairs.length;k++){de.push(pairs[k].pb.e-pairs[k].pa.e);dn.push(pairs[k].pb.n-pairs[k].pa.n)}
+  var me=median(de),mn=median(dn),dev=de.map(function(x,k2){return Math.hypot(x-me,dn[k2]-mn)}),thr=Math.max(3*median(dev),tol);
+  var keep=pairs.filter(function(pp,k2){return dev[k2]<=thr});
+  return keep.length>=3?keep:pairs;
+}
+// 2D rigid transform (translate + rotate) field → design, least squares on pairs
+function helmertFit(pairs){
+  var n=pairs.length;if(n<2)return null;
+  var i,sAe=0,sAn=0,sBe=0,sBn=0;
+  for(i=0;i<n;i++){sAe+=pairs[i].pa.e;sAn+=pairs[i].pa.n;sBe+=pairs[i].pb.e;sBn+=pairs[i].pb.n}
+  var mAe=sAe/n,mAn=sAn/n,mBe=sBe/n,mBn=sBn/n;
+  var sxx=0,sxy=0,syx=0,syy=0;
+  for(i=0;i<n;i++){
+    var deB=pairs[i].pb.e-mBe,dnB=pairs[i].pb.n-mBn;
+    var deA=pairs[i].pa.e-mAe,dnA=pairs[i].pa.n-mAn;
+    sxx+=deB*deA;sxy+=deB*dnA;syx+=dnB*deA;syy+=dnB*dnA;
+  }
+  // rotation: map B-centered → A-centered
+  // [cos -sin; sin cos] * [e;n]
+  var num=sxy-syx,den=sxx+syy;
+  var ang=Math.atan2(num,den); // small angle from cross/dot style
+  // Better: conformal 2D
+  // a = cos, b = sin for: e' = a*eB - b*nB + tx, n' = b*eB + a*nB + ty
+  var a=sxx+syy,b=syx-sxy; // wait recalculate properly
+  // Standard 2D similarity without scale:
+  // Maximize correlation with rotation
+  var c=0,s=0,norm=0;
+  for(i=0;i<n;i++){
+    var eB=pairs[i].pb.e-mBe,nB=pairs[i].pb.n-mBn;
+    var eA=pairs[i].pa.e-mAe,nA=pairs[i].pa.n-mAn;
+    c+=eB*eA+nB*nA;
+    s+=eB*nA-nB*eA;
+    norm+=eB*eB+nB*nB;
+  }
+  if(norm<1e-12)return{tx:mAe-mBe,ty:mAn-mBn,ang:0,cos:1,sin:0};
+  var scale=1; // rigid, no scale
+  var len=Math.sqrt(c*c+s*s);if(len<1e-12)return{tx:mAe-mBe,ty:mAn-mBn,ang:0,cos:1,sin:0};
+  var cos=c/len,sin=s/len;
+  // tx,ty so that mean B maps to mean A
+  var tx=mAe-(cos*mBe-sin*mBn);
+  var ty=mAn-(sin*mBe+cos*mBn);
+  return{tx:tx,ty:ty,ang:Math.atan2(sin,cos),cos:cos,sin:sin,scale:1};
+}
+function applyHelmert(pts,H){
+  if(!H)return pts;
+  return pts.map(function(p){
+    var e=H.cos*p.e-H.sin*p.n+H.tx;
+    var n=H.sin*p.e+H.cos*p.n+H.ty;
+    return{id:p.id,e:e,n:n,z:p.z,code:p.code};
+  });
+}
+var need=Math.max(2,Math.floor(Math.min(SS.a.length,SS.b.length)*0.15));
+var cellV=Math.max(0.05,tol*2);
+function shNote(sh){return sh?("إزاحة تلقائية ΔE="+sh.tx.toFixed(3)+" ΔN="+sh.ty.toFixed(3)):""}
+function evalOrient(Aw,Bw){
+  var r=nearestPairs(Aw,Bw),Bb=Bw,sh=null,T=voteShift(Aw,Bw);
+  if(T&&Math.hypot(T.tx,T.ty)>cellV){
+    var Bt=shiftPts(Bw,T.tx,T.ty),rT=nearestPairs(Aw,Bt);
+    if(quality(rT)>quality(r)+need){r=rT;Bb=Bt;sh=T}
+  }
+  return{r:r,A:Aw,B:Bb,sh:sh};
+}
+var o0=evalOrient(SS.a.slice(),SS.b.slice());
+var best=o0.r,note=shNote(o0.sh),Awork=o0.A,Bwork=o0.B;
+var oB=evalOrient(SS.a.slice(),swapPts(SS.b));
+var oA=evalOrient(swapPts(SS.a),SS.b.slice());
+if(quality(oB.r)>quality(best)+need){best=oB.r;note="عكس E↔N لملف الموقع"+(oB.sh?" + "+shNote(oB.sh):"");Awork=oB.A;Bwork=oB.B}
+else if(quality(oA.r)>quality(best)+need){best=oA.r;note="عكس E↔N للملف الأصلي"+(oA.sh?" + "+shNote(oA.sh):"");Awork=oA.A;Bwork=oA.B}
+// iterative: pair -> helmert (outliers trimmed) -> pair again
+var iter,H=null,totAng=0,alignNote="";
+for(iter=0;iter<3;iter++){
+  if(!best.pairs||best.pairs.length<2)break;
+  H=helmertFit(trimPairs(best.pairs));
+  if(!H)break;
+  var Bfit=applyHelmert(Bwork,H);
+  var rH=nearestPairs(Awork,Bfit);
+  if(quality(rH)>=quality(best)){
+    best=rH;Bwork=Bfit;totAng+=H.ang;
+    alignNote="محاذاة هندسية (إزاحة+دوران "+(totAng*180/Math.PI).toFixed(4)+"°)";
+  }else break;
+}
+if(alignNote)note=(note?note+" + ":"")+alignNote;
+// store aligned field for DXF if useful
+SS.bAligned=Bwork;
+SS.helmert=H;
+var rows=best.rows,matchOk=best.matchOk,matchBad=best.matchBad,onlyA=best.onlyA,onlyB=best.onlyB,sumDZ=best.sumDZ,sumH=best.sumH,nMatch=best.nMatch;
+SS.rows=rows;SS.aIdx={};SS.aIdxFor=SS.a;rows.forEach(function(r){if(r.pa&&r.pa._i!=null)SS.aIdx[r.pa._i]=1});
+var box=$("ss-results");box&&(box.style.display="block");
+var kpi=$("ss-kpi");
+var fieldN=SS.b.length,pct=fieldN?(matchOk/fieldN*100):0,ignoredA=Math.max(0,SS.a.length-nMatch);
+kpi&&(kpi.innerHTML='<div class="kpi"><span class="kpi-l">مطابق</span><span class="kpi-v" style="color:#4ade80">'+matchOk+'</span><span class="kpi-u">نقطة</span></div><div class="kpi"><span class="kpi-l">انحراف</span><span class="kpi-v" style="color:#fbbf24">'+matchBad+'</span><span class="kpi-u">نقطة</span></div><div class="kpi"><span class="kpi-l">موقع فقط</span><span class="kpi-v" style="color:#f87171">'+onlyB+'</span><span class="kpi-u">نقطة</span></div><div class="kpi"><span class="kpi-l">نسبة المطابق</span><span class="kpi-v" style="color:#4ade80">'+pct.toFixed(1)+'</span><span class="kpi-u">% من '+fieldN+'</span></div><div class="kpi main"><span class="kpi-l">متوسط ΔH</span><span class="kpi-v">'+(nMatch?(sumH/nMatch).toFixed(4):"—")+'</span><span class="kpi-u">م</span></div><div class="kpi"><span class="kpi-l">متوسط ΔZ (عرض)</span><span class="kpi-v">'+(nMatch?(sumDZ/nMatch).toFixed(3):"—")+'</span><span class="kpi-u">م</span></div>');
+var info=$("ss-map-info");if(info)info.textContent=(note?note+" — ":"")+"المقارنة على نقاط الموقع فقط — النقاط الزيادة في الأصلي متجاهَلة ("+ignoredA+" نقطة). التوليرانس="+tol+" م";
+var tb=document.querySelector("#ss-table tbody");if(tb){var html="";rows.forEach(function(r){var st=r.kind==="ok"?'<span style="color:#4ade80">مطابق</span>':r.kind==="bad"?'<span style="color:#fbbf24">انحراف</span>':r.kind==="onlyA"?'<span style="color:#38bdf8">أصلي فقط</span>':'<span style="color:#f87171">موقع فقط</span>';html+="<tr><td>"+esc(r.id)+'</td><td dir="ltr">'+(r.de==null?"—":r.de.toFixed(4))+'</td><td dir="ltr">'+(r.dn==null?"—":r.dn.toFixed(4))+'</td><td dir="ltr">'+(r.dz==null?"—":r.dz.toFixed(3))+'</td><td dir="ltr">'+(r.h==null?"—":r.h.toFixed(4))+"</td><td>"+st+"</td></tr>"});tb.innerHTML=html}
+try{if(typeof ssDrawSketch==="function")ssDrawSketch()}catch(e){}
+};
+window.ssClear=function(){SS={a:[],b:[],rows:[],nameA:"",nameB:"",map:SS.map,layer:null},$("ss-file-a")&&($("ss-file-a").value=""),$("ss-file-b")&&($("ss-file-b").value=""),statusA("\u0644\u0645 \u064A\u064F\u062D\u0645\u0651\u064E\u0644 \u0628\u0639\u062F"),statusB("\u0644\u0645 \u064A\u064F\u062D\u0645\u0651\u064E\u0644 \u0628\u0639\u062F");var box=$("ss-results");box&&(box.style.display="none")},window.ssShowMap=function(){if(!SS.a.length&&!SS.b.length){alert("\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u0642\u0627\u0637");return}if(typeof L=="undefined"){alert("\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u062E\u0631\u064A\u0637\u0629 \u063A\u064A\u0631 \u0645\u062D\u0645\u0651\u0644\u0629");return}var t=T();if(!t||!t.convertPts){alert("\u0623\u062F\u0648\u0627\u062A \u0627\u0644\u062A\u062D\u0648\u064A\u0644 \u063A\u064A\u0631 \u062C\u0627\u0647\u0632\u0629");return}function toLL(pts){var sys=($("ss-sys")||{}).value||"auto",zone=parseInt(($("ss-zone")||{}).value,10)||36,res=t.convertPts(pts,{sys,zone,north:!0,country:"eg"});return res.ll||[]}var llA=toLL(ssAShown()),llB=toLL(SS.b);if(!llA.length&&!llB.length){alert("\u062A\u0639\u0630\u0631 \u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u0644\u0644\u0639\u0631\u0636. \u062A\u0623\u0643\u062F \u0623\u0646 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0628\u0625\u062D\u062F\u0627\u062B\u064A\u0627\u062A \u0645\u0633\u0642\u0637\u0629 \u0635\u062D\u064A\u062D\u0629.");return}var OV=$("ss-map-ov");if(!OV){OV=document.createElement("div"),OV.id="ss-map-ov",OV.style.cssText="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#0b1220;flex-direction:column;direction:rtl;";var bs="padding:8px 12px;border-radius:10px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:0.85rem;cursor:pointer;";OV.innerHTML='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#0f172a;"><button id="ss-ov-close" type="button" style="'+bs+'">\u2715 \u0625\u063A\u0644\u0627\u0642</button><span style="flex:1;text-align:center;font-size:0.82rem;color:#e0f2fe;">\u0645\u0642\u0627\u0631\u0646\u0629 \u0627\u0644\u0631\u0641\u0639 \u2014 <span style="color:#38bdf8">\u25CF \u0623\u0635\u0644\u064A</span> &nbsp; <span style="color:#fbbf24">\u25CF \u0645\u0648\u0642\u0639</span></span><button id="ss-ov-fit" type="button" style="'+bs+'">\u2922</button></div><div id="ss-ov-map" style="flex:1;min-height:0;"></div>',document.body.appendChild(OV),document.getElementById("ss-ov-close").onclick=function(){OV.style.display="none"}}OV.style.display="flex";var mapEl=document.getElementById("ss-ov-map");if(SS.map||(SS.map=L.map(mapEl,{zoomControl:!0,maxZoom:22,minZoom:2}),L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:22,maxNativeZoom:19,attribution:"Esri"}).addTo(SS.map)),SS.layer)try{SS.map.removeLayer(SS.layer)}catch(e){}var g=L.layerGroup(),bounds=[];llA.forEach(function(o){L.circleMarker([o.lat,o.lon],{radius:7,color:"#fff",weight:1.5,fillColor:"#38bdf8",fillOpacity:.95}).bindPopup('<b style="color:#38bdf8">\u0623\u0635\u0644\u064A</b><br>'+esc(o.p.id)+"<br>Z: "+(isFinite(o.p.z)?o.p.z.toFixed(3):"\u2014")).addTo(g),bounds.push([o.lat,o.lon])}),llB.forEach(function(o){L.circleMarker([o.lat,o.lon],{radius:6,color:"#fff",weight:1.5,fillColor:"#fbbf24",fillOpacity:.95}).bindPopup('<b style="color:#fbbf24">\u0645\u0648\u0642\u0639</b><br>'+esc(o.p.id)+"<br>Z: "+(isFinite(o.p.z)?o.p.z.toFixed(3):"\u2014")).addTo(g),bounds.push([o.lat,o.lon])}),SS.rows.forEach(function(r){if(!(!r.pa||!r.pb)){var a=llA.find(function(o){return o.p===r.pa||o.p&&o.p.id===r.pa.id}),b=llB.find(function(o){return o.p===r.pb||o.p&&o.p.id===r.pb.id});a&&b&&L.polyline([[a.lat,a.lon],[b.lat,b.lon]],{color:r.ok?"#4ade80":"#f87171",weight:2,dashArray:r.ok?null:"4 4",opacity:.85}).addTo(g)}}),g.addTo(SS.map),SS.layer=g,SS.map.invalidateSize(),bounds.length&&SS.map.fitBounds(bounds,{padding:[40,40],maxZoom:22}),document.getElementById("ss-ov-fit").onclick=function(){SS.map.invalidateSize(),bounds.length&&SS.map.fitBounds(bounds,{padding:[40,40],maxZoom:22})},setTimeout(function(){SS.map.invalidateSize()},250);var info=$("ss-map-info");info&&(info.textContent="\u0623\u0632\u0631\u0642 = \u0623\u0635\u0644\u064A ("+llA.length+") \u2022 \u0630\u0647\u0628\u064A = \u0645\u0648\u0642\u0639 ("+llB.length+") \u2022 \u062E\u0637 \u0623\u062E\u0636\u0631 = \u0645\u0637\u0627\u0628\u0642 \u2022 \u062E\u0637 \u0623\u062D\u0645\u0631 \u0645\u062A\u0642\u0637\u0639 = \u0627\u0646\u062D\u0631\u0627\u0641")},window.ssExportExcel=function(){if(!SS.rows.length){alert("\u0646\u0641\u0651\u0630 \u0627\u0644\u0645\u0642\u0627\u0631\u0646\u0629 \u0623\u0648\u0644\u064B\u0627");return}if(typeof XLSX=="undefined"){alert("\u0645\u0643\u062A\u0628\u0629 Excel \u063A\u064A\u0631 \u0645\u062D\u0645\u0651\u0644\u0629");return}var data=[["ID","\u0394E_m","\u0394N_m","\u0394Z_m","Horizontal_m","Status","E_orig","N_orig","Z_orig","E_field","N_field","Z_field"]];SS.rows.forEach(function(r){var st=r.kind==="ok"?"OK":r.kind==="bad"?"DELTA":r.kind==="onlyA"?"ORIG_ONLY":"FIELD_ONLY";data.push([r.id,r.de,r.dn,r.dz,r.h,st,r.pa?r.pa.e:"",r.pa?r.pa.n:"",r.pa?r.pa.z:"",r.pb?r.pb.e:"",r.pb?r.pb.n:"",r.pb?r.pb.z:""])});var ws=XLSX.utils.aoa_to_sheet(data),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Compare"),XLSX.writeFile(wb,"AES_SiteSurvey_Compare.xlsx")};function ssDownloadText(name,content,mime){mime=mime||"application/dxf";try{if(typeof window.saveFile=="function"){var ret=window.saveFile(content,name,mime);if(ret&&typeof ret.then=="function"){ret.catch(function(){ssFallbackDl(name,content,mime)});return}return}}catch(e){}ssFallbackDl(name,content,mime)}function ssFallbackDl(name,content,mime){try{var blob=new Blob([content],{type:mime});if(typeof File!="undefined"&&navigator.share)try{var file=new File([blob],name,{type:"application/dxf"});if(!navigator.canShare||navigator.canShare({files:[file]})){navigator.share({files:[file],title:name}).catch(function(){ssAnchorDl(name,blob)});return}}catch(e){}ssAnchorDl(name,blob)}catch(e){alert("\u062A\u0639\u0630\u0631 \u0627\u0644\u062A\u062D\u0645\u064A\u0644: "+(e.message||e))}}function ssAnchorDl(name,blob){try{if(navigator.msSaveOrOpenBlob){navigator.msSaveOrOpenBlob(blob,name);return}}catch(e){}var url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url,a.download=name,a.rel="noopener",a.style.display="none",document.body.appendChild(a),a.click(),setTimeout(function(){try{var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);isIOS&&window.open(url,"_blank")}catch(e){}},400),setTimeout(function(){try{a.remove()}catch(e){}},2e3),setTimeout(function(){try{URL.revokeObjectURL(url)}catch(e){}},12e4)}function ssAShown(){
+  if(!SS.rows||!SS.rows.length||!SS.aIdx||SS.aIdxFor!==SS.a)return SS.a;
+  var out=SS.a.filter(function(p,i){return SS.aIdx[i]===1});
+  return out.length?out:SS.a;
+}
+function ssBuildDxf(kind){var out=[];function g(c,v){out.push(String(c)),out.push(String(v))}var all=[];if((kind==="a"||kind==="both")&&(kind==="both"?ssAShown():(SS.a||[])).forEach(function(pt){pt&&isFinite(pt.e)&&isFinite(pt.n)&&all.push(pt)}),(kind==="b"||kind==="both")&&(SS.b||[]).forEach(function(pt){pt&&isFinite(pt.e)&&isFinite(pt.n)&&all.push(pt)}),!all.length)return null;var minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0,minZ=1e99,maxZ=-1e99;all.forEach(function(pt){pt.e<minE&&(minE=pt.e),pt.e>maxE&&(maxE=pt.e),pt.n<minN&&(minN=pt.n),pt.n>maxN&&(maxN=pt.n);var z=isFinite(pt.z)?pt.z:0;z<minZ&&(minZ=z),z>maxZ&&(maxZ=z)});var span=Math.max(maxE-minE,maxN-minN,1),pad=span*.08,thIn=parseFloat(($("ss-th")||{}).value)||.5,nn=(function(){var L=(kind==="b"?SS.b:SS.a)||[];L=L.filter(function(q){return q&&isFinite(q.e)&&isFinite(q.n)});var n=L.length,st=Math.max(1,Math.floor(n/300)),d=[];for(var i=0;i<n;i+=st){var m=1/0;for(var j=0;j<n;j++){if(j===i)continue;var a=L[i].e-L[j].e,b=L[i].n-L[j].n,q=a*a+b*b;q>1e-8&&q<m&&(m=q)}isFinite(m)&&d.push(Math.sqrt(m))}d.sort(function(x,y){return x-y});return d.length?d[Math.floor(d.length/2)]:span})(),rad=Math.max(.05,Math.min(Math.max(.12,span*.006),nn*.25)),th=Math.max(.02,Math.min(thIn,rad*.9)),zeroZ=all.every(function(q){return!isFinite(q.z)||Math.abs(q.z)<1e-9});function chk(id,def){var el=$(id);return el?!!el.checked:def}var optNo=chk("ss-no",!1),optElev=chk("ss-elev",!0),optCode=chk("ss-code",!1),optLines=chk("ss-lines",!0),optCloud=chk("ss-cloud",!0);var ssShape=window.dxfShapeVal("ss-shape"),ssPcolA=window.dxfColorVal("ss-pcol-a"),ssPcolB=window.dxfColorVal("ss-pcol-b"),ssTcol=window.dxfColorVal("ss-tcol");var colOrig=ssPcolA||5,colField=ssPcolB||2,colTxt=ssTcol||7;var layers=[["0",7],["ORIG",colOrig],["FIELD",colField],["OK",3],["DELTA",1],["TXT_ORIG",colTxt],["TXT_FIELD",colTxt],["CLOUD",1]];g(0,"SECTION"),g(2,"HEADER"),g(9,"$ACADVER"),g(1,"AC1009"),g(9,"$DWGCODEPAGE"),g(3,"ANSI_1252"),g(9,"$INSUNITS"),g(70,6),g(9,"$INSBASE"),g(10,"0.0"),g(20,"0.0"),g(30,"0.0"),g(9,"$EXTMIN"),g(10,(minE-pad).toFixed(6)),g(20,(minN-pad).toFixed(6)),g(30,Number(minZ).toFixed(6)),g(9,"$EXTMAX"),g(10,(maxE+pad).toFixed(6)),g(20,(maxN+pad).toFixed(6)),g(30,Number(maxZ).toFixed(6)),g(9,"$LIMMIN"),g(10,(minE-pad).toFixed(6)),g(20,(minN-pad).toFixed(6)),g(9,"$LIMMAX"),g(10,(maxE+pad).toFixed(6)),g(20,(maxN+pad).toFixed(6)),g(9,"$PDMODE"),g(70,({x:3,plus:2,circle:33,square:65,diamond:65,triangle:65,dot:32,circlex:35})[ssShape]||35),g(9,"$PDSIZE"),g(40,(rad*2).toFixed(4)),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"TABLES"),g(0,"TABLE"),g(2,"LTYPE"),g(70,1),g(0,"LTYPE"),g(2,"CONTINUOUS"),g(70,0),g(3,"Solid line"),g(72,65),g(73,0),g(40,"0.0"),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"LAYER"),g(70,layers.length),layers.forEach(function(L2){g(0,"LAYER"),g(2,L2[0]),g(70,0),g(62,L2[1]),g(6,"CONTINUOUS")}),g(0,"ENDTAB"),g(0,"TABLE"),g(2,"STYLE"),g(70,1),g(0,"STYLE"),g(2,"STANDARD"),g(70,0),g(40,"0.0"),g(41,"1.0"),g(50,"0.0"),g(71,0),g(42,"0.2"),g(3,"txt"),g(4,""),g(0,"ENDTAB"),g(0,"ENDSEC"),g(0,"SECTION"),g(2,"ENTITIES");function circle(layer,e,n,z,r,col){g(0,"POINT"),g(8,layer),g(10,Number(e).toFixed(4)),g(20,Number(n).toFixed(4)),g(30,(isFinite(z)?Number(z):0).toFixed(4))}function lbl(pt,withZ){var parts=[];return optNo&&pt.id&&parts.push(String(pt.id)),optElev&&withZ&&!zeroZ&&isFinite(pt.z)&&parts.push(Number(pt.z).toFixed(2)),optCode&&pt.code&&parts.push(String(pt.code)),parts.join(" ")}function cloud(pts){var minx=1/0,maxx=-1/0,miny=1/0,maxy=-1/0;pts.forEach(function(q){q.e<minx&&(minx=q.e),q.e>maxx&&(maxx=q.e),q.n<miny&&(miny=q.n),q.n>maxy&&(maxy=q.n)});var cx=(minx+maxx)/2,cy=(miny+maxy)/2,R=rad*2;pts.forEach(function(q){var d=Math.sqrt((q.e-cx)*(q.e-cx)+(q.n-cy)*(q.n-cy));d+rad*1.5>R&&(R=d+rad*1.5)});var N=Math.max(8,Math.min(48,Math.round(2*Math.PI*R/(rad*1.6))));g(0,"POLYLINE"),g(8,"CLOUD"),g(66,1),g(10,"0.0"),g(20,"0.0"),g(30,"0.0"),g(70,1);for(var i=0;i<N;i++){var a=2*Math.PI*i/N;g(0,"VERTEX"),g(8,"CLOUD"),g(10,(cx+R*Math.cos(a)).toFixed(4)),g(20,(cy+R*Math.sin(a)).toFixed(4)),g(30,"0.0"),g(42,"0.55")}g(0,"SEQEND"),g(8,"CLOUD")}function txt(layer,e,n,h,s){s=String(s==null?"":s).replace(/[\r\n\t]/g," ").substring(0,120),s&&(g(0,"TEXT"),g(8,layer),g(7,"STANDARD"),g(10,Number(e).toFixed(4)),g(20,Number(n).toFixed(4)),g(30,"0.0"),g(40,Number(h).toFixed(4)),g(1,s),g(50,"0.0"))}function line(layer,a,b){g(0,"LINE"),g(8,layer),g(10,Number(a.e).toFixed(4)),g(20,Number(a.n).toFixed(4)),g(30,Number(a.z||0).toFixed(4)),g(11,Number(b.e).toFixed(4)),g(21,Number(b.n).toFixed(4)),g(31,Number(b.z||0).toFixed(4))}return(kind==="a"||kind==="both")&&(kind==="both"?ssAShown():(SS.a||[])).forEach(function(pt){!pt||!isFinite(pt.e)||!isFinite(pt.n)||(circle("ORIG",pt.e,pt.n,pt.z,rad,ssPcolA||0),txt("TXT_ORIG",pt.e+rad*1.8,pt.n+rad*1.8,th,lbl(pt,!0)))}),(kind==="b"||kind==="both")&&(SS.b||[]).forEach(function(pt){!pt||!isFinite(pt.e)||!isFinite(pt.n)||(circle("FIELD",pt.e,pt.n,pt.z,rad*.85,ssPcolB||0),txt("TXT_FIELD",pt.e+rad*1.8,pt.n-rad*2.2,th*.9,lbl(pt,!0)))}),kind==="both"&&optLines&&SS.rows&&SS.rows.length&&SS.rows.forEach(function(r){r.pa&&r.pb&&line(r.ok?"OK":"DELTA",r.pa,r.pb)}),optCloud&&SS.rows&&SS.rows.length&&SS.rows.forEach(function(r){if(r.kind!=="ok"){var set=[];kind==="both"?(r.pa&&set.push(r.pa),r.pb&&set.push(r.pb)):kind==="a"?r.pa&&set.push(r.pa):r.pb&&set.push(r.pb),set=set.filter(function(q){return q&&isFinite(q.e)&&isFinite(q.n)}),set.length&&cloud(set)}}),g(0,"ENDSEC"),g(0,"EOF"),out.join(`\r\n`)+`\r\n`}window.ssExportDxf=function(kind){if(kind=kind||"both",kind==="a"&&!(SS.a&&SS.a.length)){alert("\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0623\u0635\u0644\u064A \u0623\u0648\u0644\u064B\u0627");return}if(kind==="b"&&!(SS.b&&SS.b.length)){alert("\u062D\u0645\u0651\u0644 \u0645\u0644\u0641 \u0627\u0644\u0645\u0648\u0642\u0639 \u0623\u0648\u0644\u064B\u0627");return}if(kind==="both"&&!(SS.a&&SS.a.length)&&!(SS.b&&SS.b.length)){alert("\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0623\u0648\u0644\u064B\u0627");return}var dxf=ssBuildDxf(kind);if(!dxf){alert("\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u0642\u0627\u0637 \u0635\u0627\u0644\u062D\u0629 \u0644\u0644\u062A\u0635\u062F\u064A\u0631");return}var name=kind==="a"?"AES_ORIG.dxf":kind==="b"?"AES_FIELD.dxf":"AES_COMPARE.dxf";ssDownloadText(name,dxf,"application/dxf");var info=$("ss-map-info");info&&(info.textContent="\u062A\u0645 \u062A\u062C\u0647\u064A\u0632 "+name+" \u2014 \u0639\u0644\u0649 \u0627\u0644\u0645\u0648\u0628\u0627\u064A\u0644: \u0634\u0627\u0631\u0643 \u0627\u0644\u0645\u0644\u0641 \u0625\u0644\u0649 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0623\u0648 \u0627\u0641\u062A\u062D\u0647 \u0645\u0628\u0627\u0634\u0631\u0629 \u0641\u064A DWG FastView / AutoCAD")};var SK={k:1,tx:0,ty:0,rot:0,showNames:!0,ready:!1,bounds:null,cx:200,cy:180};function ssSketchEls(){return{svg:$("ss-sketch"),wrap:$("ss-sketch-wrap")}}function ssComputeBounds(){var pts=[];if(ssAShown().forEach(function(pt){isFinite(pt.e)&&isFinite(pt.n)&&pts.push(pt)}),SS.b.forEach(function(pt){isFinite(pt.e)&&isFinite(pt.n)&&pts.push(pt)}),!pts.length)return null;var minE=1/0,maxE=-1/0,minN=1/0,maxN=-1/0;pts.forEach(function(pt){pt.e<minE&&(minE=pt.e),pt.e>maxE&&(maxE=pt.e),pt.n<minN&&(minN=pt.n),pt.n>maxN&&(maxN=pt.n)}),minE===maxE&&(minE-=1,maxE+=1),minN===maxN&&(minN-=1,maxN+=1);var span=Math.max(maxE-minE,maxN-minN),midE=(minE+maxE)/2,midN=(minN+maxN)/2,pad=span*.1||1,half=span/2+pad;return{minE:midE-half,maxE:midE+half,minN:midN-half,maxN:midN+half,midE,midN,span:span+2*pad}}function ssWorldToSvg(e,n,b,W,H){var s=Math.min(W,H)/(b.maxE-b.minE),x=(W-(b.maxE-b.minE)*s)/2+(e-b.minE)*s,y=(H-(b.maxN-b.minN)*s)/2+(b.maxN-n)*s;return{x,y}}function ssApplyXform(){var g=document.getElementById("ss-sketch-g");if(g){var cx=SK.cx,cy=SK.cy;g.setAttribute("transform","translate("+SK.tx+","+SK.ty+") translate("+cx+","+cy+") rotate("+SK.rot+") scale("+SK.k+") translate("+-cx+","+-cy+")")}}window.ssDrawSketch=function(){var el=ssSketchEls().svg;if(!el)return;if(!SS.a.length&&!SS.b.length){el.innerHTML='<text x="200" y="180" text-anchor="middle" fill="#94a3b8" font-size="14">\u062D\u0645\u0651\u0644 \u0627\u0644\u0645\u0644\u0641\u0627\u062A \u0648\u0646\u0641\u0651\u0630 \u0627\u0644\u0645\u0642\u0627\u0631\u0646\u0629</text>';return}var b=ssComputeBounds();if(!b)return;SK.bounds=b;var W=400,H=360;SK.cx=W/2,SK.cy=H/2;var gParts=[];gParts.push('<defs><filter id="ss-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><marker id="ss-arr-ok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,1.5 L8,5 L0,8.5 Z" fill="#4ade80"/></marker><marker id="ss-arr-bad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,1.5 L8,5 L0,8.5 Z" fill="#f87171"/></marker></defs>');gParts.push('<rect width="'+W+'" height="'+H+'" fill="#050a12"/>');gParts.push('<g stroke="rgba(56,189,248,0.07)" stroke-width="0.45">');for(var gi=0;gi<=12;gi++){var gx=gi/12*W,gy=gi/12*H;gParts.push('<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="'+H+'"/>');gParts.push('<line x1="0" y1="'+gy+'" x2="'+W+'" y2="'+gy+'"/>')}gParts.push("</g>");function drawSet(pts,color,r,stroke){pts.forEach(function(pt){if(!isFinite(pt.e)||!isFinite(pt.n))return;var c=ssWorldToSvg(pt.e,pt.n,b,W,H);gParts.push('<circle cx="'+c.x.toFixed(2)+'" cy="'+c.y.toFixed(2)+'" r="'+(r+1.4)+'" fill="none" stroke="'+color+'" stroke-width="0.9" opacity="0.35"/>');gParts.push('<circle cx="'+c.x.toFixed(2)+'" cy="'+c.y.toFixed(2)+'" r="'+r+'" fill="'+color+'" stroke="'+(stroke||"#fff")+'" stroke-width="0.85" filter="url(#ss-glow)"/>');if(SK.showNames&&pts.length<=120&&pt.id)gParts.push('<text x="'+(c.x+5.5).toFixed(2)+'" y="'+(c.y-5.5).toFixed(2)+'" fill="'+color+'" font-size="7.5" font-family="ui-monospace,Consolas,monospace" opacity="0.95">'+esc(pt.id)+"</text>")})}if(SS.rows&&SS.rows.length)SS.rows.forEach(function(row){if(!row.pa||!row.pb)return;var a=ssWorldToSvg(row.pa.e,row.pa.n,b,W,H),bb=ssWorldToSvg(row.pb.e,row.pb.n,b,W,H),col=row.ok?"#4ade80":"#f87171",dash=row.ok?"":' stroke-dasharray="4 2.5"',mk=row.ok?"url(#ss-arr-ok)":"url(#ss-arr-bad)";gParts.push('<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+bb.x.toFixed(2)+'" y2="'+bb.y.toFixed(2)+'" stroke="'+col+'" stroke-width="1.85" opacity="0.9" marker-end="'+mk+'"'+dash+"/>")});drawSet(ssAShown(),"#38bdf8",3.8,"#e0f2fe");drawSet(SS.b,"#fbbf24",3.3,"#fef3c7");var topC=ssWorldToSvg(b.midE,b.maxN-(b.maxN-b.minN)*.04,b,W,H);gParts.push('<g transform="translate('+topC.x.toFixed(1)+","+topC.y.toFixed(1)+')"><polygon points="0,-14 5,1 -5,1" fill="#f87171"/><text y="14" text-anchor="middle" fill="#f87171" font-size="10" font-weight="800">N</text></g>');var ax=ssWorldToSvg(b.minE+(b.maxE-b.minE)*.07,b.minN+(b.maxN-b.minN)*.07,b,W,H);gParts.push('<g transform="translate('+ax.x.toFixed(1)+","+ax.y.toFixed(1)+')" stroke="#94a3b8" fill="#94a3b8"><line x1="0" y1="0" x2="30" y2="0" stroke-width="1.6"/><polygon points="30,0 23,-4.5 23,4.5" fill="#38bdf8" stroke="none"/><text x="34" y="4" fill="#38bdf8" font-size="9" font-weight="700">E</text><line x1="0" y1="0" x2="0" y2="-30" stroke-width="1.6"/><polygon points="0,-30 -4.5,-23 4.5,-23" fill="#f87171" stroke="none"/><text x="7" y="-22" fill="#f87171" font-size="9" font-weight="700">N</text></g>');var okN=0,badN=0;if(SS.rows)SS.rows.forEach(function(r){if(r.kind==="ok")okN++;else if(r.kind==="bad")badN++});gParts.push('<rect x="6" y="6" width="148" height="62" rx="8" fill="rgba(8,14,24,0.92)" stroke="rgba(56,189,248,0.4)"/>');gParts.push('<circle cx="18" cy="20" r="4.2" fill="#38bdf8"/><text x="28" y="23" fill="#e0f2fe" font-size="9">\u0623\u0635\u0644\u064A ('+ssAShown().length+")</text>");gParts.push('<circle cx="18" cy="36" r="4.2" fill="#fbbf24"/><text x="28" y="39" fill="#e0f2fe" font-size="9">\u0645\u0648\u0642\u0639 ('+SS.b.length+")</text>");gParts.push('<line x1="12" y1="50" x2="24" y2="50" stroke="#4ade80" stroke-width="2"/><text x="28" y="53" fill="#94a3b8" font-size="8">\u0645\u0637\u0627\u0628\u0642 '+okN+" \u00B7 \u0627\u0646\u062D\u0631\u0627\u0641 "+badN+"</text>");var scaleM=b.span*.2,sPx=Math.min(W,H)*0.2,sx0=W-sPx-14,sy0=H-18;gParts.push('<line x1="'+sx0+'" y1="'+sy0+'" x2="'+(sx0+sPx)+'" y2="'+sy0+'" stroke="#94a3b8" stroke-width="1.5"/>');gParts.push('<line x1="'+sx0+'" y1="'+(sy0-4)+'" x2="'+sx0+'" y2="'+(sy0+4)+'" stroke="#94a3b8" stroke-width="1.2"/>');gParts.push('<line x1="'+(sx0+sPx)+'" y1="'+(sy0-4)+'" x2="'+(sx0+sPx)+'" y2="'+(sy0+4)+'" stroke="#94a3b8" stroke-width="1.2"/>');gParts.push('<text x="'+(sx0+sPx/2)+'" y="'+(sy0-6)+'" text-anchor="middle" fill="#94a3b8" font-size="8">'+scaleM.toFixed(scaleM>=10?0:1)+" \u0645</text>");el.innerHTML='<g id="ss-sketch-g">'+gParts.join("")+"</g>",ssApplyXform(),SK.ready=!0,ssSketchBind(el)};window.ssSketchFit=function(){SK.k=1,SK.tx=0,SK.ty=0,SK.rot=0,ssDrawSketch()},window.ssSketchRot=function(deg){SK.rot=(SK.rot+deg)%360,ssApplyXform()},window.ssSketchToggleNames=function(){SK.showNames=!SK.showNames,ssDrawSketch()};function ssSketchBind(svg){if(svg._ssBound)return;svg._ssBound=1;var ptrs={},lastAng=null,lastDist=null;function ids(){return Object.keys(ptrs)}function mid(){var a=ids();if(a.length<2)return null;var p0=ptrs[a[0]],p1=ptrs[a[1]];return{x:(p0.x+p1.x)/2,y:(p0.y+p1.y)/2}}svg.addEventListener("pointerdown",function(e){ptrs[e.pointerId]={x:e.clientX,y:e.clientY};try{svg.setPointerCapture(e.pointerId)}catch(_){}if(svg.style.cursor="grabbing",ids().length>=2){var a=ids(),p0=ptrs[a[0]],p1=ptrs[a[1]];lastDist=Math.hypot(p0.x-p1.x,p0.y-p1.y)||1,lastAng=Math.atan2(p1.y-p0.y,p1.x-p0.x)}}),svg.addEventListener("pointermove",function(e){var p=ptrs[e.pointerId];if(p){var all=ids();if(all.length===1)SK.tx+=e.clientX-p.x,SK.ty+=e.clientY-p.y,p.x=e.clientX,p.y=e.clientY,ssApplyXform();else if(all.length>=2){p.x=e.clientX,p.y=e.clientY;var a=all,p0=ptrs[a[0]],p1=ptrs[a[1]];if(!p0||!p1)return;var dist=Math.hypot(p0.x-p1.x,p0.y-p1.y)||1,ang=Math.atan2(p1.y-p0.y,p1.x-p0.x);lastDist&&(SK.k=Math.max(.25,Math.min(12,SK.k*(dist/lastDist)))),lastAng!=null&&(SK.rot+=(ang-lastAng)*180/Math.PI),lastDist=dist,lastAng=ang,ssApplyXform()}}});function up(e){delete ptrs[e.pointerId],ids().length<2&&(lastAng=null,lastDist=null),ids().length||(svg.style.cursor="grab")}svg.addEventListener("pointerup",up),svg.addEventListener("pointercancel",up),svg.addEventListener("wheel",function(e){e.preventDefault();var factor=Math.exp(-(e.deltaY||0)*.0015);SK.k=Math.max(.25,Math.min(12,SK.k*factor)),ssApplyXform()},{passive:!1})}var _ssCompare=window.ssCompare;window.ssCompare=function(){_ssCompare.apply(this,arguments),SK.k=1,SK.tx=0,SK.ty=0,SK.rot=0,setTimeout(function(){ssDrawSketch()},30)};var _ssClear=window.ssClear;window.ssClear=function(){_ssClear.apply(this,arguments),SK.k=1,SK.tx=0,SK.ty=0,SK.rot=0,ssDrawSketch()};function init(){var fa=$("ss-file-a"),fb=$("ss-file-b");fa&&!fa._ss&&(fa._ss=1,fa.addEventListener("change",function(){loadSide("a")})),fb&&!fb._ss&&(fb._ss=1,fb.addEventListener("change",function(){loadSide("b")}));var oa=$("ss-order-a"),ob=$("ss-order-b");oa&&!oa._ss&&(oa._ss=1,oa.addEventListener("change",function(){loadSide("a")})),ob&&!ob._ss&&(ob._ss=1,ob.addEventListener("change",function(){loadSide("b")}))}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init()})();</script>
 
 <!-- ===== CV / ATS MODULE ===== -->
 <style id="cv-style">html{overscroll-behavior-y:none}.menu-card{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:color-mix(in srgb,var(--card) 90%,transparent)!important}#cv-ov{position:fixed;inset:0;z-index:3000;background:var(--bg);overflow-y:auto;display:none;padding:14px 14px 40px;-webkit-overflow-scrolling:touch}#cv-ov.on{display:block;overscroll-behavior:contain}body.cv-open>*:not(#cv-ov){display:none!important}body.cv-open{padding:0!important;background-image:none!important}#cv-ov .cv-in{max-width:580px;margin:0 auto}.cv-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}.cv-top h2{font-size:1.05rem;flex:1;color:var(--text)}.cv-x{padding:9px 14px;border-radius:12px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font:700 .85rem inherit;cursor:pointer}.cv-big{width:100%;display:flex;align-items:center;gap:12px;padding:18px 14px;margin-bottom:12px;border-radius:16px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);background:var(--card);color:var(--text);cursor:pointer;text-align:right;font:inherit}.cv-big .ic{font-size:1.8rem}.cv-big b{display:block;font-size:1rem;margin-bottom:2px}.cv-big span{font-size:.78rem;color:var(--muted)}.cv-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px}.cv-card h3{font-size:.95rem;margin-bottom:10px;color:var(--accent)}.cv-card label{display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px}.cv-card input[type=text],.cv-card input[type=email],.cv-card input[type=tel],.cv-card textarea,.cv-card select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);font:inherit;font-size:.9rem}.cv-card textarea{min-height:90px;resize:vertical}.cv-row{display:flex;gap:8px}.cv-row>div{flex:1;min-width:0}.cv-chk{display:flex!important;align-items:center;gap:6px;color:var(--text)!important;margin-top:8px}.cv-btn{width:100%;padding:13px;border-radius:12px;border:1px solid transparent;font:800 .92rem inherit;cursor:pointer;margin-top:8px;color:#fff;background:linear-gradient(135deg,#0284c7,#06b6d4)}.cv-btn.alt{background:var(--input-bg);color:var(--text);border-color:var(--border)}.cv-btn.gold{background:linear-gradient(135deg,#b45309,#fbbf24)}.cv-btn.red{background:#b91c1c;padding:8px;width:auto;font-size:.78rem;margin-top:10px}.cv-up{display:block;text-align:center;padding:26px 14px;border:2px dashed var(--accent);border-radius:16px;color:var(--text);cursor:pointer;background:var(--card)}.cv-up input{display:none}.cv-score{display:flex;align-items:center;gap:16px}.cv-ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex:none}.cv-ring i{width:74px;height:74px;border-radius:50%;background:var(--card);display:grid;place-items:center;font:800 1.5rem inherit;font-style:normal;color:var(--text)}.cv-li{display:flex;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:.85rem;line-height:1.6}.cv-li:last-child{border:0}.cv-li small{display:block;color:var(--muted);font-size:.76rem}.cv-prev{background:#e5e7eb;border-radius:12px;overflow:hidden;height:62vh;position:relative}.cv-prev iframe{border:0;width:794px;height:1123px;background:#fff;transform-origin:top left;position:absolute;left:0;top:0}.cv-msg{font-size:.82rem;color:var(--muted);text-align:center;padding:10px}.cv-hint{font-size:.75rem;color:var(--muted);margin-top:6px;line-height:1.6}</style>
@@ -3473,5 +3608,449 @@ window.egImgShow=function(q,box){var n=norm(q),hit=[];RULES.forEach(function(r){
 <script>(function(){function cur(){try{var h=document.getElementById("view-home");if(h&&h.style.display!=="none")return"home";var a=document.querySelector(".app-view.active");return a&&a.id?a.id.replace(/^view-/,""):"home"}catch(e){return"home"}}
 function save(){try{if(document.getElementById("aes-splash"))return;var v=cur(),o=JSON.stringify({v:v,t:Date.now()});try{sessionStorage.setItem("aes_last_view",o)}catch(e){}try{localStorage.setItem("aes_last_view",o)}catch(e){}}catch(e){}}
 document.addEventListener("visibilitychange",function(){document.hidden&&save()});window.addEventListener("pagehide",save);setInterval(save,4000);})();</script>
+
+<script>
+(function(){
+  var FMT = { pts: [], name: "", kind: "" };
+
+  function $(id){ return document.getElementById(id); }
+  function orderEN(){ return ($("fmt-order") && $("fmt-order").value === "EN"); }
+  function decText(buf){
+    try {
+      var u8 = new Uint8Array(buf);
+      if (u8.length >= 2 && u8[0] === 0xFF && u8[1] === 0xFE) return new TextDecoder("utf-16le").decode(u8);
+      if (u8.length >= 2 && u8[0] === 0xFE && u8[1] === 0xFF) return new TextDecoder("utf-16be").decode(u8);
+      var t = new TextDecoder("utf-8", {fatal:false}).decode(u8);
+      if (t.indexOf("\uFFFD") >= 0) {
+        try { t = new TextDecoder("windows-1256").decode(u8); } catch(e) {}
+      }
+      return t;
+    } catch(e) {
+      var a = new Uint8Array(buf), s = "";
+      for (var i=0;i<a.length;i++) s += String.fromCharCode(a[i]);
+      return s;
+    }
+  }
+  function isExcelName(n){ return /\.(xlsx|xls)$/i.test(n||""); }
+  function excelToText(buf){
+    if (typeof XLSX === "undefined") throw new Error("مكتبة Excel غير محمّلة");
+    var wb = XLSX.read(buf, {type:"array"});
+    var sheet = wb.Sheets[wb.SheetNames[0]];
+    return XLSX.utils.sheet_to_csv(sheet, {FS:"\t"});
+  }
+  function num(v){
+    if (v == null || v === "") return NaN;
+    var s = String(v).trim().replace(/,/g,"").replace(/[\u0660-\u0669]/g, function(c){ return String(c.charCodeAt(0)-1632); });
+    return parseFloat(s);
+  }
+  function cleanCode(c){ return String(c==null?"":c).trim().replace(/[\r\n\t]+/g," "); }
+  function parseLines(text){
+    return String(text||"").replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n");
+  }
+
+  function parseSDR(text){
+    var lines = parseLines(text), pts = [], ignored = 0;
+    var curId = null;
+    for (var i=0;i<lines.length;i++){
+      var L = lines[i].trim();
+      if (!L) continue;
+      var m08 = L.match(/^08KI\s*(.+)$/i) || L.match(/^08\s*KI\s*(.+)$/i);
+      if (m08){ curId = m08[1].trim(); continue; }
+      var m09 = L.match(/^09(?:F1|NM|KP)?\s+(.+)$/i);
+      if (m09){
+        var parts = m09[1].trim().split(/\s+/);
+        if (parts.length >= 3){
+          var a = num(parts[0]), b = num(parts[1]), z = num(parts[2]);
+          var code = parts.length > 3 ? parts.slice(3).join(" ") : "";
+          if (isFinite(a) && isFinite(b)){
+            var e, n;
+            if (orderEN()){ e=a; n=b; } else { n=a; e=b; }
+            pts.push({ id: curId || String(pts.length+1), e:e, n:n, z: isFinite(z)?z:0, code: cleanCode(code) });
+          } else ignored++;
+        }
+        continue;
+      }
+      if (/^\d{2}[A-Z]{2}/i.test(L)) continue;
+    }
+    if (!pts.length) return parseGeneric(text);
+    return { pts: pts, ignored: ignored };
+  }
+
+  function parseGSI(text){
+    var lines = parseLines(text), pts = [];
+    for (var i=0;i<lines.length;i++){
+      var L = lines[i].trim();
+      if (!L || L[0] === "!") continue;
+      var id = null, e = NaN, n = NaN, z = NaN, code = "";
+      var m11 = L.match(/\*?11\d*\+([+\-]?\d+)/);
+      if (m11) id = String(parseInt(m11[1],10));
+      var m21 = L.match(/21\.\.00([+\-]\d+)/) || L.match(/21\d*\+([+\-]?\d+)/);
+      var m22 = L.match(/22\.\.00([+\-]\d+)/) || L.match(/22\d*\+([+\-]?\d+)/);
+      var m31 = L.match(/31\.\.00([+\-]\d+)/) || L.match(/31\d*\+([+\-]?\d+)/);
+      var m71 = L.match(/71\.\.\d{2}\+([^\s]+)/);
+      function gsiVal(s){
+        if (!s) return NaN;
+        var v = parseInt(s, 10);
+        return v / 1000;
+      }
+      if (m21) e = gsiVal(m21[1]);
+      if (m22) n = gsiVal(m22[1]);
+      if (m31) z = gsiVal(m31[1]);
+      if (m71) code = m71[1].replace(/\./g,"").trim();
+      if (isFinite(e) && isFinite(n)){
+        if (!id) id = String(pts.length+1);
+        pts.push({ id:id, e:e, n:n, z:isFinite(z)?z:0, code:cleanCode(code) });
+      }
+    }
+    if (!pts.length) return parseGeneric(text);
+    return { pts: pts, ignored: 0 };
+  }
+
+  function parsePNT(text){ return parseGeneric(text); }
+
+  function parseGeneric(text){
+    var lines = parseLines(text), pts = [], ignored = 0;
+    var en = orderEN();
+    for (var i=0;i<lines.length;i++){
+      var L = lines[i].trim();
+      if (!L || /^[#*;!]/.test(L)) continue;
+      if (/^(pt|point|name|id|easting|northing|east|north|x|y|z|code)/i.test(L) && !/\d{3,}/.test(L)) continue;
+      var parts = L.split(/[\s,;\t|]+/).filter(Boolean);
+      if (parts.length < 3){ ignored++; continue; }
+      var id, a, b, z, code;
+      if (isFinite(num(parts[1])) && isFinite(num(parts[2])) && (isNaN(num(parts[0])) || parts.length >= 4)){
+        id = parts[0]; a = num(parts[1]); b = num(parts[2]);
+        z = parts.length>3 ? num(parts[3]) : 0;
+        code = parts.length>4 ? parts.slice(4).join(" ") : "";
+        if (!isFinite(z)){ code = String(parts[3]||""); z = 0; }
+      } else {
+        id = String(pts.length+1);
+        a = num(parts[0]); b = num(parts[1]); z = num(parts[2]);
+        code = parts.length>3 ? parts.slice(3).join(" ") : "";
+        if (!isFinite(z)){ z=0; code = parts.slice(2).join(" "); }
+      }
+      if (!isFinite(a) || !isFinite(b)){ ignored++; continue; }
+      var e, n;
+      if (en){ e=a; n=b; } else { n=a; e=b; }
+      pts.push({ id:String(id), e:e, n:n, z:isFinite(z)?z:0, code:cleanCode(code) });
+    }
+    return { pts:pts, ignored:ignored };
+  }
+
+  function detectAndParse(name, text){
+    var low = (name||"").toLowerCase();
+    if (/\.sdr$/i.test(low) || /08KI|09F1|00NMSDR/i.test(text)) return { kind:"SDR", res: parseSDR(text) };
+    if (/\.gsi$/i.test(low) || /\*11|21\.\.00|22\.\.00/i.test(text)) return { kind:"GSI", res: parseGSI(text) };
+    if (/\.pnt$/i.test(low)) return { kind:"PNT", res: parsePNT(text) };
+    if (/\.(csv|txt|tsv|dat|crd|xyz)$/i.test(low)) return { kind:"Text/CSV", res: parseGeneric(text) };
+    return { kind:"Auto", res: parseGeneric(text) };
+  }
+
+  function fmtN(v, d){ d = d==null?3:d; return (isFinite(v)?Number(v):0).toFixed(d); }
+
+  function exportSDR(pts){
+    var en = orderEN();
+    var lines = ["00NMSDR33V","01NMAhmed Eltabakh Format Converter"];
+    pts.forEach(function(p,i){
+      var id = String(p.id|| (i+1)).substring(0,16);
+      lines.push("08KI"+id);
+      var a = en ? p.e : p.n;
+      var b = en ? p.n : p.e;
+      lines.push("09F1 "+fmtN(a,3)+" "+fmtN(b,3)+" "+fmtN(p.z,3)+(p.code?" "+p.code:""));
+    });
+    return lines.join("\r\n")+"\r\n";
+  }
+
+  function exportText(pts, sep){
+    var en = orderEN();
+    sep = sep || "\t";
+    var rows = [];
+    rows.push(["PT", en?"E":"N", en?"N":"E", "Z", "Code"].join(sep));
+    pts.forEach(function(p){
+      var a = en ? p.e : p.n;
+      var b = en ? p.n : p.e;
+      rows.push([p.id, fmtN(a,4), fmtN(b,4), fmtN(p.z,3), p.code||""].join(sep));
+    });
+    return rows.join("\r\n")+"\r\n";
+  }
+
+  function exportCSV(pts){ return exportText(pts, ","); }
+
+  function exportPNT(pts){
+    var en = orderEN();
+    var rows = [];
+    pts.forEach(function(p){
+      var a = en ? p.e : p.n;
+      var b = en ? p.n : p.e;
+      rows.push([p.id, fmtN(a,4), fmtN(b,4), fmtN(p.z,3), p.code||""].join(","));
+    });
+    return rows.join("\r\n")+"\r\n";
+  }
+
+  function exportGSI(pts){
+    var lines = [];
+    pts.forEach(function(p,i){
+      var id = parseInt(String(p.id).replace(/\D/g,""),10);
+      if (!isFinite(id)) id = i+1;
+      function w(wi, val){
+        var v = Math.round((isFinite(val)?val:0)*1000);
+        var sign = v>=0?"+":"-";
+        var abs = String(Math.abs(v));
+        while (abs.length < 15) abs = "0"+abs;
+        return wi + ".." + "00" + sign + abs + " ";
+      }
+      var idStr = "+" + String(id);
+      while (idStr.length < 16) idStr = idStr[0] + "0" + idStr.slice(1);
+      var line = "*11" + String(i+1);
+      while (line.length < 6) line = line; // keep short index
+      line = "*11" + ("0000"+String(i+1)).slice(-4) + idStr + " ";
+      line += w("21", p.e);
+      line += w("22", p.n);
+      line += w("31", p.z);
+      if (p.code){
+        var c = String(p.code).substring(0,16);
+        while (c.length < 16) c += " ";
+        line += "71..00+" + c;
+      }
+      lines.push(line.trim());
+    });
+    return lines.join("\r\n")+"\r\n";
+  }
+
+  function exportExcel(pts){
+    if (typeof XLSX === "undefined") throw new Error("مكتبة Excel غير محمّلة");
+    var en = orderEN();
+    var data = [["PT", en?"E":"N", en?"N":"E", "Z", "Code"]];
+    pts.forEach(function(p){
+      var a = en ? p.e : p.n;
+      var b = en ? p.n : p.e;
+      data.push([p.id, a, b, p.z, p.code||""]);
+    });
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Points");
+    return XLSX.write(wb, {bookType:"xlsx", type:"array"});
+  }
+
+  function exportDXF(pts){
+    function f6(v){ return (isFinite(v)?Number(v):0).toFixed(6); }
+    var out = [];
+    function p(c,v){ out.push(String(c), String(v)); }
+    p(0,"SECTION"); p(2,"HEADER");
+    p(9,"$ACADVER"); p(1,"AC1009");
+    p(0,"ENDSEC");
+    p(0,"SECTION"); p(2,"TABLES");
+    p(0,"TABLE"); p(2,"LAYER"); p(70,2);
+    p(0,"LAYER"); p(2,"POINTS"); p(70,0); p(62,1); p(6,"CONTINUOUS");
+    p(0,"LAYER"); p(2,"LABELS"); p(70,0); p(62,3); p(6,"CONTINUOUS");
+    p(0,"ENDTAB"); p(0,"ENDSEC");
+    p(0,"SECTION"); p(2,"ENTITIES");
+    pts.forEach(function(pt){
+      p(0,"POINT"); p(8,"POINTS"); p(10,f6(pt.e)); p(20,f6(pt.n)); p(30,f6(pt.z));
+      var label = String(pt.id) + (pt.code ? " " + pt.code : "");
+      p(0,"TEXT"); p(8,"LABELS"); p(10,f6(pt.e)); p(20,f6(pt.n)); p(30,f6(pt.z));
+      p(40,0.5); p(1,label); p(50,0);
+    });
+    p(0,"ENDSEC"); p(0,"EOF");
+    return out.join("\r\n")+"\r\n";
+  }
+
+  function utmToLatLon(e, n, zone){
+    zone = zone || 36;
+    var a=6378137.0, f=1/298.257223563, k0=0.9996;
+    var e1 = f*(2-f);
+    var e2 = e1/(1-e1);
+    var x = e - 500000.0;
+    var y = n;
+    var m = y / k0;
+    var mu = m / (a*(1 - e1/4 - 3*e1*e1/64 - 5*e1*e1*e1/256));
+    var e1s = (1-Math.sqrt(1-e1))/(1+Math.sqrt(1-e1));
+    var phi1 = mu + (3*e1s/2 - 27*e1s*e1s*e1s/32)*Math.sin(2*mu)
+      + (21*e1s*e1s/16 - 55*e1s*e1s*e1s*e1s/32)*Math.sin(4*mu)
+      + (151*e1s*e1s*e1s/96)*Math.sin(6*mu);
+    var sinp=Math.sin(phi1), cosp=Math.cos(phi1), tanp=Math.tan(phi1);
+    var N1 = a/Math.sqrt(1-e1*sinp*sinp);
+    var T1 = tanp*tanp;
+    var C1 = e2*cosp*cosp;
+    var R1 = a*(1-e1)/Math.pow(1-e1*sinp*sinp,1.5);
+    var D = x/(N1*k0);
+    var lat = phi1 - (N1*tanp/R1)*(D*D/2 - (5+3*T1+10*C1-4*C1*C1-9*e2)*D*D*D*D/24
+      + (61+90*T1+298*C1+45*T1*T1-252*e2-3*C1*C1)*D*D*D*D*D*D/720);
+    var lon0 = ((zone-1)*6 - 180 + 3) * Math.PI/180;
+    var lon = lon0 + (D - (1+2*T1+C1)*D*D*D/6
+      + (5-2*C1+28*T1-3*C1*C1+8*e2+24*T1*T1)*D*D*D*D*D/120)/cosp;
+    return { lat: lat*180/Math.PI, lon: lon*180/Math.PI };
+  }
+
+  function escXml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function exportKML(pts){
+    var zone = parseInt(($("fmt-zone")&&$("fmt-zone").value)||"36",10) || 36;
+    var placemarks = pts.map(function(p){
+      var ll = utmToLatLon(p.e, p.n, zone);
+      var name = String(p.id) + (p.code? " — "+p.code : "");
+      return "<Placemark><name>"+escXml(name)+"</name><Point><coordinates>"+
+        ll.lon.toFixed(8)+","+ll.lat.toFixed(8)+","+fmtN(p.z,3)+"</coordinates></Point></Placemark>";
+    }).join("\n");
+    return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+      '<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Survey Points</name>\n'+
+      placemarks+"\n</Document></kml>\n";
+  }
+
+  function downloadBlob(data, filename, mime){
+    var blob = data instanceof Blob ? data : new Blob([data], {type: mime||"application/octet-stream"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ try{ URL.revokeObjectURL(url); a.remove(); }catch(e){} }, 1500);
+  }
+
+  function setStatus(msg, err){
+    var el = $("fmt-status");
+    if (!el) return;
+    el.style.display = "block";
+    el.style.borderRightColor = err ? "#f87171" : "var(--accent)";
+    el.textContent = msg;
+  }
+
+  function renderPreview(){
+    var sec = $("fmt-preview-sec");
+    var tb = $("fmt-tbody");
+    var en = orderEN();
+    if ($("fmt-th-a")) $("fmt-th-a").textContent = en ? "E" : "N";
+    if ($("fmt-th-b")) $("fmt-th-b").textContent = en ? "N" : "E";
+    if (!FMT.pts.length){ if(sec) sec.style.display="none"; return; }
+    if (sec) sec.style.display="block";
+    if ($("fmt-pt-count")) $("fmt-pt-count").textContent = String(FMT.pts.length);
+    if (!tb) return;
+    var max = Math.min(FMT.pts.length, 80);
+    var html = "";
+    for (var i=0;i<max;i++){
+      var p = FMT.pts[i];
+      var a = en ? p.e : p.n;
+      var b = en ? p.n : p.e;
+      html += "<tr><td>"+escXml(p.id)+"</td><td>"+fmtN(a,3)+"</td><td>"+fmtN(b,3)+"</td><td>"+fmtN(p.z,3)+"</td><td>"+escXml(p.code||"")+"</td></tr>";
+    }
+    if (FMT.pts.length > max) html += "<tr><td colspan='5' style='opacity:.7'>… و "+(FMT.pts.length-max)+" نقطة أخرى</td></tr>";
+    tb.innerHTML = html;
+  }
+
+  function loadFile(file){
+    if (!file) return;
+    FMT.name = file.name;
+    FMT.pts = [];
+    FMT.kind = "";
+    setStatus("جاري قراءة الملف…", false);
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var buf = reader.result;
+        var text;
+        if (isExcelName(file.name)) {
+          text = excelToText(buf);
+          FMT.kind = "Excel";
+          var r = parseGeneric(text);
+          FMT.pts = r.pts;
+        } else {
+          text = decText(buf);
+          var d = detectAndParse(file.name, text);
+          FMT.kind = d.kind;
+          FMT.pts = d.res.pts || [];
+        }
+        var info = $("fmt-file-info");
+        if (info){
+          info.style.display="block";
+          info.innerHTML = "الملف: <b>"+escXml(file.name)+"</b> • النوع: <b>"+escXml(FMT.kind)+"</b> • النقاط: <b>"+FMT.pts.length+"</b>";
+        }
+        if (!FMT.pts.length){
+          setStatus("مفيش نقاط اتقرأت. جرّب تغيير ترتيب الإحداثيات (E-N أو N-E) أو تأكد من صيغة الملف.", true);
+        } else {
+          setStatus("تم قراءة "+FMT.pts.length+" نقطة بنجاح. اختار صيغة التصدير واضغط تحويل.", false);
+        }
+        renderPreview();
+      } catch(e){
+        setStatus("خطأ في قراءة الملف: "+(e && e.message ? e.message : e), true);
+      }
+    };
+    reader.onerror = function(){ setStatus("تعذّر فتح الملف", true); };
+    reader.readAsArrayBuffer(file);
+  }
+
+  window.fmtConvert = function(){
+    if (!FMT.pts.length){
+      setStatus("ارفع ملف فيه نقاط أولاً", true);
+      return;
+    }
+    var out = ($("fmt-out") && $("fmt-out").value) || "sdr";
+    var base = (FMT.name||"points").replace(/\.[^.]+$/,"") + "_converted";
+    try {
+      if (out === "sdr"){
+        downloadBlob(exportSDR(FMT.pts), base+".sdr", "text/plain");
+      } else if (out === "text"){
+        downloadBlob(exportText(FMT.pts, "\t"), base+".txt", "text/plain");
+      } else if (out === "csv"){
+        downloadBlob(exportCSV(FMT.pts), base+".csv", "text/csv");
+      } else if (out === "pnt"){
+        downloadBlob(exportPNT(FMT.pts), base+".pnt", "text/plain");
+      } else if (out === "gsi"){
+        downloadBlob(exportGSI(FMT.pts), base+".gsi", "text/plain");
+      } else if (out === "excel"){
+        var arr = exportExcel(FMT.pts);
+        downloadBlob(new Blob([arr], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), base+".xlsx");
+      } else if (out === "dxf"){
+        downloadBlob(exportDXF(FMT.pts), base+".dxf", "application/dxf");
+      } else if (out === "kml"){
+        downloadBlob(exportKML(FMT.pts), base+".kml", "application/vnd.google-earth.kml+xml");
+      }
+      setStatus("تم إنشاء الملف ("+out.toUpperCase()+") — هيظهرلك تنزيل على الجهاز.", false);
+    } catch(e){
+      setStatus("خطأ أثناء التحويل: "+(e && e.message ? e.message : e), true);
+    }
+  };
+
+  window.fmtReset = function(){
+    FMT = { pts:[], name:"", kind:"" };
+    var f = $("fmt-file"); if (f) f.value = "";
+    var info = $("fmt-file-info"); if (info){ info.style.display="none"; info.textContent=""; }
+    var st = $("fmt-status"); if (st) st.style.display="none";
+    var sec = $("fmt-preview-sec"); if (sec) sec.style.display="none";
+    var tb = $("fmt-tbody"); if (tb) tb.innerHTML="";
+  };
+
+  function bind(){
+    var f = $("fmt-file");
+    if (f && !f._fmt){
+      f._fmt = 1;
+      f.addEventListener("change", function(){ if (f.files && f.files[0]) loadFile(f.files[0]); });
+    }
+    var ord = $("fmt-order");
+    if (ord && !ord._fmt){
+      ord._fmt = 1;
+      ord.addEventListener("change", function(){
+        if (FMT.name){
+          var f2 = $("fmt-file");
+          if (f2 && f2.files && f2.files[0]) loadFile(f2.files[0]);
+          else renderPreview();
+        } else renderPreview();
+      });
+    }
+    var out = $("fmt-out");
+    if (out && !out._fmt){
+      out._fmt = 1;
+      out.addEventListener("change", function(){
+        var w = $("fmt-zone-wrap");
+        if (w) w.style.display = out.value === "kml" ? "block" : "none";
+      });
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
+  else bind();
+})();
+</script>
+
 </body>
 </html>
