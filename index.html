@@ -4,6 +4,88 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ahmed Eltabakh for Modern Surveying</title>
+<script id="aes-gate">(function(){
+var PUB={"kty":"EC","crv":"P-256","x":"NfZ5Y2FjUNBWwjAH9Vq2573g0_Gt4QZPlmRr3as--ys","y":"brhFovp59CWJrF5wBGoEAnvHIN6eCQvANs-nN0miIDE"},WA="201065339946",K_ID="aes_dev_id",K_CODE="aes_unlock_code",mem={},de=document.documentElement,ov=null,locked=!1,built=!1,endMs=0,bar=null,tmr=0;
+function get(k){try{var v=localStorage.getItem(k);if(v!==null)return v}catch(e){}return mem[k]===undefined?null:mem[k]}
+function set(k,v){mem[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
+function devId(){var d=get(K_ID);if(d&&/^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(d))return d;var A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=new Uint8Array(12),s="";crypto.getRandomValues(r);for(var i=0;i<12;i++){s+=A[r[i]%32];if(i===3||i===7)s+="-"}set(K_ID,s);return s}
+function b64u(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function check(text){
+var m=/([0-9a-z]+)\.([A-Za-z0-9_-]{86})/.exec(String(text||""));
+if(!m)return"bad";
+var exp=m[1]==="0"?0:parseInt(m[1],36);
+if(exp&&Math.floor(Date.now()/864e5)>exp)return"expired";
+if(!window.crypto||!crypto.subtle)return"nocrypto";
+try{
+var key=await crypto.subtle.importKey("jwk",PUB,{name:"ECDSA",namedCurve:"P-256"},!1,["verify"]);
+var ok=await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},key,b64u(m[2]),new TextEncoder().encode("AES1|"+devId()+"|"+m[1]));
+if(ok)endMs=exp?(exp+1)*864e5:0;return ok?"ok":"bad"}catch(e){return"bad"}}
+function stopBar(){if(tmr){clearInterval(tmr);tmr=0}if(bar){bar.remove();bar=null}}
+function tick(){
+if(!bar)return;
+if(!endMs){bar.textContent="تفعيل دائم";bar.style.color="#4ade80";return}
+var left=endMs-Date.now();
+if(left<=0){stopBar();built=!1;build("expired");return}
+var s=Math.floor(left/1e3),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),x=s%60,p=function(n){return(n<10?"0":"")+n};
+bar.innerHTML="باقي على انتهاء التفعيل: "+(d?d+" يوم و ":"")+'<bdi dir="ltr">'+p(h)+":"+p(m)+":"+p(x)+"</bdi>";
+bar.style.color=left<2592e5?"#f87171":"#fbbf24"}
+function startBar(){
+if(bar){tick();return}
+if(!document.body){document.addEventListener("DOMContentLoaded",startBar,{once:!0});return}
+bar=document.createElement("div");bar.id="aes-gate-bar";
+bar.style.cssText="position:sticky;top:0;z-index:9990;margin:0 0 10px;padding:7px 10px;border-radius:10px;background:#0f172a;border:1px solid #1e3a5f;font:700 .8rem/1.4 Segoe UI,system-ui,Tahoma,Arial,sans-serif;text-align:center;direction:rtl";
+document.body.insertBefore(bar,document.body.firstChild);tick();if(endMs)tmr=setInterval(tick,1e3)}
+function setInert(on){try{if(document.body){on?document.body.setAttribute("inert",""):document.body.removeAttribute("inert")}}catch(e){}}
+function unlock(){locked=!1;built=!1;if(ov){ov.remove();ov=null}de.style.overflow="";setInert(!1)}
+function msgText(id){return"السلام عليكم، عايز أفعّل التطبيق على جهازي.\nكود الجهاز: "+id}
+function cover(){
+if(ov)return;locked=!0;de.style.overflow="hidden";
+ov=document.createElement("div");ov.id="aes-gate-ov";ov.setAttribute("dir","rtl");
+ov.style.cssText="position:fixed;inset:0;z-index:2147483647;background:#070b14;color:#f1f5f9;display:flex;align-items:center;justify-content:center;padding:16px;font-family:Segoe UI,system-ui,-apple-system,Tahoma,Arial,sans-serif;overflow:auto";
+de.appendChild(ov);setInert(!0)}
+function build(reason){
+cover();
+if(built)return;built=!0;
+var id=devId();
+var box='<div style="width:100%;max-width:420px;background:#0f172a;border:1px solid #1e3a5f;border-radius:18px;padding:22px 18px;box-shadow:0 8px 32px #00000066">'
++'<div style="text-align:center;margin-bottom:16px"><div style="font-size:1.15rem;font-weight:800;color:#38bdf8">Ahmed Eltabakh</div><div style="font-size:.8rem;color:#94a3b8;margin-top:2px">for Modern Surveying</div></div>'
++'<h2 style="font-size:1.05rem;text-align:center;margin-bottom:6px">تفعيل الجهاز</h2>'
++'<p style="font-size:.85rem;color:#94a3b8;line-height:1.8;text-align:center;margin-bottom:14px">ابعت كود جهازك لأحمد على واتساب، وهيرجعلك كود التفعيل.</p>'
++'<div style="font-size:.75rem;color:#94a3b8;margin-bottom:6px">كود الجهاز</div>'
++'<div style="display:flex;gap:8px;margin-bottom:12px"><div id="aesg-id" dir="ltr" style="flex:1;background:#1a2438;border:1px solid #1e3a5f;border-radius:12px;padding:12px;text-align:center;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.2rem;font-weight:700;letter-spacing:.08em;color:#fbbf24;user-select:all">'+id+'</div>'
++'<button id="aesg-copy" type="button" style="padding:0 14px;border-radius:12px;border:1px solid #1e3a5f;background:#1a2438;color:#f1f5f9;font-size:.85rem;cursor:pointer">نسخ</button></div>'
++'<a id="aesg-wa" target="_blank" rel="noopener" href="https://wa.me/'+WA+'?text='+encodeURIComponent(msgText(id))+'" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:12px;background:#16a34a;color:#fff;font-weight:800;font-size:.95rem;margin-bottom:18px">ابعت الكود على واتساب</a>'
++'<div style="font-size:.75rem;color:#94a3b8;margin-bottom:6px">كود التفعيل</div>'
++'<textarea id="aesg-code" dir="ltr" rows="3" placeholder="الصق كود التفعيل هنا" style="width:100%;resize:none;background:#1a2438;border:1px solid #1e3a5f;border-radius:12px;padding:10px;color:#f1f5f9;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;margin-bottom:8px"></textarea>'
++'<div id="aesg-msg" style="min-height:20px;font-size:.82rem;text-align:center;margin-bottom:8px;color:#fbbf24"></div>'
++'<button id="aesg-go" type="button" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#0284c7,#06b6d4);color:#fff;font-weight:800;font-size:.95rem;cursor:pointer">تفعيل</button></div>';
+ov.innerHTML=box;
+var msg=ov.querySelector("#aesg-msg"),inp=ov.querySelector("#aesg-code");
+function say(t,bad){msg.textContent=t;msg.style.color=bad?"#f87171":"#4ade80"}
+if(reason==="expired")say("انتهت صلاحية التفعيل. اطلب كود جديد.",!0);
+if(reason==="nocrypto")say("افتح الملف من Chrome أو Safari عشان التفعيل يشتغل.",!0);
+ov.querySelector("#aesg-copy").onclick=function(){var b=this;try{navigator.clipboard.writeText(id).then(function(){b.textContent="تم"})}catch(e){var r=document.createRange();r.selectNodeContents(ov.querySelector("#aesg-id"));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="حدّد ونسخ"}};
+ov.querySelector("#aesg-go").onclick=async function(){
+var v=inp.value.trim();if(!v){say("الصق كود التفعيل الأول.",!0);return}
+say("جاري التحقق...");
+var r=await check(v);
+if(r==="ok"){set(K_CODE,v);say("تم التفعيل.");unlock();startBar()}
+else if(r==="expired")say("الكود ده منتهي. اطلب كود جديد.",!0);
+else if(r==="nocrypto")say("افتح الملف من Chrome أو Safari عشان التفعيل يشتغل.",!0);
+else say("الكود غير صحيح أو مخصص لجهاز تاني.",!0)}}
+async function run(){
+var saved=get(K_CODE);
+if(!saved){build();return}
+var r=await check(saved);
+if(r==="ok"){if(locked)unlock();startBar();return}
+build(r)}
+cover();
+if(!window.crypto||!crypto.subtle){build("nocrypto")}
+else run().catch(function(){build()});
+document.addEventListener("DOMContentLoaded",function(){if(locked)setInert(!0)});
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&!locked)run().catch(function(){})});
+})();
+</script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" media="print" onload="this.media='all'">
