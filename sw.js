@@ -1,5 +1,5 @@
 // Service Worker - AES Survey (غيّر رقم النسخة عند كل تحديث للتطبيق)
-const VERSION = 'aes-v1';
+const VERSION = 'aes-v2';
 const CORE = [
   './',
   './index.html',
