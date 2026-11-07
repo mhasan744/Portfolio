@@ -5,44 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ahmed Eltabakh for Modern Surveying</title>
 
-<link rel="manifest" id="aes-manifest-link">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AES Survey">
-<meta name="theme-color" content="#0c4a6e">
+<meta name="apple-mobile-web-app-title" content="Eltabakh Survey">
+<meta name="theme-color" content="#0a0a0e">
 <script>
 (function(){
   var deferredPrompt = null;
-  var MANIFEST = {
-    name: "Ahmed Eltabakh for Modern Surveying",
-    short_name: "AES Survey",
-    description: "أدوات المساحة الحديثة - Ahmed Eltabakh",
-    start_url: ".",
-    display: "standalone",
-    orientation: "portrait",
-    background_color: "#070b14",
-    theme_color: "#0c4a6e",
-    lang: "ar",
-    dir: "rtl",
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%230c4a6e'/%3E%3Ctext x='256' y='300' text-anchor='middle' font-size='200' font-family='Arial' fill='%2338bdf8'%3EA%3C/text%3E%3C/svg%3E",
-      sizes: "512x512",
-      type: "image/svg+xml",
-      purpose: "any maskable"
-    }]
-  };
-  try {
-    var blob = new Blob([JSON.stringify(MANIFEST)], {type: "application/json"});
-    var url = URL.createObjectURL(blob);
-    var link = document.getElementById("aes-manifest-link");
-    if (link) link.href = url;
-  } catch (e) {}
-
   window.addEventListener("beforeinstallprompt", function(e){
     e.preventDefault();
     deferredPrompt = e;
   });
+  window.addEventListener("appinstalled", function(){ deferredPrompt = null; });
+
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1")) {
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(err){ console.warn("SW failed", err); });
+    });
+  }
 
   function isIos(){
     return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
